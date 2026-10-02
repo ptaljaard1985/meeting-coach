@@ -1,0 +1,213 @@
+{
+  "prepared_on": "2026-10-02",
+  "source_root": "/Users/pierretaljaard/crm",
+  "source_git_commit": "667d57d91845b2fe55bffd853ad9f904d6ffe281",
+  "purpose": "Standalone extraction handoff, not a built app",
+  "reference_files": [
+    {
+      "path": "reference/crm/lib/transcripts/parse.ts",
+      "source_path": "lib/transcripts/parse.ts",
+      "source_sha256": "b1425c6b48bdfc6f2bf762c83c13485485377de88de0a5bacc6e589a258d34d0",
+      "sha256": "b1425c6b48bdfc6f2bf762c83c13485485377de88de0a5bacc6e589a258d34d0",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/transcripts/parse.test.ts",
+      "source_path": "lib/transcripts/parse.test.ts",
+      "source_sha256": "b07dd9c512ce1a20b6cb63f16f875bcdade02f9cb5639dcb37056aeecd03834d",
+      "sha256": "b07dd9c512ce1a20b6cb63f16f875bcdade02f9cb5639dcb37056aeecd03834d",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/metrics.ts",
+      "source_path": "lib/scorecards/metrics.ts",
+      "source_sha256": "99d0c91ca549e05b41388db05149718c9071f656a71953c2848ac9a37456adb0",
+      "sha256": "99d0c91ca549e05b41388db05149718c9071f656a71953c2848ac9a37456adb0",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/metrics.test.ts",
+      "source_path": "lib/scorecards/metrics.test.ts",
+      "source_sha256": "dbf58e556ac8332ef6065a8eb4f69d18bbed3733286247447de92bb70d79a467",
+      "sha256": "dbf58e556ac8332ef6065a8eb4f69d18bbed3733286247447de92bb70d79a467",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/fixtures/golden-transcript.json",
+      "source_path": "lib/scorecards/fixtures/golden-transcript.json",
+      "source_sha256": "7035324f55c74c4ed2aa4597a1967a6f4ece6affd7fda35c355beb19efab6fce",
+      "sha256": "7035324f55c74c4ed2aa4597a1967a6f4ece6affd7fda35c355beb19efab6fce",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/judge.ts",
+      "source_path": "lib/scorecards/judge.ts",
+      "source_sha256": "d8d6b442b304ab4ff655a08a1239366a7bd47b622027e4bcf93340045312033d",
+      "sha256": "d8d6b442b304ab4ff655a08a1239366a7bd47b622027e4bcf93340045312033d",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/judge.test.ts",
+      "source_path": "lib/scorecards/judge.test.ts",
+      "source_sha256": "91f50068345fdd4b039c33f0d2062019f778dabf702a181e6916b598edc88387",
+      "sha256": "91f50068345fdd4b039c33f0d2062019f778dabf702a181e6916b598edc88387",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/coaching.ts",
+      "source_path": "lib/scorecards/coaching.ts",
+      "source_sha256": "05232d0a1cbcb05572a75865c8fd6a14c86b0aceebb4cce0902702efeee1a602",
+      "sha256": "05232d0a1cbcb05572a75865c8fd6a14c86b0aceebb4cce0902702efeee1a602",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/coaching.test.ts",
+      "source_path": "lib/scorecards/coaching.test.ts",
+      "source_sha256": "503081e9a7fbea1c50156ffef14d9ae6367284995ba77f50ed2b20d96230f621",
+      "sha256": "503081e9a7fbea1c50156ffef14d9ae6367284995ba77f50ed2b20d96230f621",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/run.ts",
+      "source_path": "lib/scorecards/run.ts",
+      "source_sha256": "f8c337c15f55f57bed74f484f39b98080adc7531f5cceed54da10abe465804d2",
+      "sha256": "f8c337c15f55f57bed74f484f39b98080adc7531f5cceed54da10abe465804d2",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/MODULE.md",
+      "source_path": "lib/scorecards/MODULE.md",
+      "source_sha256": "c74c5acb1d59aa050b70d7369ee790fd34132b2d0cc8d441d02fb437e899d29a",
+      "sha256": "c74c5acb1d59aa050b70d7369ee790fd34132b2d0cc8d441d02fb437e899d29a",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/pdf/template.ts",
+      "source_path": "lib/scorecards/pdf/template.ts",
+      "source_sha256": "096db56736255d70c39ce78c6219ab41becac006e5d3b5d7f373e175d7b011b6",
+      "sha256": "096db56736255d70c39ce78c6219ab41becac006e5d3b5d7f373e175d7b011b6",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/pdf/template.test.ts",
+      "source_path": "lib/scorecards/pdf/template.test.ts",
+      "source_sha256": "ca1ef12f600c1097718ca219c7e972dba5a1a6fdaa79a17cd8aaa4ae9a3d65b0",
+      "sha256": "ca1ef12f600c1097718ca219c7e972dba5a1a6fdaa79a17cd8aaa4ae9a3d65b0",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/pdf/render.ts",
+      "source_path": "lib/scorecards/pdf/render.ts",
+      "source_sha256": "1378b1fde83626bdc64bddeed29241788aed91e8ad5dbef428f1099c183f2768",
+      "sha256": "1378b1fde83626bdc64bddeed29241788aed91e8ad5dbef428f1099c183f2768",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/pdf/render.test.ts",
+      "source_path": "lib/scorecards/pdf/render.test.ts",
+      "source_sha256": "e9833b53890debd22e22b7a04b9e6091a24fad2c0b701ac00df6053c9de15e5c",
+      "sha256": "e9833b53890debd22e22b7a04b9e6091a24fad2c0b701ac00df6053c9de15e5c",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/scorecards/pdf/MODULE.md",
+      "source_path": "lib/scorecards/pdf/MODULE.md",
+      "source_sha256": "a0895e42eea340851611923755020dbc6b758edbfe51cf86bcbf3046482567fb",
+      "sha256": "a0895e42eea340851611923755020dbc6b758edbfe51cf86bcbf3046482567fb",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/anthropic/call.ts",
+      "source_path": "lib/anthropic/call.ts",
+      "source_sha256": "f4d096fdc7407135c4b8eeb3dac82bd26f06d10612ea0acd0434903bc1266b2c",
+      "sha256": "f4d096fdc7407135c4b8eeb3dac82bd26f06d10612ea0acd0434903bc1266b2c",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/anthropic/models.ts",
+      "source_path": "lib/anthropic/models.ts",
+      "source_sha256": "680f84fdb421d4c8899d9c52667f847c6e65ed3c4e97736555644419a23bbb66",
+      "sha256": "680f84fdb421d4c8899d9c52667f847c6e65ed3c4e97736555644419a23bbb66",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/scripts/seed-scorecard-behavioural-1.2.sql",
+      "source_path": "scripts/seed-scorecard-behavioural-1.2.sql",
+      "source_sha256": "e2c449c05a7269940e652cbfa9f1e07072700dc26daf446c0fcf4107ee368e22",
+      "sha256": "e2c449c05a7269940e652cbfa9f1e07072700dc26daf446c0fcf4107ee368e22",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/docs/meeting-scorecards-plan.md",
+      "source_path": "docs/meeting-scorecards-plan.md",
+      "source_sha256": "02f923c3592935aaba3e2970d125c79357391f717c06a854c7ffbf8bf8fc8085",
+      "sha256": "02f923c3592935aaba3e2970d125c79357391f717c06a854c7ffbf8bf8fc8085",
+      "kind": "verbatim_reference"
+    },
+    {
+      "path": "reference/crm/lib/types/database.ts",
+      "source_path": "lib/types/database.ts",
+      "source_sha256": "48c555abe9b9115e870cee23df1b17b4ff461b18e27ac3ce6f4a54af3b722fca",
+      "sha256": "2af7439b14866a8366501faae83075d0fdef05542bed50f3e0aee07031751b83",
+      "kind": "type_declaration_excerpt",
+      "declarations": [
+        "TranscriptSegment",
+        "ScorecardGradingMethod",
+        "ScorecardRunStatus",
+        "ScorecardRunTrigger",
+        "CriterionVerdict",
+        "Scorecard",
+        "ScorecardScore",
+        "ScorecardCriterion",
+        "ScorecardRun",
+        "ScorecardRunScore",
+        "MeetingMetrics",
+        "JudgeEvidence",
+        "JudgeCriterion",
+        "JudgeScore",
+        "JudgeFlag",
+        "CoachingPoint",
+        "JudgeResult",
+        "ScorecardWithRubric"
+      ]
+    }
+  ],
+  "generated_files": [
+    {
+      "path": "HANDOFF_NOTES.txt",
+      "sha256": "8cb0ab82f126a5e73c6624573072f938b8af59a7797d31f66cd1738364787577"
+    },
+    {
+      "path": "PRIVACY_AND_MODEL_NOTES.txt",
+      "sha256": "3a5bfb2eb75bb4d5815987eaf327b71b96902062d2efde9783a0d6e65a748031"
+    },
+    {
+      "path": "SEED_PROMPT.txt",
+      "sha256": "2e4bd72b94f61c48b8c62d61189402c38e122188aaced5301dd866b6e44fdc64"
+    },
+    {
+      "path": "START_HERE.txt",
+      "sha256": "cccaf58c78e4a2b3f5bfbb55b9a8eaaff8c6fdddf801afb4fe5be7bfc109d4a3"
+    },
+    {
+      "path": "handoff/example-transcript.txt",
+      "sha256": "38f71fcaab298a5bfd55aec6f3c8241eb9726a52bcde56a7245b3bdcb34ae57f"
+    },
+    {
+      "path": "handoff/rubric-meeting-coach-1.0.json",
+      "sha256": "c8c50303418985bd3a7d8cddedc1f2f2df16f9bf7999e806d29186e087e5dc2e"
+    },
+    {
+      "path": "handoff/rubric-provenance.json",
+      "sha256": "8d97f0cf394a7781780ba1047729949545e62d1d426d871c637f380db8f127e7"
+    },
+    {
+      "path": "handoff/rubric-source-sw-behavioural-1.2.json",
+      "sha256": "116387d2360ab012c065d99bec93fb8af165b641d8d2d4c75d06d19d84131102"
+    },
+    {
+      "path": "handoff/verify_bundle.py",
+      "sha256": "5b61d8951b750f25d0299e5003cd42011e5cc30e8e0b8a267e28fcbfaa2f8988"
+    }
+  ]
+}

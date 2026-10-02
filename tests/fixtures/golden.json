@@ -1,0 +1,82 @@
+[
+  {
+    "speaker": {
+      "display_name": "Adviser"
+    },
+    "timestamp": "00:00:00",
+    "text": "How are you both doing after the move?",
+    "id": "segment-1"
+  },
+  {
+    "speaker": {
+      "display_name": "Client A"
+    },
+    "timestamp": "00:00:30",
+    "text": "It has been a big change, but a good one.",
+    "id": "segment-2"
+  },
+  {
+    "speaker": {
+      "display_name": "Client B"
+    },
+    "timestamp": "00:01:30",
+    "text": "We are settling in nicely, thank you.",
+    "id": "segment-3"
+  },
+  {
+    "speaker": {
+      "display_name": "Adviser"
+    },
+    "timestamp": "00:02:00",
+    "text": "That is good to hear.",
+    "id": "segment-4"
+  },
+  {
+    "speaker": {
+      "display_name": "Adviser"
+    },
+    "timestamp": "00:02:15",
+    "text": "What would make today most useful for you?",
+    "id": "segment-5"
+  },
+  {
+    "speaker": {
+      "display_name": "Client A"
+    },
+    "timestamp": "00:03:00",
+    "text": "The retirement number, mostly. I want to know whether we are still on track.",
+    "id": "segment-6"
+  },
+  {
+    "speaker": {
+      "display_name": "Adviser"
+    },
+    "timestamp": "00:05:00",
+    "text": "Let me walk you through the drawdown rate.",
+    "id": "segment-7"
+  },
+  {
+    "speaker": {
+      "display_name": "Adviser"
+    },
+    "timestamp": "00:06:40",
+    "text": "It is simply the percentage of the pot you draw each year.",
+    "id": "segment-8"
+  },
+  {
+    "speaker": {
+      "display_name": "Adviser"
+    },
+    "timestamp": "00:08:00",
+    "text": "Does that land for you?",
+    "id": "segment-9"
+  },
+  {
+    "speaker": {
+      "display_name": "Client B"
+    },
+    "timestamp": "00:08:40",
+    "text": "Yes that makes sense to me and I think we should go ahead now",
+    "id": "segment-10"
+  }
+]

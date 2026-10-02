@@ -1,0 +1,59 @@
+Adviser
+00:00:00
+Before we look at the numbers, how have things been since we last spoke?
+
+Client A
+00:00:20
+The change at work has been harder than I expected. I am worried about whether we can still reduce our hours next year.
+
+Adviser
+00:00:50
+It sounds as though having more control over your time matters as much as the money. Have I understood that correctly?
+
+Client A
+00:01:10
+Yes. I want to be around after school instead of working every evening.
+
+Adviser
+00:01:25
+And what would make this conversation useful for you, Client B?
+
+Client B
+00:01:40
+I want to know what happens if one of us stops work earlier than planned.
+
+Adviser
+00:02:00
+Let us start there, then look at the reduced-hours option. We can test the plan against lower income without deciding anything today. How does that order sound?
+
+Client A
+00:02:20
+That is the right place to start.
+
+Client B
+00:02:30
+Yes, I agree.
+
+Adviser
+00:02:40
+For next time, I will prepare those two scenarios. Could you each send your expected work hours by Friday? What might get in the way of doing that?
+
+Client B
+00:03:00
+I will check with my manager tomorrow, so Friday should work.
+
+Client A
+00:03:15
+I can send mine on Thursday.
+
+Adviser
+00:03:30
+Then I will prepare the scenarios once both estimates arrive. You are each sending your work-hour estimate by Friday. Have I captured our next steps correctly?
+
+Client A
+00:03:50
+Yes, that is what we agreed.
+
+Client B
+00:04:00
+Yes, thank you.

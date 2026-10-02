@@ -1,0 +1,14 @@
+{
+  "source": "handoff/rubric-meeting-coach-1.0.json",
+  "version": "meeting-coach-behavioural-1.1",
+  "score_count": 7,
+  "criterion_count": 24,
+  "change_date": "2026-10-02",
+  "removed_criterion": {
+    "id": "meeting-coach-behavioural-1.0:s4:c3",
+    "score_id": "meeting-coach-behavioural-1.0:s4",
+    "position": 3,
+    "text": "For Afrikaans-first clients, the adviser matched the client's language and register."
+  },
+  "reason": "Owner requested removal of Afrikaans-specific scoring. All seven sections retained, with 24 criteria. The seed brief’s English/Afrikaans/mixed-language capability is preserved."
+}

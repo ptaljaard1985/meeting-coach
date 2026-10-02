@@ -1,0 +1,25 @@
+MEETING COACH — CODEX HANDOFF
+Prepared 2 October 2026
+
+Open /Users/pierretaljaard/meeting-coach as a new project in Codex, then send:
+
+Read SEED_PROMPT.txt, HANDOFF_NOTES.txt, and PRIVACY_AND_MODEL_NOTES.txt. Build the standalone Meeting Coach MVP described there, using reference/ as extraction material. Begin with a short implementation plan and then implement and verify it. This is a new project; do not modify the CRM. Complete the local working app before asking about hosting.
+
+SEED_PROMPT.txt is the detailed build instruction. The other files explain the source material, model recommendation, privacy boundaries, and verification requirements.
+
+User decisions already made:
+- Public tool, available to anyone. Pierre funds the API calls.
+- Home page: paste transcript, acknowledge responsibility, request a review.
+- Results page with a real Download PDF button.
+- Keep data in browser memory where possible; avoid saving transcripts or results.
+- Codex will design and build the tool. OpenAI API is acceptable and is the recommended first implementation.
+
+Recommendations in this handoff:
+- Grading: gpt-6-astra, medium reasoning, standard mode, calibrated against human judgment.
+- Lower-cost comparison: gpt-6.1-sol, medium reasoning.
+- Build agent: Codex using GPT-6.1 Sol; Astra is an option for difficult design/review work.
+- A server-side OpenAI Platform API key, foreground Responses API with store:false, browser PDF generation.
+
+This directory contains a handoff, not a runnable application. No credentials, live database exports, or real client transcripts were copied. Historical reference code still uses Anthropic and CRM imports; it must be adapted, not run as the new app. SOURCE_MANIFEST.json records provenance and hashes.
+
+No production deployment or paid API requests were performed while preparing this bundle.

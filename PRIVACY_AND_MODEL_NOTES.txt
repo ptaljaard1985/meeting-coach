@@ -1,0 +1,60 @@
+MODEL AND DATA-HANDLING DECISIONS
+Checked against official sources on 2 October 2026. Recheck before deployment.
+
+1. WHICH MODEL AND WHICH KEY
+
+Recommendation for the initial grading baseline: gpt-6-astra, reasoning effort medium, standard mode. This is a quality-first starting point, not a measured win on this rubric. OpenAI's evaluation guide recommends Astra for strong model judges and comparison against human labels before optimizing. Keep a local opt-in calibration harness; no provider-hosted transcript evaluation dataset is needed.
+Source: https://developers.openai.com/api/docs/guides/evaluation-best-practices
+
+GPT-6.1 Sol is the lower-cost candidate for later production grading and a reasonable Codex build model. Start Codex with medium reasoning; a higher setting can be useful for demanding review. The public app's model and the development agent's model are independent choices.
+Source: https://developers.openai.com/api/docs/guides/model-selection
+
+Published standard token prices checked today, USD per one million tokens:
+Model          Input    Cached read    Cache write    Output
+GPT-6 Astra    10.00        1.00          12.50         50.00
+GPT-6.1 Sol     2.00        0.10           2.50         10.00
+
+At an illustrative 20,000 input plus 10,000 total billed output tokens, ordinary uncached rates give $0.70 for Astra and $0.14 for Sol, before cache-write or other premiums. These are arithmetic examples, not measured per-meeting costs. Billable output includes reasoning; retries add cost. Long-context and service-tier pricing can differ. Measure the real prompt plus schema plus transcript and actual usage before publishing any price estimate.
+Sources: https://developers.openai.com/api/docs/models/gpt-6-astra
+         https://developers.openai.com/api/docs/models/gpt-6.1-sol
+
+Use a dedicated OpenAI Platform project API key (OPENAI_API_KEY). Codex can authenticate using a Platform key, but a Codex subscription/session credential or Codex access token is not the credential for this website's general inference requests. Do not read ~/.codex/auth.json or put Codex behind the public endpoint. Keep the server key out of browser bundles and NEXT_PUBLIC_* variables.
+Source: https://learn.chatgpt.com/docs/auth
+
+Use Responses API with strict structured output. JSON-schema conformance does not prove the evidence, score, speaker attribution or interpretation is correct; validate those in application code. Handle refusal and incomplete output explicitly. Confirm the installed SDK's current Responses schema syntax before implementing it.
+Source: https://developers.openai.com/api/docs/guides/structured-outputs
+
+2. WHAT THE PRIVACY PROMISE CAN SAY
+
+OpenAI API data is not used for model training by default unless the customer opts in. Explicit store:false disables stored response state; it is not zero data retention. Abuse-monitoring content is normally retained up to 30 days, with stated exceptions. Provider prompt caching can also retain encrypted technical state. Special retention controls require eligibility/configuration and have endpoint/model limitations. Use foreground text requests; do not enable background mode or content-storing features for this MVP. Do not claim zero provider retention without confirming the actual account, model and feature arrangement.
+Source: https://developers.openai.com/api/docs/guides/your-data
+
+Proposed application behavior, to be verified by implementation and hosting checks:
+- Paste, edit and parse happen in browser memory before submission.
+- Submission sends the transcript through the hosting server to OpenAI over HTTPS.
+- The app intentionally writes no transcript/review content to persistent storage or logs.
+- The response stays in the browser session; the PDF is generated locally.
+- The downloaded PDF persists on the user's device. Clear cannot delete that file or a request already processed by OpenAI.
+- An abuse limiter stores limited expiring metadata/counters; the host and optional challenge provider may retain operational/network metadata. These are separate from transcript storage and must be described accurately.
+- No recoverable meeting history is offered. No claim of secure memory erasure is made.
+
+3. THE RESPONSIBILITY CHECKBOX
+
+The checkbox should declare the adviser's authority and responsibility for their submission. It cannot serve as a blanket transfer of the tool operator's legal obligations or proof of client consent. As a practical inference from POPIA, transient processing is still processing; relevant duties can include lawful purpose, safeguards, operator arrangements and cross-border conditions. Which party has which role depends on the actual operation and contracts. Keep the UI concise and obtain appropriate local review of the operator notice/terms before opening the real service. Do not advertise "POPIA compliant" based on an implementation choice or disclaimer alone.
+Source: Protection of Personal Information Act 4 of 2013, especially definitions and sections 8, 11, 15, 19–21 and 72:
+https://www.justice.gov.za/legislation/acts/2013-004.pdf
+
+This note identifies design implications; it is not a legal opinion or a demand to build a compliance platform. The task is to implement minimal data retention and truthful wording, not add a compliance obstacle course.
+
+4. IF ANTHROPIC IS REVISITED LATER
+
+The original CRM uses Opus 4.6 with prompt v1.4. Anthropic's commercial API content is not used for model training by default; opt-ins/feedback can change that. Its standard API input/output retention is within 30 days, with exceptions, and special arrangements/features can differ. Covered-model rules can affect ZDR. Do not automatically send a failed OpenAI request to Anthropic: a provider change changes disclosure and data recipients.
+Sources: https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training
+         https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data
+         https://platform.claude.com/docs/en/manage-claude/api-and-data-retention
+
+5. PDF IMPLEMENTATION REFERENCE
+
+The existing HTML/Puppeteer renderer is not browser-ready. react-pdf supports browser document generation; its documented custom font formats are TTF and WOFF. The old CRM font assets are WOFF2, so do not copy them blindly. Generate selectable text from the current result, bundle compatible fonts with licences, and make no server request on download.
+Sources: https://react-pdf.org/docs/v4/advanced
+         https://react-pdf.org/docs/v4/fonts

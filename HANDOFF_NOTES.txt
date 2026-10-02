@@ -1,0 +1,61 @@
+EXTRACTION NOTES — READ BEFORE COPYING CODE
+
+This bundle was prepared from /Users/pierretaljaard/crm at the commit recorded in SOURCE_MANIFEST.json. Each copied file's content hash is recorded because the CRM working tree also contains unrelated local changes. Those changes were not modified. This is a curated code reference, not a branch or full repository export.
+
+Useful source map
+
+reference/crm/lib/transcripts/parse.ts + parse.test.ts
+  Pure parsers for speaker blocks, inline Name: text, VTT and SRT. Some pasted subtitle files have no speaker attribution; reject those for grading. Check how much text was consumed: format detection alone does not prove the whole transcript was parsed. Do not use distributeTimestamps() to fabricate evidence timestamps.
+
+reference/crm/lib/scorecards/metrics.ts + metrics.test.ts + fixtures/golden-transcript.json
+  Best extraction starting point. Pure calculations and partial-diarisation gate. Golden fixture is explicitly synthetic, although it uses the original adviser's name/email as test labels. Port tests before changing semantics. The existing MetricsInput assumes every non-adviser speaker is a client, which needs role-aware treatment in a public tool.
+
+reference/crm/lib/scorecards/judge.ts + judge.test.ts
+  Existing substantive prompt v1.4, Anthropic forced tool schema, validation, overall calculation and orchestration. Provider-specific sections must be rewritten for OpenAI. buildUserMessage() literally says Adviser: Pierre. Prompt identity says Simple Wealth. Both must be generalised. Temperature zero is historical, not a cross-provider setting or a determinism guarantee.
+
+  Validation is less strict than prose documentation suggests: it checks membership of criterion IDs globally, not ownership within each score; it does not reject every duplicate or omitted criterion; coaching requests five but its Zod code accepts fewer; it does not prove evidence quotes occur in the transcript. Preserve intended domain rules while fixing these gaps in the standalone implementation. Tests should establish the new contract.
+
+  The retry deadline is checked before starting a second attempt; there is no real request-level timeout in this module. Do not inherit that as a complete deadline implementation.
+
+reference/crm/lib/scorecards/coaching.ts + coaching.test.ts
+  Normalises four generations of saved CRM coaching. Useful to understand why the current shape has title/learning/example, but the new app has no historical saved runs, so legacy compatibility is unnecessary.
+
+reference/crm/lib/scorecards/pdf/template.ts + template.test.ts
+  Information design and safe text-escaping reference. Despite old descriptions calling it pure/no-I/O, it imports node:fs to load fonts. It is not browser-ready. Current layout has summary, takeaways and detailed criterion evidence. Both orientations now use one content column; earlier evidence-side-column descriptions are obsolete. Rebuild for client PDF output.
+
+reference/crm/lib/scorecards/pdf/render.ts + render.test.ts
+  Reference for view-model composition, long-report fixtures and output completeness. Contains Supabase loading and Puppeteer, which are out of scope. The tests explicitly identify their fixture as synthetic. Do not run this module in the new app or copy its whole dependency tree.
+
+reference/crm/lib/scorecards/run.ts
+  Gate/orchestration reference only. Do not copy Supabase, stored runs, cron, backfill, group lookup or per-meeting history. The new /api/review computes once in a request.
+
+reference/crm/lib/anthropic/call.ts + models.ts
+  Historical adapter context only. call.ts now imports a Supabase-backed usage ledger through usage.ts; the older feasibility document's claim that this layer has no CRM coupling is no longer accurate. usage.ts is intentionally not copied. The new adapter should use OpenAI directly without content logging or CRM telemetry.
+
+reference/crm/lib/types/database.ts
+  An EXCERPT containing transcript/scorecard-related type declarations only. Exact declarations are extracted from the original, with a header explaining that it is not the full database schema. Define smaller provider-independent app types instead of importing the CRM database model wholesale.
+
+reference/crm/scripts/seed-scorecard-behavioural-1.2.sql
+  The actual shipped rubric: seven scores, 25 criteria. This is more authoritative for wording than an exploratory plan. No database connection was used. A parsed JSON extraction and a minimally generalised standalone version are in handoff/.
+
+reference/crm/lib/scorecards/MODULE.md and pdf/MODULE.md
+  Useful explanations, but with stale passages. The current PDF is multi-page; FIT_TIERS has only two spacing-only settings. There is no front-page evidence column and flags have no reader. The adviser agree/partial/disagree controls were removed. Do not resurrect them. The new tool intentionally displays the five takeaways on screen even though the CRM panel omits them.
+
+reference/crm/docs/meeting-scorecards-plan.md
+  Historical rationale and behavioral rubric sources. Its Sonnet model, manual-only architecture, saved history, original coaching shapes, proposed migrations and future roadmap are not this project's build scope. Read for why the feature exists, not as a to-do list.
+
+Not included
+- .env files, .mcp.json, auth configuration, database dumps, real transcripts or existing client review PDFs.
+- The large session log and SaaS feasibility document; both contain superseded scope and unrelated practice context.
+- CRM routes/UI boilerplate, full schema, integrations, migration execution scripts, Fathom sync/cron or backfill jobs.
+- Old template HTML that might carry meeting-specific sample text, logos or font binaries. New fonts need a compatible format and licence.
+
+Prepared assets
+- handoff/rubric-source-sw-behavioural-1.2.json: faithful SQL-content extraction with deterministic local IDs, suitable for review without SQL.
+- handoff/rubric-meeting-coach-1.0.json: same rubric with the single Pierre-specific criterion generalised and new standalone IDs/version.
+- handoff/rubric-provenance.json: explicit mapping, counts and transformations.
+- handoff/example-transcript.txt: short synthetic role-labelled paste to exercise the UI; not a full-length quality benchmark.
+- handoff/verify_bundle.py: checks manifest hashes, reference parity when the CRM is available, and the 7-score/25-criterion derivation. It does not claim the future app has been built or tested.
+
+Boundary worth preserving
+The original feature judges adviser craft, not whether the advice was legally correct or financially suitable. Absence of an opportunity must not be treated as failure; a model's confident wording must not substitute for transcript evidence. Metrics can be deterministic while the interpretation and score still require judgment.

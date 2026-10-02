@@ -1,0 +1,146 @@
+{
+  "source_file": "reference/crm/scripts/seed-scorecard-behavioural-1.2.sql",
+  "source_version": "sw-behavioural-1.2",
+  "standalone_version": "meeting-coach-behavioural-1.0",
+  "score_count": 7,
+  "criterion_count": 25,
+  "extraction": "Parse SQL single-quoted literals; unescape doubled quotes; normalise whitespace as the seed itself does. IDs are deterministic local strings, not copied database UUIDs. No production database accessed.",
+  "omitted_fields": "created_at is a database row field, not rubric content",
+  "content_changes": [
+    {
+      "criterion_id": "meeting-coach-behavioural-1.0:s5:c2",
+      "before": "Next steps were assigned out loud - what Pierre does, what the client does, and roughly by when.",
+      "after": "Next steps were assigned out loud - what the adviser does, what the client does, and roughly by when."
+    }
+  ],
+  "id_mapping": [
+    {
+      "source": "sw-behavioural-1.2:s1",
+      "target": "meeting-coach-behavioural-1.0:s1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s1:c1",
+      "target": "meeting-coach-behavioural-1.0:s1:c1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s1:c2",
+      "target": "meeting-coach-behavioural-1.0:s1:c2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s1:c3",
+      "target": "meeting-coach-behavioural-1.0:s1:c3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s2",
+      "target": "meeting-coach-behavioural-1.0:s2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s2:c1",
+      "target": "meeting-coach-behavioural-1.0:s2:c1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s2:c2",
+      "target": "meeting-coach-behavioural-1.0:s2:c2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s2:c3",
+      "target": "meeting-coach-behavioural-1.0:s2:c3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s2:c4",
+      "target": "meeting-coach-behavioural-1.0:s2:c4"
+    },
+    {
+      "source": "sw-behavioural-1.2:s3",
+      "target": "meeting-coach-behavioural-1.0:s3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s3:c1",
+      "target": "meeting-coach-behavioural-1.0:s3:c1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s3:c2",
+      "target": "meeting-coach-behavioural-1.0:s3:c2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s3:c3",
+      "target": "meeting-coach-behavioural-1.0:s3:c3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s3:c4",
+      "target": "meeting-coach-behavioural-1.0:s3:c4"
+    },
+    {
+      "source": "sw-behavioural-1.2:s4",
+      "target": "meeting-coach-behavioural-1.0:s4"
+    },
+    {
+      "source": "sw-behavioural-1.2:s4:c1",
+      "target": "meeting-coach-behavioural-1.0:s4:c1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s4:c2",
+      "target": "meeting-coach-behavioural-1.0:s4:c2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s4:c3",
+      "target": "meeting-coach-behavioural-1.0:s4:c3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s5",
+      "target": "meeting-coach-behavioural-1.0:s5"
+    },
+    {
+      "source": "sw-behavioural-1.2:s5:c1",
+      "target": "meeting-coach-behavioural-1.0:s5:c1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s5:c2",
+      "target": "meeting-coach-behavioural-1.0:s5:c2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s5:c3",
+      "target": "meeting-coach-behavioural-1.0:s5:c3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s5:c4",
+      "target": "meeting-coach-behavioural-1.0:s5:c4"
+    },
+    {
+      "source": "sw-behavioural-1.2:s6",
+      "target": "meeting-coach-behavioural-1.0:s6"
+    },
+    {
+      "source": "sw-behavioural-1.2:s6:c1",
+      "target": "meeting-coach-behavioural-1.0:s6:c1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s6:c2",
+      "target": "meeting-coach-behavioural-1.0:s6:c2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s6:c3",
+      "target": "meeting-coach-behavioural-1.0:s6:c3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s7",
+      "target": "meeting-coach-behavioural-1.0:s7"
+    },
+    {
+      "source": "sw-behavioural-1.2:s7:c1",
+      "target": "meeting-coach-behavioural-1.0:s7:c1"
+    },
+    {
+      "source": "sw-behavioural-1.2:s7:c2",
+      "target": "meeting-coach-behavioural-1.0:s7:c2"
+    },
+    {
+      "source": "sw-behavioural-1.2:s7:c3",
+      "target": "meeting-coach-behavioural-1.0:s7:c3"
+    },
+    {
+      "source": "sw-behavioural-1.2:s7:c4",
+      "target": "meeting-coach-behavioural-1.0:s7:c4"
+    }
+  ]
+}

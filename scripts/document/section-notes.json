@@ -1,0 +1,75 @@
+[
+  {
+    "purpose":"Assess whether the opening recognises the person and lets the client influence the conversation before financial analysis begins.",
+    "scoring":"Judge the quality of engagement, not the length of small talk. A polite opening alone supports the middle anchor; strong evidence combines a meaningful response with a client-shaped agenda.",
+    "review":"A transcript starting after the opening cannot establish how the meeting began. Consider whether the opening is visible before assigning a score.",
+    "criteria":[
+      {"heading":"Engage with the opening answer","meaning":"A check-in matters when the adviser listens to the reply and follows its meaning. A scripted question followed immediately by figures is weaker evidence.","look":"Look for the opening question, the client's answer and the adviser's response together.","na":"The recording or excerpt omits the opening."},
+      {"heading":"Acknowledge life events","meaning":"Recognise a change, loss, milestone or pressure before moving to its financial implications. The criterion assesses acknowledgement rather than counselling skill.","look":"A specific acknowledgement of the event and what it means to the client.","na":"No life event is mentioned or visible."},
+      {"heading":"Let the client shape the agenda","meaning":"Ask what would make the meeting useful and visibly adapt the order or priorities. Asking the question without responding to the answer is only partial evidence.","look":"The invitation, the client's priority and the agreed agenda or next transition.","na":"The relevant opening or agenda discussion is missing."}
+    ]
+  },
+  {
+    "purpose":"Assess whether the adviser makes room for the client and responds to what the client actually says. Speaking share supports this judgment but does not define listening quality by itself.",
+    "scoring":"The current anchors use 45% and 65% adviser-share reference points and a four-minute monologue. These are rubric thresholds, not proven universal cut-offs. Reflections and responsive follow-ups are also needed for a high judgment.",
+    "review":"Review the overlapping anchor boundaries at exactly 45% and 65%, and whether the thresholds suit different meeting types. Planned technical explanations can increase adviser share without establishing poor listening.",
+    "criteria":[
+      {"heading":"Leave room for the client","meaning":"Use the computed adviser share of adviser/client speech. Observers are excluded. Compare the figure with the interaction; the model must not invent a different percentage.","look":"The provided share, plus a real exchange illustrating how space was given or taken.","na":"Reliable adviser/client attribution is unavailable."},
+      {"heading":"Build questions on the answer","meaning":"Follow up a concern, goal or detail the client has just introduced. A question can be open-ended yet still ignore the preceding answer.","look":"Adjacent turns showing a clear connection between the client's words and the follow-up.","na":"No relevant question-and-answer exchange is visible."},
+      {"heading":"Reflect meaning and feeling","meaning":"Restate or check the client's meaning before responding. Repeating words mechanically is weaker than accurately reflecting the concern or feeling behind them.","look":"A client statement followed by a reflection and, where available, confirmation or correction.","na":"The excerpt offers no assessable opportunity for a reflection."},
+      {"heading":"Check during explanations","meaning":"Break substantial explanations with a useful invitation to respond. A token check after a very long speech may support only partial achievement.","look":"An explanation and the check that lets the client ask, correct or respond.","na":"No substantial explanation occurs in the visible passage."}
+    ]
+  },
+  {
+    "purpose":"Assess how the adviser responds to worry and helps the client think ahead about difficult periods. This measures communication and preparation, not the correctness of investment advice.",
+    "scoring":"A strong judgment needs both recognition of anxiety and forward-looking preparation when relevant. Missing anxiety or market discussion is not automatically failure; first establish the opportunity.",
+    "review":"The high anchor combines reactive and proactive behaviours. Review whether the requirement is appropriate for every type of meeting before changing it.",
+    "criteria":[
+      {"heading":"Name the concern before answering","meaning":"Acknowledge the worry in the client's terms before reassuring or explaining. Immediate predictions or dismissal can be counter-evidence when the client expressed a clear concern.","look":"The client's worry and the response that names, checks or bypasses it.","na":"No worry or relevant concern is expressed."},
+      {"heading":"Anchor reassurance to the plan","meaning":"Explain reassurance through the client's plan and relevant long-term evidence. Confident forecasts about markets, tax or politics do not satisfy this communication criterion.","look":"A reassurance exchange and the stated reason supporting it.","na":"No reassurance is offered or called for."},
+      {"heading":"Separate controllable factors","meaning":"Make the distinction aloud between choices the client can influence and external events they cannot. The link should help the client decide where to focus.","look":"An explicit contrast between controllable actions and uncertain external conditions.","na":"No relevant uncertainty or decision context appears."},
+      {"heading":"Rehearse a future difficult period","meaning":"Prepare for a possible bad patch before it happens, rather than responding only to a fear already raised. Assess the communication exercise, not a proposed financial strategy.","look":"A prospective scenario and discussion of how the client would respond or use the plan.","na":"No relevant opportunity for future-turbulence preparation is established."}
+    ]
+  },
+  {
+    "purpose":"Assess whether explanations are understandable and whether the adviser checks actual understanding. Plain language concerns communication, not a client's education, intelligence or financial knowledge.",
+    "scoring":"Frequent unexplained jargon supports the low anchor. Mostly clear speech supports the middle. Strong evidence pairs ordinary explanations with an invitation to explain the idea back. A polite yes alone does not prove understanding.",
+    "review":"The language-specific subsection has been removed. This section now has two criteria; the category keeps the same equal weight as the other assessable categories.",
+    "criteria":[
+      {"heading":"Explain terms at first use","meaning":"Avoid unnecessary technical terms or explain them when first introduced. Clear explanations should retain the meaning rather than replacing precision with a misleading simplification.","look":"The first use of a term and the nearby explanation or ordinary-language alternative. Repeated unexplained terms can be counter-evidence.","na":"No relevant term or explanation is visible; do not invent a terminology problem."},
+      {"heading":"Invite teach-back","meaning":"Invite the client to explain the idea in their own words so misunderstandings can surface. Frame the invitation as a check on the explanation, not a test of the client.","look":"An invitation such as asking how the client would describe the idea, followed by their response and any clarification.","na":"No substantive explanation or suitable understanding-check opportunity occurs."}
+    ]
+  },
+  {
+    "purpose":"Assess whether a meeting turns discussion into understood decisions and manageable next steps. A transcript can show how follow-through was supported; it cannot prove that actions were later completed.",
+    "scoring":"An adviser-only summary supports the middle anchor. Stronger evidence includes client confirmation, explicit ownership and timing, a manageable first step and anticipated obstacles. No decision is not automatically a poor close.",
+    "review":"Keep the distinction between communication of agreement and actual adherence. This category does not certify informed consent, compliance or financial suitability.",
+    "criteria":[
+      {"heading":"Read back and confirm decisions","meaning":"Restate each decision clearly and invite audible confirmation. A general closing thank-you is not evidence that every material decision was understood and agreed.","look":"The decision readback and the client's confirmation or correction.","na":"No decision was reached or the decision/close is outside the excerpt."},
+      {"heading":"Assign actions and timing","meaning":"Say who will do what and roughly when. Separate adviser responsibilities from client tasks so ownership does not remain implied.","look":"Explicit action, owner and approximate deadline stated aloud.","na":"There are no relevant next steps in the visible meeting."},
+      {"heading":"Keep the action load manageable","meaning":"The rubric favours roughly three client tasks or fewer, with an easy, near-term first step. Count actions from the conversation rather than assuming brevity means feasibility.","look":"The requested task set and a practical first action the client can begin.","na":"No client action is assigned."},
+      {"heading":"Anticipate obstacles","meaning":"Ask about or anticipate what could prevent follow-through. A relevant practical obstacle matters more than a generic encouragement to get things done.","look":"A question about barriers or a specific barrier addressed before the meeting ends.","na":"No follow-through commitment or relevant opportunity is present."}
+    ]
+  },
+  {
+    "purpose":"Assess whether the adviser connects discussion and recommendations to what this particular client values and wants. The category measures the expressed link, not whether a recommendation is financially suitable.",
+    "scoring":"Product, tax or return logic alone supports the low anchor when personal goals were relevant. A generic reference to goals is middle evidence. Strong evidence ties each material recommendation to a stated client priority.",
+    "review":"A convincing connection needs both sides: the client's stated priority and the adviser's link to it. Do not infer goals from demographic details or invent a recommendation in a discussion-only meeting.",
+    "criteria":[
+      {"heading":"Link recommendations to stated goals","meaning":"Explain aloud why a recommendation relates to a goal, value or life plan the client has expressed. Merely mentioning goals beside product features is weaker evidence.","look":"The client-stated priority and the explicit recommendation-to-goal link, quoted separately if they occur in different segments.","na":"No material recommendation or relevant client priority is visible."},
+      {"heading":"Use the client's own words","meaning":"Use the client's terms for what matters instead of substituting the adviser's interpretation. A faithful reflection is stronger than a generic phrase such as financial freedom.","look":"The original wording and its accurate use in the adviser's response.","na":"The client's relevant wording is absent from the excerpt."},
+      {"heading":"Surface changes before advising","meaning":"If a goal has changed, recognise and clarify that change before advising on it. Do not assume previous goals remain current merely because a plan already exists.","look":"The changed priority, its clarification and the sequence before the recommendation.","na":"No changed goal is raised or established."}
+    ]
+  },
+  {
+    "purpose":"Assess whether both partners in an explicitly confirmed couple meeting participate and confirm important decisions. Two non-adviser speakers do not establish a couple; assistants and observers are separate roles.",
+    "scoring":"The rubric uses worse than about 3:1 as a concern and better than about 2:1 as support for a high score. Balanced time alone is insufficient: invitations, individual goals and confirmations also matter.",
+    "review":"Outside couple scope, the entire category is n/a and excluded from the overall. Within a couple meeting, distinguish a genuinely missed invitation from a passage too short to show the opportunity.",
+    "criteria":[
+      {"heading":"Balance client participation","meaning":"Use the computed ratio of the larger to smaller client speaking time. Observer speech is excluded. A ratio reflects estimated participation, not equal understanding or an obligation to split time exactly.","look":"The supplied ratio and a relevant exchange showing the participation pattern.","na":"Not a couple meeting or reliable separate client attribution is unavailable."},
+      {"heading":"Invite the quieter partner directly","meaning":"The current criterion asks for at least two invitations by name, including one on a substantive decision. A single invitation can be partial evidence; absence needs an established opportunity.","look":"The direct invitations, whom they addressed and whether one concerned a material decision.","na":"No relevant opportunity or decision is visible; the meeting is outside couple scope."},
+      {"heading":"Explore goals individually","meaning":"Ask each partner about goals rather than accepting a joint answer as both people's priorities. Individual answers can reveal differences that a shared agenda masks.","look":"A goals question addressed to each person and their separate responses.","na":"No goals discussion is visible or this is not a couple meeting."},
+      {"heading":"Hear confirmation from both","meaning":"Seek each partner's audible confirmation of each decision. One person's agreement on behalf of both is weaker evidence when a shared decision has actually been reached.","look":"The decision and separate confirmations or corrections from both clients.","na":"No decision is reached or this is not a couple meeting."}
+    ]
+  }
+]

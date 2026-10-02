@@ -1,0 +1,268 @@
+{
+  "id": "meeting-coach-behavioural-1.1",
+  "title": "Behavioural meeting review",
+  "meeting_categories": [],
+  "grading_method": "average",
+  "scale_min": 1,
+  "scale_max": 5,
+  "rubric_version": "meeting-coach-behavioural-1.1",
+  "active": true,
+  "scores": [
+    {
+      "id": "meeting-coach-behavioural-1.1:s1",
+      "scorecard_id": "meeting-coach-behavioural-1.1",
+      "position": 1,
+      "name": "Human before agenda",
+      "short_name": "Human",
+      "description": "Did the meeting open with the person rather than the portfolio? (Kinder / Mitch Anthony; Somers)",
+      "anchors": {
+        "low": "Numbers within the first minute, no check-in.",
+        "mid": "Brief check-in, then adviser-set agenda.",
+        "high": "Genuine opening conversation, and the client shaped the agenda."
+      },
+      "weight": 1,
+      "criteria": [
+        {
+          "id": "meeting-coach-behavioural-1.1:s1:c1",
+          "score_id": "meeting-coach-behavioural-1.1:s1",
+          "position": 1,
+          "text": "The adviser opened by asking how the client is doing, and engaged with the answer rather than treating it as a formality."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s1:c2",
+          "score_id": "meeting-coach-behavioural-1.1:s1",
+          "position": 2,
+          "text": "Life events mentioned by the client were acknowledged before moving to financials."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s1:c3",
+          "score_id": "meeting-coach-behavioural-1.1:s1",
+          "position": 3,
+          "text": "The client was asked what would make the meeting most useful to them, and the agenda reflected the answer."
+        }
+      ]
+    },
+    {
+      "id": "meeting-coach-behavioural-1.1:s2",
+      "scorecard_id": "meeting-coach-behavioural-1.1",
+      "position": 2,
+      "name": "Listening share",
+      "short_name": "Listening",
+      "description": "Anchored to the deterministic metrics; reflections as well as questions. (MI/OARS)",
+      "anchors": {
+        "low": "Adviser talk share 65% or more, or a monologue over 4 minutes.",
+        "mid": "Share 45-65%.",
+        "high": "Share 45% or below, with reflections and follow-ups that build on the client's own words."
+      },
+      "weight": 1,
+      "criteria": [
+        {
+          "id": "meeting-coach-behavioural-1.1:s2:c1",
+          "score_id": "meeting-coach-behavioural-1.1:s2",
+          "position": 1,
+          "text": "Per the computed metrics, the adviser spoke less than the client (or close to parity)."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s2:c2",
+          "score_id": "meeting-coach-behavioural-1.1:s2",
+          "position": 2,
+          "text": "The adviser's questions built on what the client had just said, rather than returning to a script."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s2:c3",
+          "score_id": "meeting-coach-behavioural-1.1:s2",
+          "position": 3,
+          "text": "The adviser used reflective listening - restating the client's meaning or feeling before responding - not only questions."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s2:c4",
+          "score_id": "meeting-coach-behavioural-1.1:s2",
+          "position": 4,
+          "text": "Long explanations were broken with checks rather than delivered as monologues."
+        }
+      ]
+    },
+    {
+      "id": "meeting-coach-behavioural-1.1:s3",
+      "scorecard_id": "meeting-coach-behavioural-1.1",
+      "position": 3,
+      "name": "Behavioural coaching moments",
+      "short_name": "Behavioural",
+      "description": "Naming anxiety before answering it, and rehearsing turbulence before it arrives. (Murray; Vanguard; Davies; Voss/NURSE)",
+      "anchors": {
+        "low": "Client anxiety met with a prediction or brushed past; no forward-looking coaching.",
+        "mid": "Reassurance given, plan referenced.",
+        "high": "Anxiety named before it was answered AND future turbulence rehearsed unprompted."
+      },
+      "weight": 1,
+      "criteria": [
+        {
+          "id": "meeting-coach-behavioural-1.1:s3:c1",
+          "score_id": "meeting-coach-behavioural-1.1:s3",
+          "position": 1,
+          "text": "When the client expressed worry, the adviser named the concern before answering it."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s3:c2",
+          "score_id": "meeting-coach-behavioural-1.1:s3",
+          "position": 2,
+          "text": "Reassurance was anchored to the client's plan and long-term evidence, not to predictions about markets, tax, or politics."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s3:c3",
+          "score_id": "meeting-coach-behavioural-1.1:s3",
+          "position": 3,
+          "text": "The adviser separated what is controllable from what is not, out loud."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s3:c4",
+          "score_id": "meeting-coach-behavioural-1.1:s3",
+          "position": 4,
+          "text": "Proactive inoculation: at some point the adviser rehearsed a future bad patch before it exists, rather than only reacting to raised fears."
+        }
+      ]
+    },
+    {
+      "id": "meeting-coach-behavioural-1.1:s4",
+      "scorecard_id": "meeting-coach-behavioural-1.1",
+      "position": 4,
+      "name": "Plain language",
+      "short_name": "Language",
+      "description": "Teach-back, borrowed from medical communication.",
+      "anchors": {
+        "low": "Jargon used repeatedly without translation.",
+        "mid": "Mostly plain, occasional unexplained terms.",
+        "high": "Every technical term translated at first use, and understanding tested by invitation, not assumption."
+      },
+      "weight": 1,
+      "criteria": [
+        {
+          "id": "meeting-coach-behavioural-1.1:s4:c1",
+          "score_id": "meeting-coach-behavioural-1.1:s4",
+          "position": 1,
+          "text": "Technical terms were either avoided or explained in ordinary words at first use."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s4:c2",
+          "score_id": "meeting-coach-behavioural-1.1:s4",
+          "position": 2,
+          "text": "Understanding was checked by inviting the client to say it back in their own words - teach-back, not just \"does that make sense?\"."
+        }
+      ]
+    },
+    {
+      "id": "meeting-coach-behavioural-1.1:s5",
+      "scorecard_id": "meeting-coach-behavioural-1.1",
+      "position": 5,
+      "name": "Agreements & adherence",
+      "short_name": "Agreements",
+      "description": "Adherence is designed, not hoped for. (Somers; shared decision-making)",
+      "anchors": {
+        "low": "Meeting ends without decisions restated.",
+        "mid": "Adviser summarises actions.",
+        "high": "Readback confirmed aloud, action load kept small, first step easy, obstacles anticipated."
+      },
+      "weight": 1,
+      "criteria": [
+        {
+          "id": "meeting-coach-behavioural-1.1:s5:c1",
+          "score_id": "meeting-coach-behavioural-1.1:s5",
+          "position": 1,
+          "text": "Every decision reached was restated by the adviser in one sentence, and the client audibly confirmed each."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s5:c2",
+          "score_id": "meeting-coach-behavioural-1.1:s5",
+          "position": 2,
+          "text": "Next steps were assigned out loud - what the adviser does, what the client does, and roughly by when."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s5:c3",
+          "score_id": "meeting-coach-behavioural-1.1:s5",
+          "position": 3,
+          "text": "The client's action load was kept deliberately small (roughly three items or fewer), with the first step easy and near-term."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s5:c4",
+          "score_id": "meeting-coach-behavioural-1.1:s5",
+          "position": 4,
+          "text": "Likely obstacles to follow-through were asked about or anticipated (\"what would get in the way of this?\")."
+        }
+      ]
+    },
+    {
+      "id": "meeting-coach-behavioural-1.1:s6",
+      "scorecard_id": "meeting-coach-behavioural-1.1",
+      "position": 6,
+      "name": "Anchored to their why",
+      "short_name": "Why",
+      "description": "Recommendations tied to what this client said they want. (Kinder; Mitch Anthony; Statman; Davies)",
+      "anchors": {
+        "low": "Recommendations justified only by product or tax logic.",
+        "mid": "Goals mentioned generically.",
+        "high": "Each material recommendation explicitly tied back to something this client said they want."
+      },
+      "weight": 1,
+      "criteria": [
+        {
+          "id": "meeting-coach-behavioural-1.1:s6:c1",
+          "score_id": "meeting-coach-behavioural-1.1:s6",
+          "position": 1,
+          "text": "Recommendations were linked out loud to the client's own stated goals, values, or life plans (\"because you said you want X...\"), not only to returns, tax, or product features."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s6:c2",
+          "score_id": "meeting-coach-behavioural-1.1:s6",
+          "position": 2,
+          "text": "The client's own words for what matters were used, not the adviser's substitutes."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s6:c3",
+          "score_id": "meeting-coach-behavioural-1.1:s6",
+          "position": 3,
+          "text": "Where a goal had shifted, the shift was surfaced before advice was given on it."
+        }
+      ]
+    },
+    {
+      "id": "meeting-coach-behavioural-1.1:s7",
+      "scorecard_id": "meeting-coach-behavioural-1.1",
+      "position": 7,
+      "name": "Both voices",
+      "short_name": "Voices",
+      "description": "Couples meetings only. Single-client meetings are not_assessable by definition.",
+      "anchors": {
+        "low": "One client near-silent and never drawn in.",
+        "mid": "Both spoke, but one clearly carried it.",
+        "high": "Shares within roughly 2:1, quieter partner directly invited, and each confirmed decisions individually."
+      },
+      "weight": 1,
+      "criteria": [
+        {
+          "id": "meeting-coach-behavioural-1.1:s7:c1",
+          "score_id": "meeting-coach-behavioural-1.1:s7",
+          "position": 1,
+          "text": "Per the computed metrics, speaking time between the two clients was reasonably balanced (worse than ~3:1 should pull down; better than ~2:1 supports a high score)."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s7:c2",
+          "score_id": "meeting-coach-behavioural-1.1:s7",
+          "position": 2,
+          "text": "The quieter partner was directly invited in by name at least twice, including on at least one substantive decision."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s7:c3",
+          "score_id": "meeting-coach-behavioural-1.1:s7",
+          "position": 3,
+          "text": "Goals questions were put to each partner individually, not only to the couple jointly."
+        },
+        {
+          "id": "meeting-coach-behavioural-1.1:s7:c4",
+          "score_id": "meeting-coach-behavioural-1.1:s7",
+          "position": 4,
+          "text": "Each decision was confirmed aloud by both, not by one on behalf of two."
+        }
+      ]
+    }
+  ]
+}

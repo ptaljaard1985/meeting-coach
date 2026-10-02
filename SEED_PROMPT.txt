@@ -1,0 +1,156 @@
+BUILD MEETING COACH — A SMALL PUBLIC TRANSCRIPT REVIEW TOOL
+
+You are Codex, designing and implementing a standalone application in /Users/pierretaljaard/meeting-coach. The owner is Pierre Taljaard, a financial adviser who already has a working meeting-review feature in his CRM. Extract its useful engine into a simple public tool. Build a working local MVP and verify it, rather than stopping at a proposal or mock-up.
+
+Read START_HERE.txt, HANDOFF_NOTES.txt and PRIVACY_AND_MODEL_NOTES.txt first. Then read only the relevant reference files. The historical CRM plan is background: the scope below supersedes its databases, history, dashboards, and Anthropic implementation. Do not modify /Users/pierretaljaard/crm or use its credentials or production data.
+
+1. PRODUCT AND SCOPE
+
+Working name: Meeting Coach. Intended users are financial advisers reviewing their own recorded meetings. It evaluates the adviser's communication and meeting craft. It does not certify compliance, assess investment suitability, judge clients, or generate client advice.
+
+The user explicitly chose public access with an API key HE funds. Do not turn the MVP into bring-your-own-key, an invitation-only service, or a registration funnel. There is no billing, saved history, CRM integration, audio transcription, meeting bot, team management, email sending, custom rubric editor, or trend dashboard in this version.
+
+Essential flow:
+1) Paste a speaker-labelled transcript into a large box on the home page.
+2) The browser parses it locally and asks which speaker is the adviser.
+3) The adviser checks a responsibility acknowledgement.
+4) Review meeting sends one bounded grading request.
+5) A results view shows scores, evidence and practical coaching.
+6) Download PDF creates a readable document locally in the browser.
+
+Use OpenAI for the first provider. Codex is the development agent, not the public grading service: do not run Codex CLI, expose a coding agent, or execute user-supplied code on the backend. Use an OpenAI Platform API key and a normal model request.
+
+2. USER EXPERIENCE
+
+Home page
+- Start with the tool itself: a clear title, one sentence explaining its purpose, and the transcript box. No marketing hero that pushes the form down the page.
+- Large, labelled multiline textarea with a short synthetic speaker-labelled example as its placeholder. Pasting must cause no transmission of transcript content.
+- Parse in the browser with a modest debounce or explicit local preview; show detected speakers, word count and whether timestamps are present. Handle long pastes without freezing the page.
+- Require explicit adviser selection from the detected labels. Never infer that the most talkative person is the adviser and never hardcode Pierre. Confirm which remaining speakers are clients; support a minimal role correction when someone is an assistant/observer. Do not count an observer as a spouse.
+- Optional meeting title, used locally in the report only. An optional known duration can improve estimates. Do not require names, email, company, client identity, or contact details.
+- Accept speaker blocks, Name: text, and pasted speaker-attributed VTT/SRT, using the existing parser. Plain unlabelled text and merged audio speakers cannot support this rubric; give a useful explanation, not fabricated speaker attribution. Generic labels such as Speaker 1 are acceptable when they actually identify separate speakers and the adviser confirms their role.
+- Suggested checkbox, initially unchecked:
+  "I take full responsibility for my decision to share this meeting transcript and the client data it contains. I confirm I have the authority and any required permissions to submit it to Meeting Coach and OpenAI for AI analysis."
+- Put a short factual disclosure next to the checkbox. Draft wording:
+  "Your transcript is sent through our server to OpenAI to create your review. Meeting Coach does not save transcripts or reviews. OpenAI's own data-handling terms apply. Download your review before closing or refreshing this page."
+  This is intended behavior, not a claim to publish before verifying the implementation and host settings. Link a concise privacy explanation. See the model/privacy note for qualifications.
+- A quiet reminder to remove unnecessary names, account numbers and other identifiers is enough. Do not add a long compliance form or claim automated anonymisation.
+- Disable Review meeting until input, speaker mapping and acknowledgement are valid. The server independently checks acknowledgement=true and its notice version; the checkbox is a declaration, not proof of client consent.
+- Show real states: checking input, reviewing, preparing results; elapsed time is fine. Do not invent percentage completion. Prevent double submissions. Cancel should abort the active request where possible and never promise to erase a provider request already accepted.
+- Keep the paste in memory after a recoverable failure. Errors explain the next action without exposing raw provider errors or transcript fragments.
+
+Results
+- A clear results page/state with overall score, the seven rubric categories, metrics, five takeaways, and expandable evidence per criterion. Put takeaways on screen as well as in the PDF; the CRM's PDF-only choice is not binding here.
+- Display each criterion's actual wording, verdict, rationale and quote with speaker plus real timestamp or segment reference. Render everything as text, not raw HTML.
+- Show unassessable categories as n/a, never zero. Identify metrics based on word counts as estimates. The question count is a count of turns ending in a question mark, not a comprehensive linguistic inventory.
+- Five takeaways: short title, a general lesson, and the concrete meeting example behind it. First takeaway describes something that worked. No redundant keep/try/drill section.
+- Prominent Download PDF and Clear and start again. No shareable result URL, result identifier that retrieves server content, autosave, or silent regrading. Repeated PDF downloads must not call the AI again.
+- Keep input/results in memory shared across the two UI states. A reload or fresh visit to a results URL yields a useful empty state. Do not persist to localStorage, sessionStorage, IndexedDB, URLs, cookies, service-worker caches, or browser history state. Ordinary non-content anti-abuse cookies may be used if required and documented.
+- Clear should release input/results and blob URLs. Account for back/forward cache so clearing cannot resurrect the previous meeting. Describe this as clearing the app session, not forensic erasure of browser or provider memory.
+
+Design
+- A calm, professional working tool, with readable type, generous space, restrained colour and an obvious hierarchy. Good on desktop and mobile; keyboard navigation, visible focus and accessible labels.
+- Prefer simple layouts and typographic score rows over a dashboard of decorative cards. Avoid stock finance photos, generic gradients, excessive badges and oversized hero copy.
+- Original CRM PDF source provides layout and information hierarchy ideas. The new product should say Meeting Coach, not Simple Wealth.
+- Use any design skill available in this Codex session when appropriate. Do not stop to ask for routine colour or spacing choices.
+
+3. ARCHITECTURE AND DATA LIFECYCLE
+
+Recommended default: TypeScript, React, Next.js App Router with a small Node route, Zod, the official OpenAI SDK, Vitest, and browser-based PDF generation. Use current compatible stable dependencies and commit a lockfile. No Supabase, ORM, transcript database, object storage or content queue. A simpler equivalent stack is acceptable if it preserves these boundaries; explain the choice once.
+
+Data path:
+browser memory -> HTTPS POST /api/review -> request-scoped server memory
+-> OpenAI Responses API -> server validation -> browser memory -> local PDF
+
+Because Pierre funds the shared API key, a server relay is necessary. The transcript does leave the browser when Review is pressed, and the application server processes it. Never claim the data stays only on the device, never reaches our servers, is end-to-end encrypted, or has zero retention everywhere.
+
+The server owns the rubric, prompt, model and token limits. Treat all browser inputs as untrusted. Send the raw transcript once plus role selection and required acknowledgement; reparse and recompute metrics server-side using shared pure code. Do not accept client-computed scores, a caller-selected model, arbitrary system prompts, provider URLs or cost settings.
+
+Keep content in request scope only. No module-level map of transcripts, filesystem dumps, database rows, response caches, logs of prompts or answers, analytics/session replay, exception attachments, tracing payloads, or APM request-body capture. Return no raw transcript in the API response. Results contain sensitive quotes too: they receive the same treatment as input.
+
+Use POST JSON, bounded streamed body reading (do not trust Content-Length alone), explicit no-store response headers, safe errors, HTTPS in production, and a restrictive practical CSP/referrer policy. Use a fixed provider destination. Same-origin and origin checks are useful but are not authentication or sufficient abuse protection.
+
+Self-host assets. No remote analytics, fonts, error reporters, or content-bearing fetches. A chosen bot-challenge service may load its script and process network/browser metadata, but must not receive transcript text; disclose that limited third party. Inspect the browser network flow.
+
+Draft a short privacy page that distinguishes: browser session state; transient host processing; no app transcript/review storage; minimal operational counters; AI-provider terms. Put host region, operator contact and any unresolved account-specific settings in the deployment notes, not invented facts. This is not legal certification. The responsibility declaration does not remove the operator's statutory obligations.
+
+4. GRADING ENGINE
+
+Port, do not reinvent, the useful parts of reference/crm/lib/transcripts/parse.ts, lib/scorecards/metrics.ts, and the rubric. Rework the judge to OpenAI while preserving its domain behavior.
+
+The prepared handoff/rubric-source-sw-behavioural-1.2.json is extracted from the actual SQL seed. handoff/rubric-meeting-coach-1.0.json changes only the one criterion's "what Pierre does" to "what the adviser does", assigns standalone IDs/version, and records provenance in its companion metadata. Use the standalone rubric as the initial immutable source in code; do not create SQL tables. Keep 7 scores, 25 criteria, scale 1–5, equal weights:
+1. Human before agenda
+2. Listening share
+3. Behavioural coaching moments
+4. Plain language
+5. Agreements & adherence
+6. Anchored to their why
+7. Both voices, applicable to a couple's meeting only
+
+Do not silently infer that any two speakers are a couple. Capture one client/couple/other meeting context simply when needed. S7 is not assessable outside the couple scope. Preserve English/Afrikaans/mixed-language capability of the source; write coaching in British English and quote original speech. The old SaaS exploration's English-only decision is not a requirement for this project.
+
+Compute talk share, question-turn count, uninterrupted spans, duration and client speaking balance in code. Keep the partial-diarisation quality gate. When removing observer speech from relevant metrics, retain the full conversation as judge context and test the role semantics; do not turn observer time into client speech or adviser time. Refuse unsupported attribution rather than reporting precise-looking wrong figures. Missing timestamps are allowed with clearly labelled word-based estimates. Never invent recording timestamps, including via distributeTimestamps(). If known duration is supplied without timestamps, it remains a total-duration fact, not evidence of where a sentence occurred.
+
+Judge defaults: gpt-6-astra, reasoning effort medium, standard mode; configurable server-side via REVIEW_MODEL/REVIEW_REASONING_EFFORT. GPT-6.1 Sol is the cost comparison candidate. Verify current model access and parameter support against official docs before a real smoke test. Do not automatically fall back to another model or provider. Do not blindly carry over temperature:0 or claim repeatability of AI scores; metric arithmetic is deterministic, model judgment is not.
+
+Use foreground Responses API with explicit store:false on every call, including retries. No background mode, Files API, conversations, provider-hosted tools, vector stores, web search, code execution, MCP, or agents runtime. This is a single structured grading task. Return structured JSON through the provider's strict JSON-schema mechanism, then run domain validation. Preserve the substantive instructions in the old judge, but use a new prompt version for the provider/schema/branding changes. Do not ask for hidden chain-of-thought; concise evidence-linked rationales are enough.
+
+Treat transcript content as quoted untrusted data. Instructions embedded in it do not change the rubric, reveal secrets, invoke tools or alter the output contract. Separate the trusted rubric/instructions from the transcript. Never interpolate transcript text into the output schema or schema names.
+
+Strengthen the extracted validator where it is incomplete:
+- Every score and each of its criteria appears exactly once, with correct parent-child IDs. No omissions, duplicates or invented IDs.
+- Assessable score values are finite and in 1–5; unassessable values are null. Recompute overall in code, excluding n/a. Return that recomputed value everywhere.
+- All five coaching entries contain a nonempty title, learning and example. Remove unused flags and legacy coaching shapes from the new schema rather than preserving unused fields forever; this requires a new prompt version.
+- Give parsed utterances stable request-local segment IDs. Evidence should reference a segment ID and contain a verbatim substring of its text. Resolve displayed speaker and timestamp from the source segment, not from model-generated metadata. Reject invented or mismatched quotes. Do not trim away disfluencies, merge separate utterances or pass a metric off as speech. A valid quote still does not prove the interpretation is sound: retain human calibration.
+- A criterion with no assessable evidence is n/a with an explanation. Missing opportunities are not failures. Where an actual missed opportunity is scored down, cite the relevant interaction.
+- Explicitly handle refusal, incomplete/truncated output, schema failure, provider errors and deadline expiry. Do not render partial JSON as a successful review.
+
+Allow at most one bounded correction attempt for invalid results, with concise safe error feedback. Both calls count against the quota. No automatic fallback or recursive retry loop. Configure SDK retries deliberately so hidden retries cannot exceed the documented attempt budget. Apply a real timeout/AbortSignal across provider calls; the CRM's elapsed-time check only controls whether a second attempt starts, not a hung first call.
+
+5. PUBLIC ACCESS AND SPEND CONTROL
+
+This is public and funded by the owner, so a hidden API key alone is insufficient. Keep the front page simple while implementing:
+- Server-side bot challenge verification or an equivalent host-provided gate on review submissions.
+- Per-origin/network abuse limits, modest concurrency, and a global daily model-call ceiling. Make limits configurable. Do not pretend IP addresses uniquely identify users; allow shared-office networks a reasonable allowance.
+- An atomic shared limiter/counter suitable for multiple server instances. It may store only short-lived pseudonymous limit keys, opaque request IDs and counters, never transcripts, transcript hashes, quotes or results. Set TTLs and disclose that this minimal operational state exists. An in-memory limiter is acceptable only for local development, not production.
+- Reserve allowance BEFORE every outbound AI call, including a correction attempt. Cap input and output tokens/bytes, account for billable reasoning, and document the resulting conservative maximum daily exposure at the chosen model/prices. A failed/ambiguous provider call can still cost money; do not refund its quota optimistically. Bound SDK retries or disable them.
+- Duplicate-submit protection without storing content; count limits atomically under parallel requests. A client-side disabled button is only UX.
+- Fail closed for paid calls in production if key, challenge or shared limiter configuration is absent. A synthetic demo can still work locally. Surface a friendly daily-limit message rather than a provider stack trace.
+
+Choose a lightweight managed counter and challenge adapter after checking host compatibility; do not build a general auth platform or silently provision paid services. Host/network access logs may retain IP metadata even with no app content logs. Verify deployed body/response capture settings before making privacy promises. Do not claim a dashboard budget alert is a hard spending cap without verifying its enforcement semantics.
+
+6. PDF DOWNLOAD
+
+Produce a genuine downloadable .pdf from the already received result, entirely in the browser. Prefer @react-pdf/renderer or an equivalent client library. Lazy-load the PDF code. Print / Save as PDF can be secondary; window.print() alone does not satisfy the requested Download PDF button.
+
+Use selectable text and local compatible fonts. The old template reads WOFF2 through node:fs, while react-pdf supports TTF/WOFF: it is reference material, not browser-ready code. Obtain appropriately licensed static fonts and include their licence, or start with built-in PDF fonts. No Chromium server or external PDF conversion service is necessary.
+
+Report content: Meeting Coach title, optional local meeting label, metrics with estimation caveats, all score summaries, the five complete takeaways, full criterion wording/verdict/evidence/rationale, and a small provenance footer (model, prompt/rubric versions, generated date and local report ID). Overall is the server-calculated value. State that this is adviser coaching, not a compliance certificate or client advice.
+
+Let the report run to as many A4 portrait pages as needed. No fixed one-page contract, no ellipsis that removes substantive reasoning, and no shrunken type to force a fit. Avoid orphan headings and split quotes where feasible, while allowing oversized blocks to wrap. Preserve Afrikaans characters. Use a neutral filename such as meeting-coach-review-YYYY-MM-DD.pdf. A saved PDF remains on the user's device after Clear; explain this in the privacy details.
+
+7. IMPLEMENTATION AND VALIDATION
+
+Suggested structure: app home/API routes; components for input/results; lib/transcripts, lib/metrics, lib/rubric, lib/review/schema, lib/review/judge, lib/server/limits; browser PDF components; synthetic fixtures/tests. Keep reference/ outside runtime imports, lint/build/typecheck and test discovery; its historical files are intentionally not a complete application.
+
+Start with a small vertical slice using synthetic data: paste -> local parse -> select speaker -> acknowledge -> mocked review -> results -> actual PDF. Then connect the real server adapter and public-use controls. Do not build only a polished mockup and declare success.
+
+Tests should cover meaningful behavior:
+- All parser formats, no timestamps, repeated timestamps, malformed text and substantial unparsed text. Do not silently grade a small parsed fragment of a larger unsupported transcript.
+- Golden arithmetic and the partial-diarisation failure; explicit adviser selection; solo/couple/observer behavior; missing or false acknowledgement; limits checked again on the server.
+- Unknown/duplicate/missing/wrong-parent rubric IDs, out-of-range scores, n/a exclusion, exact quote/segment matching, invalid coaching, refusal and truncated output.
+- Mocked provider requests prove store:false, server-owned settings, safe timeout/correction behavior, no external tools and bounded attempts.
+- Concurrent limiter tests prove daily allowance cannot be overshot; failures and retries cannot bypass it.
+- Browser flow proves no transcript network traffic before Review; no key in client bundles; no content in browser persistence or captured logs. PDF downloads make no server/provider request. Clear/reload/back navigation does not restore a cleared result.
+- PDF text extraction and visual page inspection for seven scores/25 criteria, long quotes, all takeaways, no clipped content, non-ASCII characters and a long report. Test actual generated PDFs, not only rendered React component trees.
+- Mobile/desktop and keyboard smoke tests; typecheck, lint, relevant tests and production build.
+
+Use synthetic transcripts for repository fixtures and screenshots. Never copy real client transcripts or PDFs from the CRM. A real model smoke test can use synthetic data once the owner has securely configured a dedicated API key; otherwise finish the mocked implementation and document exactly what remains untested. Do not search the CRM or Codex credential store for a key.
+
+Create a local calibration harness that can compare Astra and Sol on the same synthetic or explicitly authorised redacted examples. Keep it opt-in and out of normal CI/production traffic. Compare evidence fidelity, n/a decisions, usefulness and distinctness of coaching, agreement with adviser labels, latency and actual token usage. Neither brand reputation nor a syntactically valid schema proves grading quality. Avoid hosted evaluation datasets that would persist transcripts.
+
+8. DELIVERABLES AND WORKING STYLE
+
+Deliver the local working app, tests, synthetic examples, .env.example with placeholders, concise README/setup steps, short architecture/data-flow notes, draft privacy copy, and one practical deployment guide. Name unresolved launch inputs precisely: host, dedicated API project/key, challenge/counter credentials, domain/operator contact and account-specific retention settings. Do not let these block independent local implementation.
+
+No credentials in chat, commits or browser code. No deploying publicly, provisioning paid infrastructure, bulk paid evaluations or transmitting real client data as part of this initial build. Prepare a concrete preview and deployment instructions first. Ask only for decisions or access that genuinely block the next step; resolve routine implementation choices yourself. Report what runs, what was tested, and any remaining limitations plainly.
