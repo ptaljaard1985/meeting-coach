@@ -1,25 +1,36 @@
-MEETING COACH — CODEX HANDOFF
-Prepared 2 October 2026
+MEETING COACH — START THE NEXT SESSION HERE
+Updated 7 October 2026
 
-Open /Users/pierretaljaard/meeting-coach as a new project in Codex, then send:
+The standalone MVP is implemented. Do not start a new build or repeat the original extraction.
+It was pushed to https://github.com/ptaljaard1985/meeting-coach on main.
+Implementation baseline: fa3db03fb283a622074135854bf651d62b3c3ccf (2 October 2026).
+Documentation is refreshed for continuation on 7 October; check the latest main before new work.
+No live deployment, paid API smoke test or consultant calibration has been completed.
 
-Read SEED_PROMPT.txt, HANDOFF_NOTES.txt, and PRIVACY_AND_MODEL_NOTES.txt. Build the standalone Meeting Coach MVP described there, using reference/ as extraction material. Begin with a short implementation plan and then implement and verify it. This is a new project; do not modify the CRM. Complete the local working app before asking about hosting.
+NON-NEGOTIABLE: NEVER ACCESS OR MODIFY THE ACTUAL CRM.
+Do not read, search, run commands in, change or borrow credentials from /Users/pierretaljaard/crm.
+Only the already supplied reference/ files inside Meeting Coach are permitted reference material.
+They are excluded from Git and are not required to run the app.
+Do not run handoff/verify_bundle.py: it checks the original CRM automatically and assumes an old extraction-only directory.
 
-SEED_PROMPT.txt is the detailed build instruction. The other files explain the source material, model recommendation, privacy boundaries, and verification requirements.
+Read in this order:
+1. AGENTS.md — project boundaries and working rules.
+2. HANDOFF_NOTES.txt — current state, accepted decisions, next steps and environment limitations.
+3. README.md — run, verify, export/delete analytics and find the finished artifacts.
+4. PRIVACY_AND_MODEL_NOTES.txt — current provider and data lifecycle decisions.
+5. VERIFICATION.md — passed checks, dates and work still unverified.
+6. DEPLOYMENT.md for hosting; SCORING_REVIEW.md for consultant work; ARCHITECTURE.md for implementation details.
 
-User decisions already made:
-- Public tool, available to anyone. Pierre funds the API calls.
-- Home page: paste transcript, acknowledge responsibility, request a review.
-- Results page with a real Download PDF button.
-- Keep data in browser memory where possible; avoid saving transcripts or results.
-- Codex will design and build the tool. OpenAI API is acceptable and is the recommended first implementation.
+Continue with these accepted choices:
+- Seven sections, 24 criteria, rubric 1.1; the Afrikaans-specific criterion was removed.
+- English, Afrikaans and mixed-language meetings still use the same rubric.
+- Calm panel layout with Editorial colours and fonts. The owner is happy with the design for now.
+- Astra/medium/standard reviews; Sol 6.1/low fictional example generation, using a dedicated Platform API key.
+- Foreground requests, a 15-minute overall deadline, keep-page-open instructions, no background worker.
+- Numerical usage and scores retained until the owner deletes them; transcript text and written reviews stay transient.
 
-Recommendations in this handoff:
-- Grading: gpt-6-astra, medium reasoning, standard mode, calibrated against human judgment.
-- Lower-cost comparison: gpt-6.1-sol, medium reasoning.
-- Build agent: Codex using GPT-6.1 Sol; Astra is an option for difficult design/review work.
-- A server-side OpenAI Platform API key, foreground Responses API with store:false, browser PDF generation.
+Suggested prompt to paste into the next Codex session:
 
-This directory contains a handoff, not a runnable application. No credentials, live database exports, or real client transcripts were copied. Historical reference code still uses Anthropic and CRM imports; it must be adapted, not run as the new app. SOURCE_MANIFEST.json records provenance and hashes.
+Read AGENTS.md, START_HERE.txt, HANDOFF_NOTES.txt, README.md, PRIVACY_AND_MODEL_NOTES.txt and VERIFICATION.md. Continue the existing Meeting Coach MVP; do not rebuild it. Never access or modify the actual CRM. Preserve the accepted scoring, design and retention choices. Check the current GitHub main and local state, then work through the remaining live synthetic test, browser verification, consultant calibration and pilot deployment steps. If credentials or host access are missing, complete independent checks and identify the exact missing input without looking for credentials elsewhere.
 
-No production deployment or paid API requests were performed while preparing this bundle.
+SEED_PROMPT.txt is the maintained product brief, updated with the accepted changes. The source manifest and original handoff rubric JSON files preserve historical extraction provenance; they are not the operative scoring source. Use lib/rubric.json.

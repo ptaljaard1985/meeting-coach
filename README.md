@@ -1,5 +1,7 @@
 # Meeting Coach
 
+Documentation reviewed 7 October 2026. The local MVP is implemented and the implementation baseline was pushed to [GitHub main](https://github.com/ptaljaard1985/meeting-coach) as `fa3db03` on 2 October. Start a new session with [START_HERE.txt](START_HERE.txt) and [HANDOFF_NOTES.txt](HANDOFF_NOTES.txt). Live provider, hosted service and consultant calibration checks remain outstanding; the last full local verification was on 2 October.
+
 Standalone, public-access adviser communication coaching. No CRM integration, account registration or saved meeting history. Transcript text and written reviews are not stored; live requests can contribute private numerical usage and scoring records. The same rubric applies to English, Afrikaans and mixed-language meetings, with original-language quotes and British English coaching. The owner removed the Afrikaans-specific criterion; this does not restrict transcript languages.
 
 ## Run locally
@@ -29,7 +31,7 @@ npm run test:browser
 
 PDF verification needs Poppler (`pdftotext`, `pdftoppm`) and writes synthetic reports/page renders into ignored `tmp/pdfs/`. Browser tests use Brave on this Mac; set `PLAYWRIGHT_EXECUTABLE_PATH` to a compatible Chromium binary on another machine. They start the production app on port 3100. If a server already runs there, Playwright reuses it. This sandbox may block opening a port; starting `npm run dev -- --port 3100` from your own terminal allows visual inspection but browser checks should ultimately be repeated against a production build.
 
-Tests and runtime imports exclude `reference/` and `handoff/`. The supplied CRM extraction is reference material only. The actual CRM directory must never be accessed or changed. `handoff/verify_bundle.py` is a historical provenance utility: do not run its optional source-parity mode against the CRM.
+Tests and runtime imports exclude `reference/` and `handoff/`. The supplied CRM extraction is reference material only. The actual CRM directory must never be accessed or changed. **Do not run `handoff/verify_bundle.py`: it automatically accesses original CRM paths and assumes an extraction-only directory.** The historical reference hashes were checked separately using only the local extracted files. `lib/rubric.json` is the operative 24-criterion rubric; handoff JSON preserves the former 25-criterion extraction.
 
 The GitHub repository contains the standalone application, synthetic fixtures, handoff notes and finished design/scoring documents. The local `reference/` extraction is excluded from Git; it is not needed to build or run the app. The manifest and original handoff instructions describe historical local reference material.
 
@@ -70,6 +72,16 @@ Analytics are best effort: a storage failure does not discard a completed review
 
 The app is implemented for local use; live provider access, account retention settings and deployed challenge/counter/host behaviour require explicit verification before launch. See [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md) and [VERIFICATION.md](VERIFICATION.md).
 
+## Next steps
+
+1. Configure a dedicated OpenAI Platform key securely for a local live synthetic test. Verify both model IDs are available to that project.
+2. Generate several fictional meetings and review them; measure actual duration, returned usage, evidence quality and variation. Compare Astra and Sol using human labels before changing the default review model.
+3. Complete the interactive browser checks and a fresh dependency audit in an environment permitting browser/server access.
+4. Have the consultant review the scoring guide, particularly the listening-share anchor overlap; keep proposed changes out of the operative rubric until decided.
+5. Configure the pilot host, Turnstile and Redis, then verify long foreground requests, limits, private analytics export/deletion and host content-capture settings before opening live access. The discussed route is one Render web service; no service has been provisioned.
+
+The documentation and GitHub push do not imply a live site or completed API test. For the exact unresolved settings and known environment limitations, use [HANDOFF_NOTES.txt](HANDOFF_NOTES.txt).
+
 ## Calibration (paid; never normal CI)
 
 ```sh
@@ -81,3 +93,5 @@ npm run calibrate -- --allow-paid --labels tests/fixtures/human-labels.json
 This compares Astra and Sol on the **same supplied synthetic example**, with at most four calls. No hosted dataset is created. It reports actual token usage, latency, exact-evidence validation, n/a decisions and optional agreement with adviser labels. Rate coaching usefulness and semantic distinctness manually; unique titles alone cannot establish distinct ideas. Do not redirect real client content into this harness. The short example is a functional smoke test, not a quality benchmark.
 
 The selected design combines Calm's separated panels with Editorial's burgundy and warm cream palette, Fraunces headings and IBM Plex Sans body text. Open the [combined HTML preview](output/design/meeting-coach-combined-style.html) or the [three original options](output/design/meeting-coach-style-options.html) locally; both are self-contained and make no AI calls. The app self-hosts its fonts under their included OFL licences. PDF generation uses built-in Helvetica/Times fonts and no font download. Licence copies are in `public/licences/`.
+
+The scoring guide and HTML previews remain valid for rubric 1.1; they were prepared on 2 October and have not been redesigned for this documentation refresh. Guide verification requires Python `python-docx` and Poppler. Its builder writes the Word document; the matching PDF needs rendering/export and visual QA before replacing it. The design-options builder also needs `tmp/layout/demo-review.json` and a separate font cache currently configured under `/private/tmp/meeting-coach-design-fonts/`; this cache can disappear between sessions. The committed previews embed their fonts and remain usable without it. These artifact-building prerequisites do not affect the normal app build.

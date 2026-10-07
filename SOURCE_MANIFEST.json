@@ -2,7 +2,7 @@
   "prepared_on": "2026-10-02",
   "source_root": "/Users/pierretaljaard/crm",
   "source_git_commit": "667d57d91845b2fe55bffd853ad9f904d6ffe281",
-  "purpose": "Standalone extraction handoff, not a built app",
+  "purpose": "Historical 2 October extraction provenance; the implemented standalone app and continuation status are described in START_HERE.txt and HANDOFF_NOTES.txt.",
   "reference_files": [
     {
       "path": "reference/crm/lib/transcripts/parse.ts",
@@ -209,5 +209,34 @@
       "path": "handoff/verify_bundle.py",
       "sha256": "5b61d8951b750f25d0299e5003cd42011e5cc30e8e0b8a267e28fcbfaa2f8988"
     }
-  ]
+  ],
+  "historical_checksum_note": "The reference_files/generated_files hashes retain the original extraction checksums from 2 October. The root instruction documents were revised on 7 October; use current_document_sha256 for those current copies. Original source_root/source_path fields are provenance only and must never be accessed. Do not run handoff/verify_bundle.py.",
+  "current_project": {
+    "documentation_updated_on": "2026-10-07",
+    "implementation_baseline": "fa3db03fb283a622074135854bf651d62b3c3ccf",
+    "repository": "https://github.com/ptaljaard1985/meeting-coach",
+    "branch": "main",
+    "status": "Standalone MVP implemented and source pushed; live API, consultant calibration and website deployment not completed.",
+    "operative_rubric": "lib/rubric.json",
+    "rubric_version": "meeting-coach-behavioural-1.1",
+    "score_count": 7,
+    "criterion_count": 24,
+    "review_prompt_version": "meeting-coach-openai-2.2",
+    "notice_version": "2026-10-02.2",
+    "overall_timeout_ms": 900000,
+    "analytics_retention": "Until explicit operator deletion; no automatic expiry.",
+    "reference_files_in_git": false
+  },
+  "current_document_sha256": {
+    "AGENTS.md": "2f5f9bb91b1478880325de1813855b25496a812451ba9673ce7548dcaefbef70",
+    "START_HERE.txt": "2b463ff82967b488a1d8162e98648a00778300131f0336fcbdfc862a213faa14",
+    "HANDOFF_NOTES.txt": "3f761a684b0be906e10a30e06e92f3d0b14a4f8f1115f86e8ecd6ab3c593190c",
+    "SEED_PROMPT.txt": "947216db46ff26b0884179f4a41d27050b4cee76969c61866b0774e30bed7852",
+    "PRIVACY_AND_MODEL_NOTES.txt": "abb6de5479295c31569ce2901be89dab14bce035b1e4692a3b02062db33d9c52",
+    "README.md": "1bc70b9534f34d90bf40f17a61ea68b3d9563809f1a02f3ea29e7f0a1cc440e1",
+    "ARCHITECTURE.md": "0828da9c855bd4b06a47ff443525117afde24e90351208617ecc4f38b677cc3c",
+    "DEPLOYMENT.md": "a35763dac3427e4462e4e54853f828e5f9a2fe66ab3e5830c4b18cb104922354",
+    "VERIFICATION.md": "0090c33299800f8bb46a1fd953fad75944404e7bf8632f3a3e44cb1438241a48",
+    "SCORING_REVIEW.md": "54b4b22aa33942aa9e6d5eaa69138cb6a55638e6915663aa400c0ece7654e77c"
+  }
 }

@@ -1,5 +1,7 @@
 # Architecture and data lifecycle
 
+Source reviewed 7 October 2026 against GitHub implementation baseline `fa3db03`; this document describes implemented behaviour, not a deployed-service verification. See `HANDOFF_NOTES.txt` for continuation and `VERIFICATION.md` for outstanding live checks.
+
 TypeScript, Next.js App Router, React, Zod, official OpenAI SDK, Vitest and browser `@react-pdf/renderer`. The server relay is needed because the operator funds a shared key. No CRM, Supabase, ORM, transcript store, object storage, content queue or hosted eval dataset is used.
 
 ```text
@@ -26,6 +28,8 @@ PDF code is lazy-loaded and uses the received review. Blob URLs are released on 
 
 The operative rubric is version 1.1: all seven categories are retained, with 24 criteria after the owner removed the Afrikaans-specific criterion. The original handoff is preserved as provenance. Prompt `meeting-coach-openai-2.2` preserves English, Afrikaans and mixed-language review with original quotes and British English coaching. Responses `text.format` uses a strict JSON schema. Model judgment is not deterministic.
 
+The responsibility notice version is `2026-10-02.2`, reflecting the numerical analytics disclosure. The live review defaults to Astra/medium/standard; example generation uses Sol 6.1/low. All defaults and limits are server-owned. The app's current UI uses the accepted Calm panels, Editorial colours, Fraunces headings and IBM Plex Sans body text.
+
 Every category/criterion appears once under the right parent. Assessable values are 1–5; unassessable values are null with explanations. Assessable criteria require source-matched evidence. Quotes are exact substrings of one request-local segment, with speaker/time resolved from that source. A known duration never generates evidence timestamps. Overall is recomputed by the server and excludes n/a. Quotes being authentic does not prove a verdict is fair.
 
 The adapter has no tools, background requests, conversations, Files, web search or provider fallback. The SDK has `maxRetries:0`; one safe correction is possible for invalid output. Refusals, incomplete output, schema failure, provider errors and timeout do not render partial success. AbortSignal and a promise race bound a hung provider; accepted upstream work may still incur cost after cancellation.
@@ -51,3 +55,18 @@ The record is written before each model attempt, then updated after validated su
 Atomic writes use HSET, ZADD and PERSIST with **no expiry, pruning or automatic deletion**, matching the operator's retention choice. The Redis service must preserve data without eviction. The index uses equal scores and lexicographic cursor pagination for export. The operator-only CLI validates each exported row; it has no public API counterpart. Explicit deletion targets only the two analytics keys and leaves limiter controls intact. Disable collection and finish active requests before deletion to prevent later writes; external CSV exports have their own lifecycle. Clear resets the browser session and does not delete analytics.
 
 Official implementation references: [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [OpenAI data controls](https://developers.openai.com/api/docs/guides/your-data), [Turnstile server validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/), [Upstash EVAL](https://upstash.com/docs/redis/sdks/ts/commands/scripts/eval).
+
+## Files to inspect when continuing
+
+| Concern | Operative files |
+| --- | --- |
+| User flow, waiting and session reset | `components/Coach.tsx`, `components/WaitingNotice.tsx`, `components/Results.tsx` |
+| Transcript attribution and metrics | `lib/transcripts.ts`, `lib/roles.ts`, `lib/metrics.ts` |
+| Scoring and evidence contract | `lib/rubric.json`, `lib/review/prompt.ts`, `lib/review/schema.ts`, `lib/review/judge.ts` |
+| Fictional meetings | `lib/examples/prompt.ts`, `lib/examples/generate.ts` |
+| Request gates, deadlines and quotas | `lib/server/handler.ts`, `lib/server/example-handler.ts`, `lib/server/config.ts`, `lib/server/limits.ts` |
+| Private numerical records | `lib/analytics.ts`, `lib/server/analytics.ts`, `scripts/analytics.ts` |
+| Privacy and disclosure versions | `app/privacy/page.tsx`, `lib/constants.ts` |
+| Browser PDF | `lib/pdf.tsx`, `lib/report.ts`, `scripts/verify-pdf.tsx` |
+
+The original handoff rubric files and source manifest are historical extraction records. They must not override the current rubric, privacy notice or accepted owner decisions. Never run the historical extraction verifier against the CRM.

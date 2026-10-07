@@ -1,5 +1,7 @@
 # Scoring review: discussion draft
 
+Status reviewed 7 October 2026: the consultant has not yet supplied labels or approved rubric changes. The nine-page [PDF guide](output/documents/meeting-coach-scoring-guide.pdf) and [editable Word guide](output/documents/meeting-coach-scoring-guide.docx), prepared 2 October, explain the current seven sections and 24 criteria one section per page. All refinements below remain proposals.
+
 The owner confirmed that all seven sections should remain and requested a consultant guide to each section and its method. The Afrikaans-specific Plain language criterion was removed; the other 24 criteria remain. English, Afrikaans and mixed-language meetings use the same rubric, as required by the seed brief. The original handoff files remain as provenance.
 
 The current implementation retains the extracted categories while we review them. It has 24 criteria, a 1–5 category score, equal category weights and a server-calculated mean excluding n/a. The AI applies low/mid/high category anchors; criteria use Met / Partially met / Not met / Not assessable, with source evidence. Scores are model judgments, not arithmetic averages of the criterion verdicts.
@@ -24,3 +26,5 @@ Recommended method for discussion:
 - Calibrate on a small, varied set of synthetic or expressly authorised redacted meetings with adviser labels. Compare evidence fidelity, n/a fairness and coaching usefulness before adjusting weights or switching models.
 
 These are proposed refinements, not silent rubric changes. Replacing category names, criteria, anchors or aggregation requires a new rubric/prompt version and an explicit decision after this review.
+
+For the next session, first ask the consultant to review the guide and score a small, varied fictional meeting set independently. In particular, settle how the Listening share anchors apply at exactly 45% and 65% adviser share; the current boundaries overlap. Check solo/couple and missing-opportunity n/a decisions, evidence fidelity and usefulness of the five takeaways. Compare Astra and Sol on the same source only after live model access is configured. Record proposed changes separately, then update `lib/rubric.json`, prompt/provenance, tests and both guide formats together after the owner decides.

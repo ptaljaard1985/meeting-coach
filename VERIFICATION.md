@@ -1,6 +1,6 @@
 # MVP verification
 
-Recorded 2 October 2026. These checks use synthetic content only. The actual CRM directory was neither accessed nor changed.
+Documentation reviewed 7 October 2026. The checks below were performed on **2 October 2026**, using synthetic content only, for implementation baseline `fa3db03`. On 7 October the tracked workspace files were confirmed identical to that fetched GitHub baseline before documentation edits. No fresh full test suite, paid call, deployment or browser run is claimed by this documentation refresh. The actual CRM directory was neither accessed nor changed.
 
 ## Completed
 
@@ -36,4 +36,8 @@ python3 scripts/document/verify_guide.py
 npm run test:browser
 ```
 
-Use Node 24 LTS. PDF checks require Poppler. Paid calibration is separate and opt-in; see `README.md`. Do not run the historical handoff verifier against the CRM.
+Use the documented Node 24 LTS target. Report-PDF checks require Poppler; consultant-guide checks also require Python `python-docx`. Paid calibration is separate and opt-in; see `README.md`. **Do not run `handoff/verify_bundle.py`: it automatically accesses original CRM paths and assumes the pre-build extraction-only directory.** Preserve the source manifest as provenance; a check of extracted hashes must read only this project's local files.
+
+## Documentation and repository continuity
+
+The initial implementation was pushed to GitHub `main` on 2 October as `fa3db03fb283a622074135854bf651d62b3c3ccf`, including app source, tests, synthetic fixtures, design previews and scoring guide. The CRM extracts, credentials, analytics exports and temporary test/build files were excluded. A fresh checkout fetched on 7 October confirmed that baseline. `START_HERE.txt`, `HANDOFF_NOTES.txt` and `AGENTS.md` provide the restart path; historical 25-criterion handoff JSON must not replace the operative 24-criterion rubric.

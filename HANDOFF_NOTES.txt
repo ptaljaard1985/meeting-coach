@@ -1,3 +1,84 @@
+MEETING COACH — CURRENT SESSION HANDOFF
+Updated 7 October 2026
+
+STATUS AND REPOSITORY
+The standalone MVP is implemented locally and pushed to GitHub main:
+https://github.com/ptaljaard1985/meeting-coach
+Implementation baseline: fa3db03fb283a622074135854bf651d62b3c3ccf, pushed 2 October 2026.
+A fresh fetch on 7 October confirmed the tracked workspace files matched that baseline before this documentation refresh. Check the latest main for the subsequent documentation commit; do not pin continuation to the older commit.
+Workspace: /Users/pierretaljaard/meeting-coach. It currently has no .git repository. The prior /private/tmp/meeting-coach-repository checkout was cleaned between sessions and is no longer usable. The documentation work uses a fresh /private/tmp/meeting-coach-docs-20261007 checkout. Temporary directories are not durable; use a fresh checkout if needed, fetch before editing, compare workspace files and avoid overwriting remote changes. The GitHub push was authorised by the owner.
+No live site, paid infrastructure, real OpenAI call, real Redis analytics record or consultant calibration was completed in this work. GitHub source publishing is complete; website deployment remains pending.
+
+PERMANENT CRM BOUNDARY
+The owner repeated: never touch the CRM. Never read, search, execute or modify anything in /Users/pierretaljaard/crm; never borrow its keys or production data. The already extracted reference/ inside this workspace may be read, but is ignored by Git and never used by runtime/build/test imports. Do not run handoff/verify_bundle.py: source.is_file() and the following parity checks access original CRM paths automatically. It also assumes an extraction-only directory and is obsolete for this app. The source manifest is historical provenance, not a request to re-extract anything.
+
+ACCEPTED OWNER DECISIONS — PRESERVE THESE
+- Public adviser communication coaching, funded by the operator; no registration, billing, client advice, compliance certification, audio transcription or CRM integration.
+- Keep all seven sections. Remove the Afrikaans-specific Plain language criterion only. Operative lib/rubric.json is meeting-coach-behavioural-1.1 with 24 criteria; historical handoff JSON still has 25.
+- English, Afrikaans and mixed-language transcripts remain supported under the same rubric, with original-language evidence and British English coaching.
+- Keep the Calm layout with distinct panels and Editorial burgundy/cream colours, Fraunces headings and IBM Plex Sans body text. The owner accepted the design for now.
+- Keep the fictional example button beside the transcript box. Each live click gets a random variation and a different scenario from the preceding example. It targets 6,300–7,700 spoken words, roughly 45–55 minutes at a simulated 140 words/minute. Realism and variation still need live/human verification.
+- Reviews default to gpt-6-astra / medium reasoning / standard service. Examples use fixed gpt-6.1-sol / low reasoning. This is normal OpenAI Responses API inference, not a Codex coding-agent execution. Only a dedicated Platform project key is appropriate.
+- No fallback model/provider. Foreground background:false, store:false, SDK hidden retries disabled, at most one correction, both attempts counted.
+- Fifteen-minute overall request allowance including a correction; SDK/HTTP transport deadlines are aligned and routes declare 960 seconds of host headroom. The wait panel asks users to keep the page open and avoid refresh/navigation; Cancel remains available. No background worker is implemented.
+- Keep private numerical request/usage and scoring records UNTIL THE OWNER DELETES THEM. No automatic expiry or record cap. Store no transcript text, names, titles, quotes, written coaching, IP/network identifiers or submission/report IDs in analytics. No public analytics endpoint/dashboard has been requested.
+- The discussed inexpensive hosting route is one Render web service using its supplied subdomain. It was about US$7/month when checked 2 October, plus AI/service charges. Nothing is provisioned and final host/project/region is undecided. Recheck pricing and limits before purchase. Netlify's standard-function limit did not fit this foreground design; do not silently migrate to asynchronous storage/worker behaviour.
+
+WHAT IS IMPLEMENTED
+- Browser-local parsing of speaker blocks, inline labels and attributed VTT/SRT; explicit adviser/client/observer roles and one-client/couple/other context; deterministic metrics and attribution/coverage gates.
+- Bounded same-origin APIs with independent server validation, responsibility notice 2026-10-02.2, strict structured review validation and exact source-linked evidence. Server recalculates equal-weight overall excluding n/a; criteria verdicts are not an arithmetic category-score formula.
+- Seven score panels, 24 criteria, five complete coaching takeaways, local optional title and client-side PDF download from the existing result. No regrading on download, browser persistence or recoverable meeting history.
+- Synthetic offline preview with visibly hand-authored scores; arbitrary input is not graded in demo and the AI generator is disabled there.
+- Production fail-closed Turnstile + Upstash shared Redis limiter: 30 model calls/UTC day, 12 calls/network/hour, concurrency 3 by default. Reserve every outbound attempt; no optimistic refunds. Includes duplicate submission IDs and expiring leases.
+- Numerical analytics in mc:{analytics}:records and mc:{analytics}:index, separate from the expiring limiter keys. One record per accepted model request, updated for attempts/outcomes; sum returned correction usage, keep successful overall/seven category scores. Missing usage is marked incomplete; interrupted work may remain running. Writes are best effort, without content-bearing errors.
+- Operator-only CSV export/summary and explicit deletion commands. ANALYTICS_ENABLED=false stops future collection, not existing retention; let active requests finish before deletion if no later writes are wanted. Exported CSV copies have a separate lifecycle.
+- Consultant scoring guide: nine A4 pages, one per category plus introduction/method, matching PDF and editable Word. Scoring has not been calibrated or consultant-approved.
+
+ARTIFACTS AND OPERATIVE FILES
+- output/documents/meeting-coach-scoring-guide.pdf and .docx — current 7-section/24-criterion guide, prepared 2 October.
+- output/design/meeting-coach-combined-style.html — selected Calm/Editorial combination, self-contained.
+- output/design/meeting-coach-style-options.html — original three style options with transcript/results screens.
+- lib/rubric.json, lib/review/prompt.ts, lib/review/schema.ts, lib/review/judge.ts — operative scoring/provider contract; prompt meeting-coach-openai-2.2.
+- lib/examples/prompt.ts and generate.ts — fictional meeting contract; generation prompt version in that module.
+- lib/server/config.ts, handler.ts, example-handler.ts, limits.ts — gates, quotas and request deadlines.
+- lib/analytics.ts, lib/server/analytics.ts, scripts/analytics.ts — projection, Redis store and private commands.
+- app/privacy/page.tsx, lib/constants.ts, components/Coach.tsx — current disclosure and responsibility version.
+- scripts/document/verify_guide.py — safe consultant guide check using only app artifacts/rubric; this is different from the forbidden extraction verifier.
+
+VERIFICATION — KEEP THE DATES HONEST
+Full local checks were completed 2 October: 100 unit/component tests in seven files; TypeScript, ESLint and production build passed. Fake-clock tests cover a correction inside the shared 15-minute deadline; analytics tests cover strict projection, outcomes, returned usage, no expiry and safe export/deletion adapters.
+Report PDF content checks passed for standard seven-page and long fourteen-page reports. Consultant guide checks passed for nine pages, all seven categories/24 criteria/21 anchors, matching Word and PDF, with every page visually inspected.
+Offline actual SSR markup was inspected in Safari at 320/375/414/768 px for home/results/waiting: twelve fixtures, no horizontal overflow or clipped controls. These static fixtures do NOT prove hydrated interaction correctness.
+The full Playwright run was blocked by sandbox local bind EPERM and a blocked headless browser launch. An earlier dependency audit passed; Undici 7.28.0 was later installed from cache and a fresh audit remains pending. No key was supplied and no paid calls were made. No live model quality, 15-minute hosted transport, challenge/quota integration or Redis persistence test is claimed.
+This 7 October update checks documentation against the fetched source; it is not a new full runtime verification. See VERIFICATION.md for evidence and remaining checks.
+
+NEXT WORK, IN ORDER
+1. Confirm latest main/local state, read AGENTS.md and this handoff, preserve accepted decisions. Do not rebuild the app or repeat source extraction.
+2. Securely configure a dedicated OpenAI Platform key for a local synthetic smoke test; verify both configured model IDs and parameter support in that account. Do not search any unrelated credential store.
+3. Generate several fictional meetings and review them. Measure actual processing times, cost/usage, evidence accuracy, completeness, score usefulness and transcript variation. Do not substitute another model silently if access fails.
+4. Complete browser interaction checks in an environment that permits a server and browser: PDF, keyboard, cancellation, Clear, refresh, back/forward and mobile. Run a fresh dependency audit. Do not claim a static preview is a full browser test.
+5. Have the consultant review the scoring guide and independently label varied synthetic meetings. Resolve overlapping Listening share anchors at exactly 45%/65% and n/a fairness before treating scores as a benchmark. Compare Astra/Sol on the same inputs; proposed rubric changes require an explicit decision/version and updated guide/tests.
+6. Prepare a reviewable pilot deployment on the selected host. Securely configure Turnstile, Redis, fixed HTTPS APP_ORIGIN, LIMIT_KEY_SECRET and a VERIFIED host-overwritten TRUSTED_IP_HEADER. The template's x-vercel-forwarded-for is not verified for Render. Use public host binding/PORT from DEPLOYMENT.md.
+7. Check hosted long-request/cancellation behaviour, shared quotas, no body/content capture, numerical persistence/export/deletion in an isolated synthetic database, and Redis eviction/backup settings against retention until deletion. Complete operator/contact/region and actual account data-control disclosures before opening live access.
+No services have been provisioned or launch approval given by this docs request. Complete independent work when an input is missing; state the exact missing configuration rather than requesting secrets in chat.
+
+RUNBOOK AND ENVIRONMENT LIMITATIONS
+- Use the documented Node 24 LTS target; prior Mac checks ran under installed Node 25.5.0. npm dependencies are pinned by package-lock.json; do not upgrade them just to refresh documentation.
+- npm ci; copy .env.example to ignored .env.local; npm run dev for default no-cost synthetic demo at http://127.0.0.1:3000. npm start also binds to 127.0.0.1; deployment needs 0.0.0.0 and the host PORT.
+- npm run test; npm run typecheck; npm run lint; npm run build. npm run test:browser uses port 3100 and Brave on this Mac unless PLAYWRIGHT_EXECUTABLE_PATH is set. Browser binaries, bindings and tmp fixtures can disappear; inspect availability without assuming previous state.
+- npm run verify:pdf needs Poppler. python3 scripts/document/verify_guide.py also needs python-docx. Guide builder writes DOCX only; render/export the matching PDF and inspect pages before replacing artifacts.
+- npm run calibrate -- --allow-paid is separate, intentionally paid and limited to four calls on the same short synthetic fixture. The short fixture is a functional check, not a full quality benchmark. Do not run it as routine CI.
+- npm run analytics:export; optional -- --out output/analytics/reviews.csv. npm run analytics:delete -- --confirm-delete is an intentional operator action, not a normal test against production. Both need this project's Redis credentials; no public route exposes them.
+- scripts/preview-layout.tsx creates offline fixtures and tmp/layout/demo-review.json. The style-options builder requires that file and a separately installed font cache at /private/tmp/meeting-coach-design-fonts/node_modules/@fontsource; this path may be gone. Committed HTML embeds fonts and remains usable. Recreating the cache is only needed to rebuild the historical style options, not to build the app.
+- Git exclusions include actual environment files, numerical exports, reference/, node_modules/, .next/, tmp/, test results, tsbuildinfo, document locks and tool credential directories. Keep these exclusions.
+- Source manifest/reference hashes and handoff rubric JSON preserve original extraction; do not change their recorded source hashes to represent the current app or execute the old verifier.
+
+DOCUMENT AUTHORITY
+AGENTS.md + START_HERE.txt + this current section record session continuation and accepted owner decisions. README/ARCHITECTURE describe the app, SEED_PROMPT.txt is the maintained brief, PRIVACY_AND_MODEL_NOTES.txt records model/data choices, DEPLOYMENT.md carries unresolved launch inputs, VERIFICATION.md records dated evidence, SCORING_REVIEW.md separates proposals from implemented scoring. Operator/host/account-specific facts must be filled only when verified.
+
+HISTORICAL EXTRACTION NOTES — PRESERVED FROM 2 OCTOBER
+The following source map describes the already supplied extraction, not pending build tasks. The app now uses the strengthened OpenAI adapter and 24-criterion rubric. Any wording below about a future app or the former 25 criteria is historical. The original CRM must still never be accessed. The old verifier is forbidden, not an optional safe parity check.
+
 EXTRACTION NOTES — READ BEFORE COPYING CODE
 
 This bundle was prepared from /Users/pierretaljaard/crm at the commit recorded in SOURCE_MANIFEST.json. Each copied file's content hash is recorded because the CRM working tree also contains unrelated local changes. Those changes were not modified. This is a curated code reference, not a branch or full repository export.

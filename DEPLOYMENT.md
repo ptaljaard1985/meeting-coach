@@ -1,5 +1,7 @@
 # Deployment guide (prepared; not deployed)
 
+Status reviewed 7 October 2026: the implementation is on GitHub `main` (baseline `fa3db03`); no service, domain, live credentials or paid infrastructure has been configured in this work. The owner wants inexpensive hosting with room for long requests. The discussed route is one Render web service with a 15-minute app deadline; the final host/project/region still needs to be selected. Prices and host limits below were checked on 2 October, not refreshed on 7 October; recheck official sources before purchase.
+
 Suggested pilot host: **one small paid Render Node web service, currently about US$7/month**, using its included subdomain. No background worker is needed for the present foreground design. Render documents a 100-minute HTTP request limit, leaving room for the app's 15-minute deadline and 16-minute route headroom. Add Cloudflare Turnstile and Upstash Redis REST for live public access. Sources checked on 2 October 2026: [Render pricing](https://render.com/pricing), [Render request limit](https://render.com/docs/render-vs-vercel-comparison). Nothing has been provisioned. Confirm actual request/disconnect behaviour with a synthetic test on the chosen service.
 
 For Render, use Node 24 LTS, build with `npm ci && npm run build`, and start with `./node_modules/.bin/next start --hostname 0.0.0.0 --port "$PORT"`. The ordinary local `npm start` intentionally binds to 127.0.0.1; deployment must use the public binding and Render-assigned port. See [Render web service requirements](https://render.com/docs/web-services). The user must keep the browser page open and connected during a request. Refresh or navigation cannot recover a completed review because no meeting history is stored.
@@ -15,6 +17,8 @@ Netlify also supports the Next.js app and supplies a `*.netlify.app` address. It
 5. Verified proxy header handling. The provided `x-vercel-forwarded-for` assumption must be checked on Vercel; other hosts must overwrite an appropriate header and prevent direct untrusted access. Never trust arbitrary client `X-Forwarded-For`.
 6. Public operator contact/domain details, host region disclosure and approved privacy/terms copy. Add these to the privacy page before opening the real service.
 7. Account-specific provider retention/training/caching settings and host request/response capture settings.
+
+The default `TRUSTED_IP_HEADER=x-vercel-forwarded-for` is not a verified Render setting. Resolving which header the chosen host securely overwrites is an outstanding implementation/deployment check. Do not publish live mode with an unverified header assumption. No credentials should be added to documentation or commits.
 
 Set `REVIEW_MODE=live` and the required variables from `.env.example` as server secrets. Never expose the API key, counter token or challenge secret through `NEXT_PUBLIC_*`. Use the default Astra/medium/standard configuration unless an explicit calibration decision changes it. There is no automatic Sol or Anthropic fallback.
 
@@ -44,3 +48,13 @@ Sol pricing: [official model page](https://developers.openai.com/api/docs/models
 The SDK request uses `service_tier: default`, foreground `background:false`, `store:false`, medium reasoning and strict structured output, with no tools. `store:false` does not promise zero provider retention. Confirm actual OpenAI data controls, account exceptions and host retention before publishing privacy promises. Do not advertise legal compliance certification.
 
 Public deployment, paid provisioning and real-client submissions were not authorised in this build. Prepare a reviewable private preview first and obtain the operator’s launch decision.
+
+## Next-session rollout order
+
+1. Fetch current GitHub `main`, inspect local differences and preserve the accepted configuration. The documentation refresh itself does not deploy anything.
+2. Run a local live smoke test using fictional content and a securely configured dedicated Platform key; verify review and generation, returned usage and model access.
+3. Complete interactive browser checks and the dependency audit, then prepare the selected host's build/start configuration.
+4. Configure the host, fixed HTTPS origin, Turnstile, Redis and verified trusted proxy header. Keep all server credentials private.
+5. Exercise a long synthetic hosted request, cancellation/disconnect behaviour, shared quotas and a correction. Confirm the host does not end the request before the 15-minute app allowance.
+6. Verify analytics persistence and CSV export; test deletion only in an isolated synthetic database. Check no-expiry/eviction/backup behaviour against retention until deletion.
+7. Complete operator/region/privacy details and inspect host logging before the operator decides to open the live service. Record the URL, configuration choices and actual verification evidence in these docs.

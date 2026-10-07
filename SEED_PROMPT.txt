@@ -1,8 +1,9 @@
-BUILD MEETING COACH — A SMALL PUBLIC TRANSCRIPT REVIEW TOOL
+MEETING COACH — MAINTAINED PRODUCT BRIEF
+Updated 7 October 2026
 
-You are Codex, designing and implementing a standalone application in /Users/pierretaljaard/meeting-coach. The owner is Pierre Taljaard, a financial adviser who already has a working meeting-review feature in his CRM. Extract its useful engine into a simple public tool. Build a working local MVP and verify it, rather than stopping at a proposal or mock-up.
+The standalone application in /Users/pierretaljaard/meeting-coach is implemented and published as source to https://github.com/ptaljaard1985/meeting-coach, main. Continue the existing MVP; do not restart the build or extract the engine again. The implementation baseline is fa3db03 from 2 October; the latest documentation records subsequent owner decisions and next steps. Live AI, hosted-service and consultant calibration checks remain outstanding.
 
-Read START_HERE.txt, HANDOFF_NOTES.txt and PRIVACY_AND_MODEL_NOTES.txt first. Then read only the relevant reference files. The historical CRM plan is background: the scope below supersedes its databases, history, dashboards, and Anthropic implementation. Do not modify /Users/pierretaljaard/crm or use its credentials or production data.
+Read AGENTS.md, START_HERE.txt, HANDOFF_NOTES.txt, PRIVACY_AND_MODEL_NOTES.txt and VERIFICATION.md first. This brief records the current product contract; the original extraction and CRM plan are historical background. Never access, read, search, execute in or modify /Users/pierretaljaard/crm, or use its credentials or production data. Only relevant already supplied files in this project's local reference/ may be read. Do not run handoff/verify_bundle.py, which automatically checks original CRM paths and assumes an extraction-only directory.
 
 1. PRODUCT AND SCOPE
 
@@ -25,6 +26,7 @@ Use OpenAI for the first provider. Codex is the development agent, not the publi
 Home page
 - Start with the tool itself: a clear title, one sentence explaining its purpose, and the transcript box. No marketing hero that pushes the form down the page.
 - Large, labelled multiline textarea with a short synthetic speaker-labelled example as its placeholder. Pasting must cause no transmission of transcript content.
+- Keep the implemented Generate example meeting button beside the transcript box. In live mode it requests a fictional couple meeting on fixed gpt-6.1-sol/low through Responses API, with a fresh variation ID and a scenario different from the preceding example. Validate three participating speakers, 6,300–7,700 spoken words and the 64 KB cap, with clearly simulated timestamps at 140 words/minute. Generation receives no existing pasted content, local title or role mapping; failure/cancellation preserves that text. Demo mode disables paid generation. Verify realism and variation before claiming quality.
 - Parse in the browser with a modest debounce or explicit local preview; show detected speakers, word count and whether timestamps are present. Handle long pastes without freezing the page.
 - Require explicit adviser selection from the detected labels. Never infer that the most talkative person is the adviser and never hardcode Pierre. Confirm which remaining speakers are clients; support a minimal role correction when someone is an assistant/observer. Do not count an observer as a spouse.
 - Optional meeting title, used locally in the report only. An optional known duration can improve estimates. Do not require names, email, company, client identity, or contact details.
@@ -32,10 +34,11 @@ Home page
 - Suggested checkbox, initially unchecked:
   "I take full responsibility for my decision to share this meeting transcript and the client data it contains. I confirm I have the authority and any required permissions to submit it to Meeting Coach and OpenAI for AI analysis."
 - Put a short factual disclosure next to the checkbox. Draft wording:
-  "Your transcript is sent through our server to OpenAI to create your review. Meeting Coach does not save transcripts or reviews. OpenAI's own data-handling terms apply. Download your review before closing or refreshing this page."
+  "Your transcript is sent through our server to OpenAI to create your review. Meeting Coach does not save transcript text, quotes or written reviews. We keep numerical scores and usage statistics until the operator deletes them. OpenAI's own data-handling terms apply. Download your review before closing or refreshing this page."
   This is intended behavior, not a claim to publish before verifying the implementation and host settings. Link a concise privacy explanation. See the model/privacy note for qualifications.
 - A quiet reminder to remove unnecessary names, account numbers and other identifiers is enough. Do not add a long compliance form or claim automated anonymisation.
 - Disable Review meeting until input, speaker mapping and acknowledgement are valid. The server independently checks acknowledgement=true and its notice version; the checkbox is a declaration, not proof of client consent.
+- Keep the prominent wait panel during reviews and example generation: users should keep the page open and avoid refresh/navigation until completion, with Cancel available. The default/maximum overall allowance is 15 minutes including a correction; no background worker or recoverable meeting history is introduced.
 - Show real states: checking input, reviewing, preparing results; elapsed time is fine. Do not invent percentage completion. Prevent double submissions. Cancel should abort the active request where possible and never promise to erase a provider request already accepted.
 - Keep the paste in memory after a recoverable failure. Errors explain the next action without exposing raw provider errors or transcript fragments.
 
@@ -50,13 +53,14 @@ Results
 
 Design
 - A calm, professional working tool, with readable type, generous space, restrained colour and an obvious hierarchy. Good on desktop and mobile; keyboard navigation, visible focus and accessible labels.
+- The owner selected Calm's separated panel layout with Editorial burgundy/warm cream, Fraunces headings and IBM Plex Sans body text, and accepted it for now. Preserve this implemented design; do not reopen routine style selection during continuation. The combined and original option HTML files are in output/design/.
 - Prefer simple layouts and typographic score rows over a dashboard of decorative cards. Avoid stock finance photos, generic gradients, excessive badges and oversized hero copy.
 - Original CRM PDF source provides layout and information hierarchy ideas. The new product should say Meeting Coach, not Simple Wealth.
 - Use any design skill available in this Codex session when appropriate. Do not stop to ask for routine colour or spacing choices.
 
 3. ARCHITECTURE AND DATA LIFECYCLE
 
-Recommended default: TypeScript, React, Next.js App Router with a small Node route, Zod, the official OpenAI SDK, Vitest, and browser-based PDF generation. Use current compatible stable dependencies and commit a lockfile. No Supabase, ORM, transcript database, object storage or content queue. A simpler equivalent stack is acceptable if it preserves these boundaries; explain the choice once.
+Implemented stack: TypeScript, React, Next.js App Router with Node routes, Zod, the official OpenAI SDK plus request-local Undici transport, Vitest, and browser-based PDF generation. Preserve the pinned package-lock.json; do not upgrade dependencies just for a documentation refresh. No Supabase, ORM, transcript database, object storage or content queue is used. The shared Upstash Redis connection stores expiring limiter metadata and separate private numerical analytics.
 
 Data path:
 browser memory -> HTTPS POST /api/review -> request-scoped server memory
@@ -66,19 +70,19 @@ Because Pierre funds the shared API key, a server relay is necessary. The transc
 
 The server owns the rubric, prompt, model and token limits. Treat all browser inputs as untrusted. Send the raw transcript once plus role selection and required acknowledgement; reparse and recompute metrics server-side using shared pure code. Do not accept client-computed scores, a caller-selected model, arbitrary system prompts, provider URLs or cost settings.
 
-Keep content in request scope only. No module-level map of transcripts, filesystem dumps, database rows, response caches, logs of prompts or answers, analytics/session replay, exception attachments, tracing payloads, or APM request-body capture. Return no raw transcript in the API response. Results contain sensitive quotes too: they receive the same treatment as input.
+Keep meeting content in request scope only. No module-level map of transcripts, filesystem dumps, content database rows, response caches, prompt/answer logs, content analytics/session replay, exception attachments, tracing payloads or APM request-body capture. Return no raw transcript in the review API response. Results contain sensitive quotes too: they receive the same treatment as input. The owner separately approved numerical usage and score metadata, retained until explicit deletion as specified below.
 
 Use POST JSON, bounded streamed body reading (do not trust Content-Length alone), explicit no-store response headers, safe errors, HTTPS in production, and a restrictive practical CSP/referrer policy. Use a fixed provider destination. Same-origin and origin checks are useful but are not authentication or sufficient abuse protection.
 
-Self-host assets. No remote analytics, fonts, error reporters, or content-bearing fetches. A chosen bot-challenge service may load its script and process network/browser metadata, but must not receive transcript text; disclose that limited third party. Inspect the browser network flow.
+Self-host assets. No third-party browser analytics/session replay, remote fonts or content-bearing error reporters. The private server-side numerical Redis log is allowed under its strict schema; it never receives meeting text or identifiers. Turnstile may load its script and process network/browser metadata, but must not receive transcript text; disclose that limited third party. Inspect the browser network flow.
 
-Draft a short privacy page that distinguishes: browser session state; transient host processing; no app transcript/review storage; minimal operational counters; AI-provider terms. Put host region, operator contact and any unresolved account-specific settings in the deployment notes, not invented facts. This is not legal certification. The responsibility declaration does not remove the operator's statutory obligations.
+Maintain the implemented privacy page distinguishing browser session state, transient host processing, no app transcript/written-review storage, expiring operational counters, private numerical analytics until deletion, and AI-provider terms. The current notice version is 2026-10-02.2. Put unresolved host region/operator/account inputs in deployment notes until verified. This is not legal certification; the responsibility declaration does not remove the operator's duties.
 
 4. GRADING ENGINE
 
-Port, do not reinvent, the useful parts of reference/crm/lib/transcripts/parse.ts, lib/scorecards/metrics.ts, and the rubric. Rework the judge to OpenAI while preserving its domain behavior.
+The useful parser, metrics and domain rules have already been implemented in lib/. Maintain the strengthened OpenAI judge and inspect relevant supplied reference/ only when necessary; do not perform another extraction or reconnect CRM modules.
 
-The prepared handoff/rubric-source-sw-behavioural-1.2.json is extracted from the actual SQL seed. handoff/rubric-meeting-coach-1.0.json changes only the one criterion's "what Pierre does" to "what the adviser does", assigns standalone IDs/version, and records provenance in its companion metadata. Use the standalone rubric as the initial immutable source in code; do not create SQL tables. Keep 7 scores, 25 criteria, scale 1–5, equal weights:
+The handoff source/standalone rubric JSON files preserve the original 25-criterion extraction and one adviser-name generalisation. They are historical provenance, not current scoring instructions. The owner removed the Afrikaans-specific Plain language criterion and retained all seven sections. Use operative lib/rubric.json, meeting-coach-behavioural-1.1, with 24 criteria, scale 1–5 and equal category weights; do not restore the removed criterion or create SQL tables:
 1. Human before agenda
 2. Listening share
 3. Behavioural coaching moments
@@ -105,7 +109,7 @@ Strengthen the extracted validator where it is incomplete:
 - A criterion with no assessable evidence is n/a with an explanation. Missing opportunities are not failures. Where an actual missed opportunity is scored down, cite the relevant interaction.
 - Explicitly handle refusal, incomplete/truncated output, schema failure, provider errors and deadline expiry. Do not render partial JSON as a successful review.
 
-Allow at most one bounded correction attempt for invalid results, with concise safe error feedback. Both calls count against the quota. No automatic fallback or recursive retry loop. Configure SDK retries deliberately so hidden retries cannot exceed the documented attempt budget. Apply a real timeout/AbortSignal across provider calls; the CRM's elapsed-time check only controls whether a second attempt starts, not a hung first call.
+Allow at most one bounded correction attempt for invalid results, with concise safe error feedback. Both calls count against the quota. No automatic fallback or recursive retry loop. Keep SDK maxRetries:0 and the implemented shared 900,000 ms deadline across attempts, with matching SDK and HTTP headers/body deadlines and request-local socket cleanup. Routes declare maxDuration=960 for surrounding work; the host must separately allow this. A shorter configuration is possible; do not silently exceed the 15-minute maximum or restart the deadline for a correction.
 
 5. PUBLIC ACCESS AND SPEND CONTROL
 
@@ -118,6 +122,10 @@ This is public and funded by the owner, so a hidden API key alone is insufficien
 - Fail closed for paid calls in production if key, challenge or shared limiter configuration is absent. A synthetic demo can still work locally. Surface a friendly daily-limit message rather than a provider stack trace.
 
 Choose a lightweight managed counter and challenge adapter after checking host compatibility; do not build a general auth platform or silently provision paid services. Host/network access logs may retain IP metadata even with no app content logs. Verify deployed body/response capture settings before making privacy promises. Do not claim a dashboard budget alert is a hard spending cap without verifying its enforcement semantics.
+
+The implemented adapters are Cloudflare Turnstile and Upstash Redis REST/EVAL. Defaults are 30 funded model attempts per UTC day across review/generation, 12 per network/hour and concurrency 3. Hosting remains unprovisioned; one Render web service was discussed. Verify the host's trusted IP header, public binding and long-request behaviour rather than assuming the template's Vercel header works there.
+
+Private numerical analytics are an explicit owner-approved addition: record independent analytics IDs, dates, processing times, request type, model/prompt/rubric versions, fixed outcomes, model attempts and returned numerical usage; successful reviews add overall and seven category scores. Exclude names, titles, transcript text, quotes, written coaching, raw errors, IP/network identifiers and submission/report IDs. Demo/rejected submissions are excluded. Retain until the owner explicitly deletes them, with no automatic expiry or record cap. Keep private server-credential CSV export/deletion only; no public dashboard. Analytics storage failure must not discard a validated review. Missing usage is incomplete, not zero-cost. Keep the persistent analytics keys separate from the expiring limiter keys, verify Redis persistence/capacity/eviction, and disclose that Clear does not delete analytics.
 
 6. PDF DOWNLOAD
 
@@ -142,7 +150,7 @@ Tests should cover meaningful behavior:
 - Mocked provider requests prove store:false, server-owned settings, safe timeout/correction behavior, no external tools and bounded attempts.
 - Concurrent limiter tests prove daily allowance cannot be overshot; failures and retries cannot bypass it.
 - Browser flow proves no transcript network traffic before Review; no key in client bundles; no content in browser persistence or captured logs. PDF downloads make no server/provider request. Clear/reload/back navigation does not restore a cleared result.
-- PDF text extraction and visual page inspection for seven scores/25 criteria, long quotes, all takeaways, no clipped content, non-ASCII characters and a long report. Test actual generated PDFs, not only rendered React component trees.
+- PDF text extraction and visual page inspection for seven scores/24 criteria, long quotes, all takeaways, no clipped content, non-ASCII characters and a long report. Test actual generated PDFs, not only rendered React component trees.
 - Mobile/desktop and keyboard smoke tests; typecheck, lint, relevant tests and production build.
 
 Use synthetic transcripts for repository fixtures and screenshots. Never copy real client transcripts or PDFs from the CRM. A real model smoke test can use synthetic data once the owner has securely configured a dedicated API key; otherwise finish the mocked implementation and document exactly what remains untested. Do not search the CRM or Codex credential store for a key.
@@ -154,3 +162,7 @@ Create a local calibration harness that can compare Astra and Sol on the same sy
 Deliver the local working app, tests, synthetic examples, .env.example with placeholders, concise README/setup steps, short architecture/data-flow notes, draft privacy copy, and one practical deployment guide. Name unresolved launch inputs precisely: host, dedicated API project/key, challenge/counter credentials, domain/operator contact and account-specific retention settings. Do not let these block independent local implementation.
 
 No credentials in chat, commits or browser code. No deploying publicly, provisioning paid infrastructure, bulk paid evaluations or transmitting real client data as part of this initial build. Prepare a concrete preview and deployment instructions first. Ask only for decisions or access that genuinely block the next step; resolve routine implementation choices yourself. Report what runs, what was tested, and any remaining limitations plainly.
+
+9. CONTINUATION STATUS
+
+The initial local build and GitHub source push are complete. The owner also requested the consultant guide (output/documents/, nine pages, one page per section), fictional example generator, accepted combined design, 15-minute wait flow and numerical analytics until deletion; all are implemented. The last full local verification was 2 October: 100 tests across seven files, typecheck/lint/build and PDF/document checks passed, with twelve offline responsive fixtures. Full interactive browser, fresh post-Undici dependency audit, authorised live synthetic model checks, consultant calibration, hosted long requests and real Redis/Turnstile integration remain pending. Do not represent static previews as hydrated browser tests or source publishing as a deployed site. Use HANDOFF_NOTES.txt and VERIFICATION.md for the next action and update dated evidence when checks are actually run.

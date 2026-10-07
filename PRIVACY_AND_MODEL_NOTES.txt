@@ -1,60 +1,52 @@
-MODEL AND DATA-HANDLING DECISIONS
-Checked against official sources on 2 October 2026. Recheck before deployment.
+CURRENT MODEL AND DATA-HANDLING DECISIONS
+Documentation updated 7 October 2026; implementation baseline fa3db03.
+Read START_HERE.txt and HANDOFF_NOTES.txt for continuation. The app is implemented locally and on GitHub; live account/host behaviour remains unverified.
 
-1. WHICH MODEL AND WHICH KEY
+1. CURRENT MODEL CONTRACT
+Reviews default to gpt-6-astra, medium reasoning, standard service. This is the owner's current baseline, not a measured quality win. The server permits an explicit gpt-6.1-sol review setting for calibration; it never automatically falls back.
+Fictional 45–55-minute example generation is implemented separately on fixed gpt-6.1-sol with low reasoning. It sends no pasted transcript, meeting title or speaker mapping. A fresh variation and changed preceding scenario support diversity; realism and variation still need live/human verification.
+Both routes use foreground Responses API with strict JSON schema, background:false and store:false. SDK retries are disabled; one correction is allowed and both attempts count against the shared quota. The default/maximum overall allowance is 900000 ms (15 minutes), shared across corrections, with matching SDK/HTTP transport settings. Routes declare 960 seconds; the host must independently support that duration. Keep the wait panel and Cancel.
+Use a dedicated OpenAI Platform project API key in server secrets. Never use the CRM's key, Codex session/subscription credentials or an unrelated credential store. No dedicated key was supplied or paid API request made in this work. Documentation model IDs do not establish project access; verify access and request parameters with an authorised synthetic smoke test. Normal generation/inference does not run the Codex coding agent.
 
-Recommendation for the initial grading baseline: gpt-6-astra, reasoning effort medium, standard mode. This is a quality-first starting point, not a measured win on this rubric. OpenAI's evaluation guide recommends Astra for strong model judges and comparison against human labels before optimizing. Keep a local opt-in calibration harness; no provider-hosted transcript evaluation dataset is needed.
-Source: https://developers.openai.com/api/docs/guides/evaluation-best-practices
+2. DATED COST ESTIMATES, NOT MEASURED COSTS
+The following standard prices were checked on 2 October 2026 and were not rechecked for this 7 October documentation refresh (USD per million tokens):
+Model         Input   Cached read   Cache write   Output
+GPT-6 Astra   10.00       1.00          12.50        50.00
+GPT-6.1 Sol    2.00       0.10           2.50        10.00
+An illustrative 20000 ordinary uncached input plus 10000 billed output tokens gives US$0.70 Astra or US$0.14 Sol, before premiums, tax or additional attempts. Output includes reasoning. These are arithmetic examples, not actual meeting prices. Recheck prices before spending decisions and measure returned usage/latency on real synthetic runs. DEPLOYMENT.md contains conservative technical exposure bounds for the existing caps, not billing guarantees.
+Sources to recheck:
+https://developers.openai.com/api/docs/models/gpt-6-astra
+https://developers.openai.com/api/docs/models/gpt-6.1-sol
 
-GPT-6.1 Sol is the lower-cost candidate for later production grading and a reasonable Codex build model. Start Codex with medium reasoning; a higher setting can be useful for demanding review. The public app's model and the development agent's model are independent choices.
-Source: https://developers.openai.com/api/docs/guides/model-selection
+3. IMPLEMENTED APPLICATION DATA LIFECYCLE
+- Paste/edit/parse happen in browser memory; paste does not transmit transcript content.
+- Review sends transcript/roles through the hosting server to OpenAI. The optional title stays local.
+- Transcript text, parsed segments, evidence, explanations and written coaching stay request-scoped on the server, then in active browser memory. No transcript/review content database, file archive, log, cache or recoverable meeting history is implemented.
+- The browser creates a selectable-text PDF from the received review; download does not regrade or contact an external PDF converter. A downloaded file stays on the device.
+- Navigation, Clear and page lifecycle handling release app session/download state. This is not forensic erasure and cannot retract accepted upstream work. Cancel attempts to abort but an accepted call can still be processed/billed.
+- Production's shared abuse limiter retains short-lived pseudonymous network keys, opaque submission/call IDs and counters. Those expiring keys are distinct from the numerical analytics below.
+- Host logs and Turnstile may retain network/operational metadata. The app sends no transcript text to Turnstile. Actual host body/response capture must be checked before launch.
 
-Published standard token prices checked today, USD per one million tokens:
-Model          Input    Cached read    Cache write    Output
-GPT-6 Astra    10.00        1.00          12.50         50.00
-GPT-6.1 Sol     2.00        0.10           2.50         10.00
+4. OWNER-APPROVED NUMERICAL ANALYTICS — UNTIL DELETED
+The owner requested request counts, timings and scores for their own analyses, then chose retention "until i delete them". This is an explicit exception to the original blanket no-result-storage wording: keep numerical metadata, never meeting text or written reviews.
+With ANALYTICS_ENABLED=true and project Redis credentials, accepted live AI requests record an independent random analytics ID, start/finish dates, server processing duration, review/example type, configured model, prompt/rubric versions, fixed outcome, model-call attempts and returned numerical token counts. A successful validated review also contributes its overall and seven category scores. There are no names, titles, transcript text, quotes, coaching, raw errors, IP/network identifiers or submission/report IDs. Demo and rejected submissions are excluded.
+Records use mc:{analytics}:records and mc:{analytics}:index in the existing Upstash service. Writes remove expiry and have no automatic cleanup or record cap. Keep records until explicit operator deletion; verify Redis persistence, capacity, eviction and backup lifecycle accordingly. There is no public analytics endpoint or dashboard.
+Commands with server credentials:
+  npm run analytics:export
+  npm run analytics:export -- --out output/analytics/reviews.csv
+  npm run analytics:delete -- --confirm-delete
+Deletion targets only analytics keys, not quota/duplicate protections. ANALYTICS_ENABLED=false stops future collection without deleting old records. Let active requests finish before deletion to avoid subsequent writes. Clear does not delete these records. Exported CSV copies must be handled separately.
+Analytics are best effort; storage failure does not discard a completed review. A running record may indicate interruption. A request can have two model attempts, and a failed call may lack usage; usageComplete=false prevents treating missing usage as zero cost. This is operational analysis, not an exact billing ledger. No live numerical records have been collected in this verification work.
+Responsibility notice version 2026-10-02.2 includes the changed numerical retention disclosure. Future material disclosure changes need a notice-version update alongside the UI/privacy text.
 
-At an illustrative 20,000 input plus 10,000 total billed output tokens, ordinary uncached rates give $0.70 for Astra and $0.14 for Sol, before cache-write or other premiums. These are arithmetic examples, not measured per-meeting costs. Billable output includes reasoning; retries add cost. Long-context and service-tier pricing can differ. Measure the real prompt plus schema plus transcript and actual usage before publishing any price estimate.
-Sources: https://developers.openai.com/api/docs/models/gpt-6-astra
-         https://developers.openai.com/api/docs/models/gpt-6.1-sol
-
-Use a dedicated OpenAI Platform project API key (OPENAI_API_KEY). Codex can authenticate using a Platform key, but a Codex subscription/session credential or Codex access token is not the credential for this website's general inference requests. Do not read ~/.codex/auth.json or put Codex behind the public endpoint. Keep the server key out of browser bundles and NEXT_PUBLIC_* variables.
-Source: https://learn.chatgpt.com/docs/auth
-
-Use Responses API with strict structured output. JSON-schema conformance does not prove the evidence, score, speaker attribution or interpretation is correct; validate those in application code. Handle refusal and incomplete output explicitly. Confirm the installed SDK's current Responses schema syntax before implementing it.
-Source: https://developers.openai.com/api/docs/guides/structured-outputs
-
-2. WHAT THE PRIVACY PROMISE CAN SAY
-
-OpenAI API data is not used for model training by default unless the customer opts in. Explicit store:false disables stored response state; it is not zero data retention. Abuse-monitoring content is normally retained up to 30 days, with stated exceptions. Provider prompt caching can also retain encrypted technical state. Special retention controls require eligibility/configuration and have endpoint/model limitations. Use foreground text requests; do not enable background mode or content-storing features for this MVP. Do not claim zero provider retention without confirming the actual account, model and feature arrangement.
+5. OPENAI AND HOST RETENTION ARE SEPARATE
+Official OpenAI data controls were read again on 7 October 2026. API data is not used for training unless opted in. store:false disables stored response state; it does not enable Zero Data Retention. Abuse-monitoring content may normally remain for up to 30 days, with exceptions. Prompt caching and other features have separate retention rules. Special controls depend on account approval and configuration. Do not promise zero provider retention without verifying the actual project/model settings.
 Source: https://developers.openai.com/api/docs/guides/your-data
+Before live launch, document actual account data controls, hosting provider/region, logging and operator contact. The hosted-service checks have not been performed. Keep the responsibility declaration concise: it states authority to submit; it is not proof of client consent, transfer of operator duties or a compliance certificate. Appropriate operator/privacy review remains a launch input, not permission to invent legal conclusions or build a compliance platform.
 
-Proposed application behavior, to be verified by implementation and hosting checks:
-- Paste, edit and parse happen in browser memory before submission.
-- Submission sends the transcript through the hosting server to OpenAI over HTTPS.
-- The app intentionally writes no transcript/review content to persistent storage or logs.
-- The response stays in the browser session; the PDF is generated locally.
-- The downloaded PDF persists on the user's device. Clear cannot delete that file or a request already processed by OpenAI.
-- An abuse limiter stores limited expiring metadata/counters; the host and optional challenge provider may retain operational/network metadata. These are separate from transcript storage and must be described accurately.
-- No recoverable meeting history is offered. No claim of secure memory erasure is made.
-
-3. THE RESPONSIBILITY CHECKBOX
-
-The checkbox should declare the adviser's authority and responsibility for their submission. It cannot serve as a blanket transfer of the tool operator's legal obligations or proof of client consent. As a practical inference from POPIA, transient processing is still processing; relevant duties can include lawful purpose, safeguards, operator arrangements and cross-border conditions. Which party has which role depends on the actual operation and contracts. Keep the UI concise and obtain appropriate local review of the operator notice/terms before opening the real service. Do not advertise "POPIA compliant" based on an implementation choice or disclaimer alone.
-Source: Protection of Personal Information Act 4 of 2013, especially definitions and sections 8, 11, 15, 19–21 and 72:
-https://www.justice.gov.za/legislation/acts/2013-004.pdf
-
-This note identifies design implications; it is not a legal opinion or a demand to build a compliance platform. The task is to implement minimal data retention and truthful wording, not add a compliance obstacle course.
-
-4. IF ANTHROPIC IS REVISITED LATER
-
-The original CRM uses Opus 4.6 with prompt v1.4. Anthropic's commercial API content is not used for model training by default; opt-ins/feedback can change that. Its standard API input/output retention is within 30 days, with exceptions, and special arrangements/features can differ. Covered-model rules can affect ZDR. Do not automatically send a failed OpenAI request to Anthropic: a provider change changes disclosure and data recipients.
-Sources: https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training
-         https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data
-         https://platform.claude.com/docs/en/manage-claude/api-and-data-retention
-
-5. PDF IMPLEMENTATION REFERENCE
-
-The existing HTML/Puppeteer renderer is not browser-ready. react-pdf supports browser document generation; its documented custom font formats are TTF and WOFF. The old CRM font assets are WOFF2, so do not copy them blindly. Generate selectable text from the current result, bundle compatible fonts with licences, and make no server request on download.
-Sources: https://react-pdf.org/docs/v4/advanced
-         https://react-pdf.org/docs/v4/fonts
+6. BOUNDARIES AND REMAINING CHECKS
+Never access or modify the actual CRM, its credentials or client content. Read only supplied reference/ inside this project when necessary; never run handoff/verify_bundle.py, which automatically checks original CRM paths.
+The historical Anthropic adapter is reference material only. No Anthropic fallback, provider-hosted tools, Files/conversations, content queues or hosted evaluation datasets are implemented. Changing provider, storage or background behaviour requires an explicit product/data-recipient decision, updated disclosure and verification.
+Keep the current same-language rubric: seven sections, 24 criteria; remove the Afrikaans-specific criterion without disabling Afrikaans/mixed input. Preserve original-language quotes and British English coaching. Category scores are AI judgments against anchors; authentic quotes and schema validation do not prove fair interpretations. Human consultant calibration is still required.
+The PDF uses built-in Helvetica/Times. App fonts are self-hosted Fraunces/IBM Plex Sans with licences. The current design/scoring artifacts are already committed and valid; their unchanged 2 October dates are not a claim of fresh calibration.
+Use VERIFICATION.md for exact remaining tasks: authorised live synthetic requests, full browser behaviour, fresh dependency audit, consultant labels, hosted long requests, challenge/Redis integration and private analytics persistence/export/deletion.
