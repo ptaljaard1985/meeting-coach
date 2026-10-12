@@ -1,8 +1,8 @@
 # Meeting Coach
 
-Documentation updated 12 October 2026. The owner reports deploying the pilot at **https://meeting-coach-0f6x.onrender.com** and adding Upstash credentials and an OpenAI key; they also confirm the site opens in their browser. The last instructed mode is **Synthetic preview (`demo`)**; no hosted AI review has been verified. The owner selected **GPT-6.1 Sol / medium / standard** for pilot reviews. This requires an explicit Render environment override because the unchanged source and `.env.example` still default to Astra.
+Documentation updated 12 October 2026. The owner reports deploying the pilot at **https://meeting-coach-0f6x.onrender.com** and adding Upstash credentials and an OpenAI key; they also confirm the site opens in their browser. The owner asked to switch to live mode on 12 October, but the site still served **Synthetic preview (`demo`)** at the agent's last check; no hosted AI review has been verified. The owner selected **GPT-6.1 Sol / medium / standard** for pilot reviews. This requires an explicit Render environment override because the unchanged source and `.env.example` still default to Astra.
 
-Fresh local verification on 12 October passed all 100 tests, TypeScript, ESLint and the production build. Hosted integrations, browser interaction, dependency audit and calibration remain outstanding. After the agent shell failed DNS resolution, the owner cloned GitHub main through their Mac Terminal. This documentation update was reconciled against that fresh checkout at `e30ec35`. Start with [START_HERE.txt](START_HERE.txt), [HANDOFF_NOTES.txt](HANDOFF_NOTES.txt) and the current [deployment runbook](DEPLOYMENT.md).
+Fresh local verification on 12 October passed all 100 tests, TypeScript, ESLint and the production build. Hosted integrations, browser interaction, dependency audit and calibration remain outstanding. The earlier documentation refresh was merged into GitHub `main` as `e05aacd` (PR #1). Start with [START_HERE.txt](START_HERE.txt), [HANDOFF_NOTES.txt](HANDOFF_NOTES.txt) and the current [deployment runbook](DEPLOYMENT.md).
 
 Standalone, public-access adviser communication coaching. No CRM integration, account registration or saved meeting history. Transcript text and written reviews are not stored; live requests can contribute private numerical usage and scoring records. The same rubric applies to English, Afrikaans and mixed-language meetings, with original-language quotes and British English coaching. The owner removed the Afrikaans-specific criterion; this does not restrict transcript languages.
 
@@ -72,22 +72,22 @@ The export includes a CSV and a console summary of request counts, outcomes, mea
 
 Analytics are best effort: a storage failure does not discard a completed review. A `running` record can indicate an interrupted server request rather than active work. A request may involve two model-call attempts; these are separate from request counts. Missing provider usage is marked `usageComplete=false`, and known token totals are not a zero-cost claim or a billing ledger. No real records have been collected during this local verification.
 
-The owner reports a Render deployment, but live provider access, account retention settings and deployed challenge/counter/host behaviour remain unverified. Public operator name/email and the actual Render region are still awaiting confirmation. See [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md) and [VERIFICATION.md](VERIFICATION.md).
+The owner reports a Render deployment, but live provider access, account retention settings and deployed challenge/counter/host behaviour remain unverified. The operator (Rob Macdonald, rob@coachingwayofbeing.com) and Render's Frankfurt region were supplied on 12 October and are stated on the privacy page. See [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md) and [VERIFICATION.md](VERIFICATION.md).
 
 ## Finish deployment
 
-The owner has completed account/key setup steps and reports deploying after the Upstash and OpenAI additions. Turnstile keys were obtained and Render configuration instructions supplied. The Upstash setup screenshot shows Frankfurt and pay-as-you-go pricing; Render's region was recommended as Frankfurt but is unconfirmed. The OpenAI permissions screenshot shows Responses Write only. Secret values are not documented or available to the agent.
+The owner has completed account/key setup steps and reports deploying after the Upstash and OpenAI additions. Turnstile keys were obtained and Render configuration instructions supplied. The Upstash setup screenshot shows Frankfurt and pay-as-you-go pricing; the owner confirmed Render is also in Frankfurt. The OpenAI permissions screenshot shows Responses Write only. Secret values are not documented or available to the agent.
 
 1. Check the remaining Render settings without revealing secrets: Sol review override, `LIMIT_KEY_SECRET`, exact HTTPS origin, documented Render proxy header and limits. The proposed pilot allowance is 10 model calls/day; the source/template default remains 30. Confirm the actual `REVIEW_MODE` rather than inferring it from a deploy.
-2. Supply the operator name/public email for the privacy page and confirm Render's region. Verify account-specific retention, host body/response logging and trusted proxy behaviour; the page has not yet been updated with those facts.
+2. The operator name/email and Render's Frankfurt region are now on the privacy page (notice `2026-10-12.1`). Still verify account-specific retention, host body/response logging and trusted proxy behaviour.
 3. When configuration is ready, enable live mode for the authorised pilot and test a supplied fictional transcript and a separately generated example. Measure actual usage, timing, completeness and evidence. No successful paid call is recorded yet.
 4. Complete browser/PDF interactions, hosted long-request/cancellation behaviour, shared quotas and numerical persistence/export/deletion using an isolated synthetic database. Run the outstanding dependency audit when registry access permits.
 5. Have the consultant calibrate the selected Sol model against human labels before treating scores as a benchmark. The rubric and existing nine-page guide are unchanged.
-6. Check publication/PR state for `docs/render-pilot-20261012`, prepared against freshly cloned `main` at `e30ec35`. Preserve any later remote changes.
+6. `docs/render-pilot-20261012` is merged (PR #1, `e05aacd`). Check branch/PR state before publishing later changes, and preserve any remote changes.
 
 The intended service configuration and dated cost examples are in [DEPLOYMENT.md](DEPLOYMENT.md). At the illustrative 20,000 ordinary input + 10,000 billed output tokens per Sol review, 100 reviews cost $14 in AI usage, or $21 including $7 Render compute, before Redis, tax, corrections, generation and overages. These are estimates, not measured app costs. See [official Sol pricing](https://developers.openai.com/api/docs/models/gpt-6.1-sol).
 
-The owner confirms the site opens in their browser. The agent could not independently verify it: web access failed, local DNS could not resolve the host and no browser was available. Use [VERIFICATION.md](VERIFICATION.md) to distinguish owner-reported setup, current local checks and remaining live work.
+The owner confirms the site opens in their browser. Later on 12 October the agent also fetched the homepage (HTTP 200, mode `demo`); that is not an AI-request test. Use [VERIFICATION.md](VERIFICATION.md) to distinguish owner-reported setup, current local checks and remaining live work.
 
 ## Calibration (paid; never normal CI)
 

@@ -11,19 +11,26 @@ Documentation updated 12 October 2026. Evidence below separates fresh local chec
 - These checks ran on the locally installed Node 25.5.0. The Render setup instructions specify Node 24.21.0; host runtime and behaviour have not been independently verified.
 - No paid API request or real client content was used. No runtime code, rubric, prompt or privacy UI change was made by this documentation refresh. PDF/document rendering and full interactive browser tests were not rerun.
 
+## Later checks on 12 October 2026
+
+- After the owner supplied the operator details and confirmed Render Frankfurt, `app/privacy/page.tsx` gained a "Who runs Meeting Coach" section and `NOTICE_VERSION` moved to `2026-10-12.1`. `npm run test` (100 tests, seven files), typecheck, lint and build passed again, and a local production server rendered the new section at `/privacy`. The hosted page shows it only after the change is merged and deployed.
+- The agent shell reached GitHub: PR #1 (`docs/render-pilot-20261012`) was merged at 17:12 SAST as `e05aacd`, a merge commit with no further changes.
+- The agent fetched the hosted homepage: HTTP 200 through Cloudflare to Render, `no-store` and CSP headers present, a Turnstile site key in the page, and mode `demo`. This shows the site is up in demo mode. It does not verify AI requests, Redis, the Turnstile secret or the environment values.
+- The owner asked to switch to live mode and was given the Render steps. A check after that request still showed `demo`; the switch is not yet confirmed.
+
 ## Owner-reported setup on 12 October 2026
 
 - Owner supplied `https://meeting-coach-0f6x.onrender.com` and reported deployments after adding Upstash credentials and the OpenAI key. The Render setup screenshot showed the $7/month plan selected. The owner later confirmed the site opens in their browser; this does not verify AI requests.
 - Owner obtained Turnstile keys and was guided to add them, the exact hostname and `APP_ORIGIN` in Render. Successful verification is not established.
 - Upstash setup screenshot showed Frankfurt (`eu-central-1`), pay-as-you-go $0.20/100K commands and no maximum budget set at that point. Eviction was off on the initial screenshot and instructed to remain off. Final settings and data lifecycle are not audited.
 - OpenAI permissions screenshot showed Restricted, Responses Write and all other displayed permissions None. The owner reported adding the resulting key and deploying; the key value was not inspected. Dedicated project selection, billing, expiry and model access remain unverified.
-- Owner explicitly selected `gpt-6.1-sol` for pilot reviews. The model override, 10-call suggested allowance, random limiter secret and remaining non-secret environment values have not been inspected. Last instructed `REVIEW_MODE` is `demo`; no switch to live or successful paid review is recorded.
-- Public operator name/email and confirmation of Render's region were requested but not supplied.
+- Owner explicitly selected `gpt-6.1-sol` for pilot reviews. The model override, 10-call suggested allowance, random limiter secret and remaining non-secret environment values have not been inspected. The owner later asked to switch `REVIEW_MODE` to `live`; no completed switch or successful paid review is recorded.
+- The owner supplied the public operator (Rob Macdonald, rob@coachingwayofbeing.com) and confirmed Render's region as Frankfurt.
 
 ## Access limitations observed on 12 October 2026
 
-- Web-tool requests could not load the new Render URL; shell `curl` failed DNS resolution. Computer-use attempts found no available browser. These failures do not establish that the deployed service is down.
-- Agent-shell `git ls-remote` could not resolve `github.com`; the owner's Mac Terminal succeeded and cloned `main` at `e30ec35aba30ed8e8567081dd06bc394b513d894`. The agent inspected the checkout and confirmed all eleven targeted files matched the pre-edit backups. The intervening commit changes documentation/provenance only. The `docs/render-pilot-20261012` branch was prepared in that checkout; check GitHub for publication/merge state. The app workspace itself has no `.git`.
+- Earlier on 12 October, web-tool requests could not load the new Render URL; shell `curl` failed DNS resolution. Computer-use attempts found no available browser. These failures do not establish that the deployed service is down.
+- Agent-shell `git ls-remote` could not resolve `github.com`; the owner's Mac Terminal succeeded and cloned `main` at `e30ec35aba30ed8e8567081dd06bc394b513d894`. The agent inspected the checkout and confirmed all eleven targeted files matched the pre-edit backups. The intervening commit changes documentation/provenance only. The `docs/render-pilot-20261012` branch was prepared in that checkout; it was later merged as `e05aacd` (PR #1). The app workspace itself has no `.git`.
 - Current dependency audit, live OpenAI/Redis/Turnstile integration, hosted proxy and long-request behaviour remain unverified. Prior sandbox browser restrictions are recorded below, not claimed as a fresh browser test failure.
 
 ## Historical checks completed on 2 October 2026
@@ -44,7 +51,7 @@ Documentation updated 12 October 2026. Evidence below separates fresh local chec
 
 1. **Live OpenAI behaviour.** The owner reports installing a dedicated key in Render, but access to the selected Sol model and a successful paid request remain unverified. Confirm the explicit Sol environment override, then run a fictional end-to-end review and example generation. Measure actual cost, latency, evidence accuracy, usefulness and variation. Compare against human labels; passing schema tests does not establish model quality.
 2. **Full interactive browser flow.** Playwright tests are implemented, but the sandbox rejected the local server bind with `EPERM`; a headless browser launch was also blocked. Run `npm run build` followed by `npm run test:browser` in an environment that permits the server and browser. Check PDF download, keyboard navigation, cancellation, Clear, refresh and back/forward navigation.
-3. **Hosted pilot.** Verify the owner-provided Render URL, HTTPS, the fixed public origin, Turnstile, shared Redis counters, trusted proxy configuration (including forged-header behaviour) and the 15-minute provider deadline. Verify analytics persistence/export and explicit deletion using a separate synthetic test database; ensure service eviction and backup settings match retention until deletion. Inspect network traffic and host logging to confirm that content is not captured. Verify the OpenAI account's retention settings and complete the operator/host details before publishing the privacy wording.
+3. **Hosted pilot.** Verify the owner-provided Render URL, HTTPS, the fixed public origin, Turnstile, shared Redis counters, trusted proxy configuration (including forged-header behaviour) and the 15-minute provider deadline. Verify analytics persistence/export and explicit deletion using a separate synthetic test database; ensure service eviction and backup settings match retention until deletion. Inspect network traffic and host logging to confirm that content is not captured. Verify the OpenAI account's retention settings and publish the operator/host privacy section (notice `2026-10-12.1`) and confirm it on the hosted page.
 4. **Scoring calibration.** A consultant should review the category anchors and applicability rules using the scoring guide, then independently label several varied synthetic meetings. The listening-share anchors have an overlap identified in `SCORING_REVIEW.md`; resolve this through the rubric review before treating scores as a reliable benchmark.
 
 ## Reproduce
@@ -66,4 +73,4 @@ Use the documented Node 24 LTS target. Report-PDF checks require Poppler; consul
 
 The initial implementation was pushed to GitHub `main` on 2 October as `fa3db03fb283a622074135854bf651d62b3c3ccf`, including app source, tests, synthetic fixtures, design previews and scoring guide. The CRM extracts, credentials, analytics exports and temporary test/build files were excluded. A fresh checkout fetched on 7 October confirmed that baseline. `START_HERE.txt`, `HANDOFF_NOTES.txt` and `AGENTS.md` provide the restart path; historical 25-criterion handoff JSON must not replace the operative 24-criterion rubric.
 
-This 12 October documentation refresh records the owner's Sol choice and deployment progress without changing source defaults or backdating live verification. The edits have been reconciled against freshly cloned GitHub `main` at `e30ec35`; inspect the prepared branch and PR before repeating publication work.
+This 12 October documentation refresh records the owner's Sol choice and deployment progress without changing source defaults or backdating live verification. The edits have been reconciled against freshly cloned GitHub `main` at `e30ec35`; that branch was later merged as PR #1 (`e05aacd`). Check GitHub branch/PR state before repeating publication work.
