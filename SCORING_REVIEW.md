@@ -1,6 +1,8 @@
 # Scoring review: discussion draft
 
-Status reviewed 7 October 2026: the consultant has not yet supplied labels or approved rubric changes. The nine-page [PDF guide](output/documents/meeting-coach-scoring-guide.pdf) and [editable Word guide](output/documents/meeting-coach-scoring-guide.docx), prepared 2 October, explain the current seven sections and 24 criteria one section per page. All refinements below remain proposals.
+Status reviewed 12 October 2026: the consultant has not yet supplied labels or approved rubric changes. The nine-page [PDF guide](output/documents/meeting-coach-scoring-guide.pdf) and [editable Word guide](output/documents/meeting-coach-scoring-guide.docx), prepared 2 October, explain the current seven sections and 24 criteria one section per page. All refinements below remain proposals.
+
+The owner selected `gpt-6.1-sol` with medium reasoning and standard service for the Render pilot on 12 October, after discussing cost. This supersedes the earlier Astra deployment preference; it is not evidence of scoring equivalence, a completed calibration or a runtime-code change. The review model must be explicitly configured in Render because the source/template default is still Astra. No successful live review has been verified. The rubric, prompt, scoring guide and disclosure versions remain unchanged.
 
 The owner confirmed that all seven sections should remain and requested a consultant guide to each section and its method. The Afrikaans-specific Plain language criterion was removed; the other 24 criteria remain. English, Afrikaans and mixed-language meetings use the same rubric, as required by the seed brief. The original handoff files remain as provenance.
 
@@ -23,7 +25,7 @@ Recommended method for discussion:
 - Show category scores to one decimal at most; the overall is an orientation aid, not a scientific measurement. Avoid converting it to a percentage or letter grade.
 - Show how many categories/criteria were assessable alongside the overall. A 4 from limited evidence should not look equivalent to a 4 from a complete meeting.
 - Retain five concrete takeaways with the first describing something that worked. Keep exact evidence available directly beneath each criterion.
-- Calibrate on a small, varied set of synthetic or expressly authorised redacted meetings with adviser labels. Compare evidence fidelity, n/a fairness and coaching usefulness before adjusting weights or switching models.
+- Calibrate the selected Sol pilot model on a small, varied set of synthetic or expressly authorised redacted meetings with adviser labels. Compare evidence fidelity, n/a fairness and coaching usefulness before treating its scores as a benchmark or making further model/weight changes.
 
 These are proposed refinements, not silent rubric changes. Replacing category names, criteria, anchors or aggregation requires a new rubric/prompt version and an explicit decision after this review.
 

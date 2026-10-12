@@ -1,6 +1,6 @@
 # Architecture and data lifecycle
 
-Source reviewed 7 October 2026 against GitHub implementation baseline `fa3db03`; this document describes implemented behaviour, not a deployed-service verification. See `HANDOFF_NOTES.txt` for continuation and `VERIFICATION.md` for outstanding live checks.
+Updated 12 October 2026 against the local implementation. Implementation baseline `fa3db03` is unchanged by fresh GitHub `main` at `e30ec35`, inspected on 12 October after the owner cloned through their Mac Terminal. The owner reports a Render deployment at https://meeting-coach-0f6x.onrender.com and confirms it opens in their browser; its AI and hosted-service behaviour have not been independently verified. See `HANDOFF_NOTES.txt` for continuation and `VERIFICATION.md` for dated evidence.
 
 TypeScript, Next.js App Router, React, Zod, official OpenAI SDK, Vitest and browser `@react-pdf/renderer`. The server relay is needed because the operator funds a shared key. No CRM, Supabase, ORM, transcript store, object storage, content queue or hosted eval dataset is used.
 
@@ -28,7 +28,7 @@ PDF code is lazy-loaded and uses the received review. Blob URLs are released on 
 
 The operative rubric is version 1.1: all seven categories are retained, with 24 criteria after the owner removed the Afrikaans-specific criterion. The original handoff is preserved as provenance. Prompt `meeting-coach-openai-2.2` preserves English, Afrikaans and mixed-language review with original quotes and British English coaching. Responses `text.format` uses a strict JSON schema. Model judgment is not deterministic.
 
-The responsibility notice version is `2026-10-02.2`, reflecting the numerical analytics disclosure. The live review defaults to Astra/medium/standard; example generation uses Sol 6.1/low. All defaults and limits are server-owned. The app's current UI uses the accepted Calm panels, Editorial colours, Fraunces headings and IBM Plex Sans body text.
+The responsibility notice version is `2026-10-02.2`, reflecting the numerical analytics disclosure. On 12 October the owner selected Sol 6.1/medium/standard for pilot reviews through an explicit `REVIEW_MODEL=gpt-6.1-sol` override; example generation remains Sol 6.1/low. The unchanged code and environment template still default to Astra if the review-model override is omitted. This choice is not a measured quality or calibration result. All defaults and limits are server-owned. The app's current UI uses the accepted Calm panels, Editorial colours, Fraunces headings and IBM Plex Sans body text.
 
 Every category/criterion appears once under the right parent. Assessable values are 1–5; unassessable values are null with explanations. Assessable criteria require source-matched evidence. Quotes are exact substrings of one request-local segment, with speaker/time resolved from that source. A known duration never generates evidence timestamps. Overall is recomputed by the server and excludes n/a. Quotes being authentic does not prove a verdict is fair.
 
@@ -45,6 +45,8 @@ Turnstile is verified on the server, including hostname and `review` action. No 
 Upstash Redis EVAL makes each concurrency, duplicate and call-quota decision atomic across instances. Redis time sets UTC daily allowance and rolling network hour. Limiter keys hold only pseudonymous network IDs, opaque request/call IDs and counters. Leases expire after the request deadline plus 30 seconds; submission IDs after 24 hours; network counters after two hours; daily call records after two days. Limiter data is bounded/pruned. There is also a shared 300-submission/hour pre-challenge ceiling. IPs do not identify people; a shared network gets 12 model calls/hour by default.
 
 Allowance is reserved before **every** outbound model call, including a correction. Failed/ambiguous calls are never refunded. Production live calls fail closed without the key, exact HTTPS origin, challenge, shared limiter, trusted proxy IP header and pseudonym secret. The in-memory limiter is for local development only.
+
+The Render pilot instructions use `APP_ORIGIN=https://meeting-coach-0f6x.onrender.com`, public binding to `0.0.0.0:$PORT`, and a suggested 10-call daily allowance; the unchanged code/template defaults remain 30 calls/day, 12/network/hour and concurrency 3. The configured values have not been inspected. Upstash's Frankfurt selection is visible in the setup screenshot; the Render region still needs confirmation. Render documents `x-forwarded-for` for the client IP, but the deployed proxy and forged-header behaviour remain a separate check. Last instructed mode is `demo`. See `DEPLOYMENT.md` before enabling paid requests.
 
 ## Numerical analytics retained until deletion
 

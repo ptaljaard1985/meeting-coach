@@ -1,36 +1,44 @@
 MEETING COACH — START THE NEXT SESSION HERE
-Updated 7 October 2026
+Updated 12 October 2026
 
-The standalone MVP is implemented. Do not start a new build or repeat the original extraction.
-It was pushed to https://github.com/ptaljaard1985/meeting-coach on main.
-Implementation baseline: fa3db03fb283a622074135854bf651d62b3c3ccf (2 October 2026).
-Documentation is refreshed for continuation on 7 October; check the latest main before new work.
-No live deployment, paid API smoke test or consultant calibration has been completed.
+Continue the implemented standalone app. The owner is setting up its first Render pilot:
+https://meeting-coach-0f6x.onrender.com
+The owner reports deployments after entering Upstash credentials and a dedicated OpenAI key, and confirms the site opens in their browser. Cloudflare Turnstile keys were obtained and setup instructions supplied. The last instructed REVIEW_MODE is demo. No successful hosted AI review or example generation has been verified; do not announce a completed live AI launch.
+
+The owner explicitly selected gpt-6.1-sol for pilot reviews on 12 October, with medium reasoning and standard service. Set REVIEW_MODEL=gpt-6.1-sol in Render: existing code and .env.example still default to Astra. Examples remain fixed Sol 6.1/low. The suggested pilot daily allowance is 10 model attempts; its actual deployed value, the model override and LIMIT_KEY_SECRET have not been checked.
+
+Fresh local checks on 12 October: 100 tests in seven files, TypeScript, ESLint and production build passed. Browser, live provider, Redis/Turnstile integration, hosted transport, dependency audit and scoring calibration remain outstanding. See VERIFICATION.md for precise dates and limits.
 
 NON-NEGOTIABLE: NEVER ACCESS OR MODIFY THE ACTUAL CRM.
 Do not read, search, run commands in, change or borrow credentials from /Users/pierretaljaard/crm.
-Only the already supplied reference/ files inside Meeting Coach are permitted reference material.
-They are excluded from Git and are not required to run the app.
-Do not run handoff/verify_bundle.py: it checks the original CRM automatically and assumes an old extraction-only directory.
+Only already supplied reference/ files inside Meeting Coach are permitted reference material; they are excluded from Git and runtime imports.
+Do not run handoff/verify_bundle.py: it accesses original CRM paths and is obsolete.
 
 Read in this order:
-1. AGENTS.md — project boundaries and working rules.
-2. HANDOFF_NOTES.txt — current state, accepted decisions, next steps and environment limitations.
-3. README.md — run, verify, export/delete analytics and find the finished artifacts.
-4. PRIVACY_AND_MODEL_NOTES.txt — current provider and data lifecycle decisions.
-5. VERIFICATION.md — passed checks, dates and work still unverified.
-6. DEPLOYMENT.md for hosting; SCORING_REVIEW.md for consultant work; ARCHITECTURE.md for implementation details.
+1. AGENTS.md — boundaries and current owner choices.
+2. HANDOFF_NOTES.txt — progress, missing inputs and continuation.
+3. DEPLOYMENT.md — exact Render configuration, costs and launch checks.
+4. README.md — app operation and private analytics commands.
+5. PRIVACY_AND_MODEL_NOTES.txt — provider and data lifecycle decisions.
+6. VERIFICATION.md — dated evidence, including the new local check results.
+7. SCORING_REVIEW.md / ARCHITECTURE.md — calibration and implementation details.
 
-Continue with these accepted choices:
-- Seven sections, 24 criteria, rubric 1.1; the Afrikaans-specific criterion was removed.
-- English, Afrikaans and mixed-language meetings still use the same rubric.
-- Calm panel layout with Editorial colours and fonts. The owner is happy with the design for now.
-- Astra/medium/standard reviews; Sol 6.1/low fictional example generation, using a dedicated Platform API key.
-- Foreground requests, a 15-minute overall deadline, keep-page-open instructions, no background worker.
-- Numerical usage and scores retained until the owner deletes them; transcript text and written reviews stay transient.
+Preserve these decisions:
+- Seven sections, 24 criteria, rubric 1.1; English, Afrikaans and mixed-language support.
+- Calm panels with Editorial colours and typography.
+- Sol 6.1/medium/standard pilot reviews; Sol 6.1/low fictional examples; dedicated Platform key only.
+- Foreground requests, shared 15-minute deadline, keep-page-open notice and Cancel; no worker.
+- Transcript text, quotes and written reviews remain transient. Private numerical analytics remain until owner deletion; no public analytics endpoint.
 
-Suggested prompt to paste into the next Codex session:
+NEXT ACTION
+Confirm the remaining non-secret Render configuration, then finish the operator/contact and host-region disclosure and run a fictional end-to-end test. The owner has not yet answered which operator name/public email to publish or whether Render is in Frankfurt. Upstash Frankfurt was shown in the setup screenshot. Do not request secret values or assume the outstanding fields are configured just because a build deployed. Do not toggle live mode merely to verify a documentation change.
 
-Read AGENTS.md, START_HERE.txt, HANDOFF_NOTES.txt, README.md, PRIVACY_AND_MODEL_NOTES.txt and VERIFICATION.md. Continue the existing Meeting Coach MVP; do not rebuild it. Never access or modify the actual CRM. Preserve the accepted scoring, design and retention choices. Check the current GitHub main and local state, then work through the remaining live synthetic test, browser verification, consultant calibration and pilot deployment steps. If credentials or host access are missing, complete independent checks and identify the exact missing input without looking for credentials elsewhere.
+REPOSITORY
+Upstream: https://github.com/ptaljaard1985/meeting-coach.git, branch main.
+Implementation baseline: fa3db03fb283a622074135854bf651d62b3c3ccf (2 October). On 12 October the owner cloned current main, e30ec35aba30ed8e8567081dd06bc394b513d894, through their Mac Terminal after the agent shell failed DNS resolution. The agent inspected that fresh checkout and confirmed that all eleven targeted files exactly matched the pre-edit backups; the intervening main commit changed documentation/provenance only.
+The working app directory has no .git. The documentation branch docs/render-pilot-20261012 is prepared in /private/tmp/meeting-coach-publish-20261012. Check that the checkout still exists and inspect branch/PR state before continuing; publication or merge is not implied by preparation. Preserve remote changes and never force-push.
 
-SEED_PROMPT.txt is the maintained product brief, updated with the accepted changes. The source manifest and original handoff rubric JSON files preserve historical extraction provenance; they are not the operative scoring source. Use lib/rubric.json.
+Suggested continuation prompt:
+Read the current Meeting Coach docs and continue the existing Render pilot at https://meeting-coach-0f6x.onrender.com. Never touch the CRM. The owner chose Sol 6.1 reviews; preserve the rubric, design and retention decisions. They report adding credentials and deploying, but the last instructed mode is demo and paid requests have not been verified. Check remaining configuration without exposing secrets, collect the missing public operator/contact and Render-region details, finish synthetic hosted checks, and update the docs with actual results. The documentation refresh has been reconciled against main e30ec35; check the docs/render-pilot-20261012 branch and its PR before repeating publication work.
+
+Historical source manifests and handoff JSON preserve extraction provenance; they are not the operative scoring source. Use lib/rubric.json. No rubric, prompt, privacy wording or application code was changed by this documentation refresh.

@@ -1,60 +1,125 @@
-# Deployment guide (prepared; not deployed)
+# Render pilot deployment
 
-Status reviewed 7 October 2026: the implementation is on GitHub `main` (baseline `fa3db03`); no service, domain, live credentials or paid infrastructure has been configured in this work. The owner wants inexpensive hosting with room for long requests. The discussed route is one Render web service with a 15-minute app deadline; the final host/project/region still needs to be selected. Prices and host limits below were checked on 2 October, not refreshed on 7 October; recheck official sources before purchase.
+Updated 12 October 2026. The owner supplied **https://meeting-coach-0f6x.onrender.com** and reports deployments after entering Upstash credentials and the OpenAI key. Cloudflare Turnstile keys were obtained and configuration instructions supplied. The owner confirms the site opens in their browser. **The last instructed mode is `demo`; live AI reviews have not been verified.** The agent could not independently load the URL (web-tool access failed, shell DNS failed, and no browser was available). A reported deployment is not an end-to-end test.
 
-Suggested pilot host: **one small paid Render Node web service, currently about US$7/month**, using its included subdomain. No background worker is needed for the present foreground design. Render documents a 100-minute HTTP request limit, leaving room for the app's 15-minute deadline and 16-minute route headroom. Add Cloudflare Turnstile and Upstash Redis REST for live public access. Sources checked on 2 October 2026: [Render pricing](https://render.com/pricing), [Render request limit](https://render.com/docs/render-vs-vercel-comparison). Nothing has been provisioned. Confirm actual request/disconnect behaviour with a synthetic test on the chosen service.
+The owner explicitly selected **GPT-6.1 Sol for reviews** on 12 October, retaining medium reasoning and standard service. Examples remain fixed Sol 6.1/low. Set the model override explicitly: unchanged runtime code and `.env.example` still default to Astra. Claude was discussed but no provider change or fallback was selected.
 
-For Render, use Node 24 LTS, build with `npm ci && npm run build`, and start with `./node_modules/.bin/next start --hostname 0.0.0.0 --port "$PORT"`. The ordinary local `npm start` intentionally binds to 127.0.0.1; deployment must use the public binding and Render-assigned port. See [Render web service requirements](https://render.com/docs/web-services). The user must keep the browser page open and connected during a request. Refresh or navigation cannot recover a completed review because no meeting history is stored.
+## Progress and evidence
 
-Netlify also supports the Next.js app and supplies a `*.netlify.app` address. Its current Personal plan is US$9/month with 1,000 monthly credits; Pro starts at US$20/month with 3,000 credits. However, [standard function execution is limited to 60 seconds](https://docs.netlify.com/build/functions/configuration/?fn-language=js), below this app’s default 900-second request timeout. Do not assume Next.js `maxDuration` overrides that host limit. The offline preview fits; reliable live reviews and long example generation need an independently hosted backend or a reviewed asynchronous design. Background Functions run up to 15 minutes but return an immediate empty 202, automatically retry errors and require a new result-delivery mechanism. That would change the present transient-content and paid-call controls, so it has not been introduced just to enable hosting. Sources checked on 2 October 2026: [pricing](https://www.netlify.com/pricing/), [Next.js support](https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/), [domains](https://docs.netlify.com/manage/domains/domains-fundamentals/understand-domains/), [background functions](https://docs.netlify.com/build/functions/background-functions/). AI API charges remain separate from hosting.
+| Item | Status as of 12 October |
+| --- | --- |
+| Render service | Owner-provided URL, browser access confirmation and repeated reports of successful deployment; $7/month 0.5 CPU / 512 MB plan selected in screenshot |
+| Render region | Frankfurt recommended; actual selection still needs confirmation |
+| Turnstile | Owner obtained keys; instructed to add site/secret keys and exact origin in Render; widget integration not tested |
+| Upstash | Setup screenshot confirms `meeting-coach`, Frankfurt (`eu-central-1`), pay-as-you-go $0.20/100K commands; owner reports adding REST credentials and deploying |
+| Upstash retention/cost settings | Eviction shown off initially and instructed to stay off; no read regions or Prod Pack requested; maximum budget was not set in the screenshot; final settings/backups not inspected |
+| OpenAI key | Owner reports adding key and deploying; screenshot confirms only Responses Write enabled under Restricted permissions |
+| OpenAI project/access | Dedicated project, billing and 90-day expiry were instructed/recommended; actual project selection, billing, expiry and Sol access are unverified |
+| Remaining environment values | Instructions supplied below; actual model override, limiter secret, limits, mode and IP-header value have not been inspected |
+| Public operator details | Operator name/public email and Render region were requested; awaiting reply |
+| Live testing | No successful review, generation, challenge/counter integration or live numerical record verified |
 
-## Inputs needed before a live launch
+## Render service settings
 
-1. Host/project, server region and exact HTTPS domain/origin.
-2. Dedicated OpenAI Platform project/key with access to `gpt-6-astra` for reviews and `gpt-6.1-sol` for example generation; verify the account’s access with a synthetic opt-in smoke test. A model appearing in documentation does not establish account access.
-3. Turnstile site/secret keys restricted to the chosen hostname. The browser receives only the public site key.
-4. Upstash Redis URL/token and a random limiter HMAC secret of at least 32 characters. Select a region and service agreement appropriate to the host/operator arrangement.
-5. Verified proxy header handling. The provided `x-vercel-forwarded-for` assumption must be checked on Vercel; other hosts must overwrite an appropriate header and prevent direct untrusted access. Never trust arbitrary client `X-Forwarded-For`.
-6. Public operator contact/domain details, host region disclosure and approved privacy/terms copy. Add these to the privacy page before opening the real service.
-7. Account-specific provider retention/training/caching settings and host request/response capture settings.
+These are the supplied setup instructions, not a claim that the environment has been inspected:
 
-The default `TRUSTED_IP_HEADER=x-vercel-forwarded-for` is not a verified Render setting. Resolving which header the chosen host securely overwrites is an outstanding implementation/deployment check. Do not publish live mode with an unverified header assumption. No credentials should be added to documentation or commits.
+| Setting | Value |
+| --- | --- |
+| Source | `ptaljaard1985/meeting-coach`, branch `main` |
+| Language | Node |
+| Root directory | Empty (repository root) |
+| Compute | `0.5c-512mb` (formerly Starter), one instance, $7/month |
+| Region | Frankfurt recommended; confirm the actual service region |
+| Node runtime | `NODE_VERSION=24.21.0` (Node 24 LTS) |
+| Build | `npm ci --include=dev && npm run build` |
+| Start | `./node_modules/.bin/next start --hostname 0.0.0.0 --port "$PORT"` |
+| Initial mode | `REVIEW_MODE=demo` |
 
-Set `REVIEW_MODE=live` and the required variables from `.env.example` as server secrets. Never expose the API key, counter token or challenge secret through `NEXT_PUBLIC_*`. Use the default Astra/medium/standard configuration unless an explicit calibration decision changes it. There is no automatic Sol or Anthropic fallback.
+The ordinary local `npm start` binds to `127.0.0.1`; the Render command above supplies the public binding and host port. Render provides the `onrender.com` address and managed HTTPS, so no custom domain or DNS change is required. [Web service setup](https://render.com/docs/web-services), [Node version](https://render.com/docs/node-version), [compute plan names](https://render.com/docs/compute-plans).
 
-Set `REVIEW_TIMEOUT_MS=900000` for the recommended 15-minute allowance. The SDK/transport and shared request deadline are aligned; a correction uses the remaining overall allowance. The hosting platform must permit this duration independently of the route's `maxDuration=960` declaration. Keep provider/body capture and SDK verbose logging disabled.
+Render documents a 100-minute HTTP response limit, sufficient in principle for the app's 15-minute foreground deadline and 16-minute route declaration. Actual long requests and cancellation still need testing. The user must keep the page open; refresh/navigation cannot recover a review. No background worker or content storage was introduced. [Render request duration](https://render.com/docs/render-vs-vercel-comparison).
 
-`ANALYTICS_ENABLED=true` stores numerical usage and validated scores in the configured Redis service until explicit operator deletion. Confirm Redis persistence, backups and eviction settings; there is no automatic cleanup or app record cap. Monitor capacity as the log grows. Collection can be disabled without deleting existing records. Verify CSV export, incomplete-usage reporting and explicit deletion against a separate synthetic test database before launch; do not run deletion against production records as a deployment check. Operator commands are in [README.md](README.md#private-numerical-analytics). No public analytics endpoint is exposed.
+## Required environment values
 
-Run `npm ci`, tests, typecheck, lint and production build. Inspect an HTTPS synthetic request: browser → own API only, server → challenge/counter/OpenAI only. Verify that request/response bodies and prompts/quotes are absent from host logs, request tracing, APM, crash reporting and dashboard previews. Disable body capture and response caching, and document actual host metadata retention. Test bot denial, hostname/action mismatch, origin denial, daily-limit message, parallel allowance, lease expiry and a shared-office network.
+Enter secrets directly in Render; do not put their values in chat, screenshots, source or commits. The table records intended pilot configuration. The owner's completed key/deployment reports do not establish every value below.
 
-## Conservative paid-call ceiling
+| Key | Intended value / source |
+| --- | --- |
+| `NODE_VERSION` | `24.21.0` |
+| `REVIEW_MODE` | `demo` until configuration and launch checks are ready; switch deliberately to `live` for the authorised pilot |
+| `OPENAI_API_KEY` | Dedicated Meeting Coach Platform project key, with funded API billing and Sol access |
+| `REVIEW_MODEL` | **`gpt-6.1-sol`** (owner selected; source/template default is Astra) |
+| `REVIEW_REASONING_EFFORT` | `medium` |
+| `REVIEW_DAILY_CALL_LIMIT` | `10` suggested for the initial pilot (source/template default: `30`) |
+| `REVIEW_NETWORK_HOURLY_CALL_LIMIT` | `12` (existing default) |
+| `REVIEW_CONCURRENCY` | `3` (existing default) |
+| `REVIEW_TIMEOUT_MS` | `900000` (15 minutes including any correction) |
+| `ANALYTICS_ENABLED` | `true` |
+| `APP_ORIGIN` | `https://meeting-coach-0f6x.onrender.com` — no trailing slash |
+| `TURNSTILE_SITE_KEY` | Widget's public site key |
+| `TURNSTILE_SECRET_KEY` | Widget's private secret key |
+| `UPSTASH_REDIS_REST_URL` | Database HTTPS REST URL ending in `.upstash.io`, not the Redis TCP connection URL |
+| `UPSTASH_REDIS_REST_TOKEN` | Standard read/write REST token, not the read-only token |
+| `LIMIT_KEY_SECRET` | Fresh random value of at least 32 characters; suggested generator below |
+| `TRUSTED_IP_HEADER` | `x-forwarded-for` for Render, subject to hosted verification below |
 
-Default global ceiling: **30 model calls per UTC day**, including reviews, example generation and their corrections. Reviews allow **12,000 output tokens**; example generation allows **20,000 output tokens** on fixed `gpt-6.1-sol` with low reasoning. These limits include billable reasoning. SDK hidden retries are disabled. The app caps serialized model parameters at 123,904 UTF-8 bytes and reserves an additional 4,096-token framing allowance, conservatively budgeting 128,000 input tokens. BPE text tokens are bounded by source bytes; confirm framing/actual usage with the installed SDK/model before relying on a published estimate. Transcript input itself is at most 64 KB; streamed API body is at most 80 KB.
+Generate the limiter secret locally, then copy the result directly to Render:
 
-Official standard prices checked on 2 October 2026: [Astra](https://developers.openai.com/api/docs/models/gpt-6-astra) input $10 / million, cache write $12.50 / million, output $50 / million. Use the higher cache-write input price for a conservative exposure bound:
-
-```text
-Astra per call: 128,000 × $12.50 / 1m + 12,000 × $50 / 1m = $2.20
-Astra default daily call ceiling: 30 × $2.20 = $66.00
-
-Sol per call: 128,000 × $2.50 / 1m + 12,000 × $10 / 1m = $0.44
-Sol generation per call: 128,000 × $2.50 / 1m + 20,000 × $10 / 1m = $0.52
-All-Sol worst-case daily ceiling including generation: 30 × $0.52 = $15.60
+```sh
+openssl rand -hex 32
 ```
 
-Sol pricing: [official model page](https://developers.openai.com/api/docs/models/gpt-6.1-sol). These are deliberately generous technical bounds, not measured meeting costs or billing guarantees. They assume current standard pricing below long-context premium thresholds and exclude infrastructure, tax or other account charges. A generation call is below the default Astra review ceiling, so the conservative US$66 daily maximum still covers a mixture of both at the default global allowance. A request may reserve two calls; failed/ambiguous requests still consume allowance. Raising input/output/call limits or changing model/prices requires recomputing exposure. Budget alerts alone are not used as a hard spend control.
+The OpenAI key permissions screenshot showed **Restricted**, **Responses (`/v1/responses`) = Write**, every other displayed individual permission **None**, and the parent Model capabilities group **Mixed**. A 90-day expiry was suggested but not confirmed; record the actual expiry and replace the key in Render before that date. Never use another application's key or a Codex session credential. [OpenAI permissions](https://developers.openai.com/api/docs/guides/rbac), [API key handling](https://developers.openai.com/api/docs/guides/production-best-practices).
 
-The SDK request uses `service_tier: default`, foreground `background:false`, `store:false`, medium reasoning and strict structured output, with no tools. `store:false` does not promise zero provider retention. Confirm actual OpenAI data controls, account exceptions and host retention before publishing privacy promises. Do not advertise legal compliance certification.
+Turnstile setup instructions: widget name `Meeting Coach`, hostname `meeting-coach-0f6x.onrender.com` (no scheme/path), **Managed**, pre-clearance disabled. The app already embeds the widget and verifies tokens server-side, including hostname and action `review`; no DNS proxy change is needed. [Widget setup](https://developers.cloudflare.com/turnstile/get-started/widget-management/dashboard/).
 
-Public deployment, paid provisioning and real-client submissions were not authorised in this build. Prepare a reviewable private preview first and obtain the operator’s launch decision.
+## Proxy verification and retention
 
-## Next-session rollout order
+Render's documentation identifies `x-forwarded-for` as the client IP header; a Render staff response states that the first value is set to the real client IP. The app uses the first comma-separated value. This supports the Render-specific configuration, but **normal and forged-header behaviour have not been tested on this service**. Verify that clients cannot control the value used by the limiter and cannot bypass the trusted edge before treating network quotas as verified. The template's `x-vercel-forwarded-for` is not the Render setting. [Render client IP guidance](https://render.com/articles/how-render-handles-ddos-attacks), [Render staff clarification](https://feedback.render.com/features/p/send-the-correct-x-forwarded-for).
 
-1. Fetch current GitHub `main`, inspect local differences and preserve the accepted configuration. The documentation refresh itself does not deploy anything.
-2. Run a local live smoke test using fictional content and a securely configured dedicated Platform key; verify review and generation, returned usage and model access.
-3. Complete interactive browser checks and the dependency audit, then prepare the selected host's build/start configuration.
-4. Configure the host, fixed HTTPS origin, Turnstile, Redis and verified trusted proxy header. Keep all server credentials private.
-5. Exercise a long synthetic hosted request, cancellation/disconnect behaviour, shared quotas and a correction. Confirm the host does not end the request before the 15-minute app allowance.
-6. Verify analytics persistence and CSV export; test deletion only in an isolated synthetic database. Check no-expiry/eviction/backup behaviour against retention until deletion.
-7. Complete operator/region/privacy details and inspect host logging before the operator decides to open the live service. Record the URL, configuration choices and actual verification evidence in these docs.
+Keep Upstash eviction **off**. Private numerical records have no automatic expiry or cap and remain until owner deletion. Expiring limiter keys are separate. Verify final persistence, backup/deletion lifecycle and capacity monitoring. Upstash documents durable storage; paid tiers also avoid the free-tier endpoint archival caused by prolonged inactivity. This is not a claim that the database settings have been audited. [Durable storage](https://upstash.com/docs/redis/features/durability), [eviction](https://upstash.com/docs/redis/features/eviction), [inactivity FAQ](https://upstash.com/docs/redis/help/faq).
+
+The displayed Upstash monthly maximum budget was **not set**. Set an appropriate pilot budget in its console; Upstash rate-limits the database at the cap, which can also prevent the app's live requests because its limiter fails closed. The $200/month Prod Pack was not requested. [Upstash pricing and budgets](https://upstash.com/pricing/redis).
+
+Before public use with real content, finish `app/privacy/page.tsx` with the owner-approved public operator name/email, confirmed host region and actual provider/host handling. Do not infer public contact details from account screenshots. Confirm request/response bodies, prompts, quotes and raw provider errors are absent from host logging/tracing/APM. `store:false` does not promise zero OpenAI retention; account-specific data controls remain unverified. No transcript or written-review storage, public analytics endpoint, or privacy wording change is part of this documentation update.
+
+## Costs checked 12 October 2026 (USD)
+
+| Service | Price basis |
+| --- | --- |
+| Render | $7/month for the selected server; Hobby workspace has no additional monthly plan fee; tax, overages or later upgrades are additional |
+| Turnstile | Free plan includes unlimited challenges |
+| Upstash | Selected pay-as-you-go: $0.20 per 100K commands; storage/bandwidth allowances and excess charges apply; no Prod Pack requested |
+| OpenAI Sol 6.1 | Per million tokens: $2 ordinary input, $0.10 cached read, $2.50 cache write, $10 output |
+| Address and HTTPS | Render-provided subdomain/TLS included; no domain purchase required |
+
+Sources: [Render compute pricing](https://render.com/articles/render-vs-railway), [workspace fees](https://render.com/docs/platform-features-by-plan), [Turnstile plans](https://developers.cloudflare.com/turnstile/plans/), [Upstash pricing](https://upstash.com/pricing/redis), [Sol model pricing](https://developers.openai.com/api/docs/models/gpt-6.1-sol). Recheck before new spending decisions.
+
+The owner's cost illustration used **20,000 ordinary input + 10,000 billed output tokens per review**: $0.04 + $0.10 = **$0.14**, or **$14 for 100 reviews**. With $7 Render compute this is **$21/month**, excluding Redis, tax, hosting overages, example generation, caching differences and correction attempts. Output includes reasoning tokens. These are arithmetic estimates, not observed app usage or a fixed review price.
+
+### Conservative technical exposure
+
+The app caps serialized model parameters at 123,904 UTF-8 bytes plus a conservative 4,096-token framing allowance, budgeting 128,000 input tokens. Reviews allow 12,000 output tokens and examples 20,000; both include reasoning. Confirm framing/actual usage before relying on these technical bounds. Transcript input is at most 64 KB and API body at most 80 KB.
+
+Using the higher cache-write input price as a conservative input assumption:
+
+```text
+Sol review attempt:    128,000 × $2.50 / 1m + 12,000 × $10 / 1m = $0.44
+Sol example attempt:   128,000 × $2.50 / 1m + 20,000 × $10 / 1m = $0.52
+Suggested 10 calls/day: 10 × $0.52 = $5.20/day technical exposure
+Source-default 30/day:  30 × $0.52 = $15.60/day technical exposure
+```
+
+The daily counter includes reviews, examples and corrections; ten calls are not ten completed reviews. Hidden SDK retries are disabled and failed/ambiguous attempts are not refunded. This is a deliberately generous technical bound, not a measured bill or monthly dollar cap; it excludes tax/other account charges and depends on model/pricing/token assumptions. If the Sol override is missing, the Astra source default has a higher bound ($2.20/review attempt at the checked prices), so verifying `REVIEW_MODEL` matters. [Astra pricing](https://developers.openai.com/api/docs/models/gpt-6-astra).
+
+## Finish the pilot
+
+1. Inspect configuration without revealing secrets. Confirm the dedicated project/billing/model access, Sol override, random limiter secret, exact origin, limits and actual mode. Do not switch to live merely for this docs update.
+2. Resolve the outstanding operator name/public email and Render region; finish account-specific privacy/host logging disclosures and verify proxy handling.
+3. When ready, deliberately set `REVIEW_MODE=live` and deploy. Use the supplied synthetic transcript for the first paid review, then test fictional example generation separately. Record success/failure, actual usage, timing, evidence quality and model shown in the report. If access fails, diagnose it; no silent model/provider substitution.
+4. Verify challenge failures, hostname/action mismatch, origin rejection, quotas, concurrent requests, leases and shared-office behaviour. Check a hosted long request and cancellation/disconnect against the shared 15-minute allowance. A single fast success does not prove the long-request behaviour.
+5. Exercise PDF download, keyboard, Clear, refresh/back navigation and mobile flow. Verify no content capture or browser persistence.
+6. Test private numerical persistence/export/deletion using a separate synthetic database. Do not run deletion against production records as a launch check. No public analytics route is authorised.
+7. Complete dependency audit and consultant calibration; do not advertise uncalibrated scores as a benchmark. Record evidence in `VERIFICATION.md` and current status in `HANDOFF_NOTES.txt`.
+
+Fresh local tests/typecheck/lint/build passed on 12 October, but no hosted paid test is claimed. Agent-shell GitHub access failed DNS resolution, so the owner cloned the repository through their Mac Terminal. The agent reconciled this refresh against fresh `main` at `e30ec35`; check publication/PR state for `docs/render-pilot-20261012` before continuing. Preserve any later remote changes. Never access the CRM or run the obsolete extraction verifier.
