@@ -1,6 +1,6 @@
 # Render pilot deployment
 
-Updated 12 October 2026. The owner supplied **https://meeting-coach-0f6x.onrender.com** and reports deployments after entering Upstash credentials and the OpenAI key. Cloudflare Turnstile keys were obtained and configuration instructions supplied. The owner confirms the site opens in their browser. **The last instructed mode is `demo`; live AI reviews have not been verified.** The agent could not independently load the URL (web-tool access failed, shell DNS failed, and no browser was available). A reported deployment is not an end-to-end test.
+Updated 12 October 2026. The owner supplied **https://meeting-coach-0f6x.onrender.com** and reports deployments after entering Upstash credentials and the OpenAI key. Cloudflare Turnstile keys were obtained and configuration instructions supplied. The owner confirms the site opens in their browser. **The owner asked to switch to `live` on 12 October, but the homepage still reported `demo` at the agent's last check; live AI reviews have not been verified.** Later that day the agent loaded the homepage from its shell (HTTP 200, Turnstile site key present, mode `demo`). A reported deployment is not an end-to-end test.
 
 The owner explicitly selected **GPT-6.1 Sol for reviews** on 12 October, retaining medium reasoning and standard service. Examples remain fixed Sol 6.1/low. Set the model override explicitly: unchanged runtime code and `.env.example` still default to Astra. Claude was discussed but no provider change or fallback was selected.
 
@@ -9,14 +9,14 @@ The owner explicitly selected **GPT-6.1 Sol for reviews** on 12 October, retaini
 | Item | Status as of 12 October |
 | --- | --- |
 | Render service | Owner-provided URL, browser access confirmation and repeated reports of successful deployment; $7/month 0.5 CPU / 512 MB plan selected in screenshot |
-| Render region | Frankfurt recommended; actual selection still needs confirmation |
+| Render region | Frankfurt, confirmed by the owner on 12 October |
 | Turnstile | Owner obtained keys; instructed to add site/secret keys and exact origin in Render; widget integration not tested |
 | Upstash | Setup screenshot confirms `meeting-coach`, Frankfurt (`eu-central-1`), pay-as-you-go $0.20/100K commands; owner reports adding REST credentials and deploying |
 | Upstash retention/cost settings | Eviction shown off initially and instructed to stay off; no read regions or Prod Pack requested; maximum budget was not set in the screenshot; final settings/backups not inspected |
 | OpenAI key | Owner reports adding key and deploying; screenshot confirms only Responses Write enabled under Restricted permissions |
 | OpenAI project/access | Dedicated project, billing and 90-day expiry were instructed/recommended; actual project selection, billing, expiry and Sol access are unverified |
-| Remaining environment values | Instructions supplied below; actual model override, limiter secret, limits, mode and IP-header value have not been inspected |
-| Public operator details | Operator name/public email and Render region were requested; awaiting reply |
+| Remaining environment values | Instructions supplied below; the owner was asked on 12 October to confirm them while setting `REVIEW_MODE=live`. Actual model override, limiter secret, limits, mode and IP-header value have not been inspected |
+| Public operator details | Rob Macdonald, rob@coachingwayofbeing.com (owner-supplied 12 October); on the privacy page under notice `2026-10-12.1`, pending publication |
 | Live testing | No successful review, generation, challenge/counter integration or live numerical record verified |
 
 ## Render service settings
@@ -29,7 +29,7 @@ These are the supplied setup instructions, not a claim that the environment has 
 | Language | Node |
 | Root directory | Empty (repository root) |
 | Compute | `0.5c-512mb` (formerly Starter), one instance, $7/month |
-| Region | Frankfurt recommended; confirm the actual service region |
+| Region | Frankfurt (owner-confirmed) |
 | Node runtime | `NODE_VERSION=24.21.0` (Node 24 LTS) |
 | Build | `npm ci --include=dev && npm run build` |
 | Start | `./node_modules/.bin/next start --hostname 0.0.0.0 --port "$PORT"` |
@@ -81,7 +81,7 @@ Keep Upstash eviction **off**. Private numerical records have no automatic expir
 
 The displayed Upstash monthly maximum budget was **not set**. Set an appropriate pilot budget in its console; Upstash rate-limits the database at the cap, which can also prevent the app's live requests because its limiter fails closed. The $200/month Prod Pack was not requested. [Upstash pricing and budgets](https://upstash.com/pricing/redis).
 
-Before public use with real content, finish `app/privacy/page.tsx` with the owner-approved public operator name/email, confirmed host region and actual provider/host handling. Do not infer public contact details from account screenshots. Confirm request/response bodies, prompts, quotes and raw provider errors are absent from host logging/tracing/APM. `store:false` does not promise zero OpenAI retention; account-specific data controls remain unverified. No transcript or written-review storage, public analytics endpoint, or privacy wording change is part of this documentation update.
+`app/privacy/page.tsx` now states the owner-approved operator (Rob Macdonald, rob@coachingwayofbeing.com), Render Frankfurt hosting and Upstash Frankfurt storage (notice `2026-10-12.1`). Before public use with real content, still confirm actual provider/host handling. Confirm request/response bodies, prompts, quotes and raw provider errors are absent from host logging/tracing/APM. `store:false` does not promise zero OpenAI retention; account-specific data controls remain unverified. No transcript or written-review storage, public analytics endpoint, or privacy wording change is part of this documentation update.
 
 ## Costs checked 12 October 2026 (USD)
 
@@ -115,11 +115,11 @@ The daily counter includes reviews, examples and corrections; ten calls are not 
 ## Finish the pilot
 
 1. Inspect configuration without revealing secrets. Confirm the dedicated project/billing/model access, Sol override, random limiter secret, exact origin, limits and actual mode. Do not switch to live merely for this docs update.
-2. Resolve the outstanding operator name/public email and Render region; finish account-specific privacy/host logging disclosures and verify proxy handling.
+2. Publish the privacy-page operator/region change and confirm it on the hosted `/privacy` page; finish account-specific privacy/host logging disclosures and verify proxy handling.
 3. When ready, deliberately set `REVIEW_MODE=live` and deploy. Use the supplied synthetic transcript for the first paid review, then test fictional example generation separately. Record success/failure, actual usage, timing, evidence quality and model shown in the report. If access fails, diagnose it; no silent model/provider substitution.
 4. Verify challenge failures, hostname/action mismatch, origin rejection, quotas, concurrent requests, leases and shared-office behaviour. Check a hosted long request and cancellation/disconnect against the shared 15-minute allowance. A single fast success does not prove the long-request behaviour.
 5. Exercise PDF download, keyboard, Clear, refresh/back navigation and mobile flow. Verify no content capture or browser persistence.
 6. Test private numerical persistence/export/deletion using a separate synthetic database. Do not run deletion against production records as a launch check. No public analytics route is authorised.
 7. Complete dependency audit and consultant calibration; do not advertise uncalibrated scores as a benchmark. Record evidence in `VERIFICATION.md` and current status in `HANDOFF_NOTES.txt`.
 
-Fresh local tests/typecheck/lint/build passed on 12 October, but no hosted paid test is claimed. Agent-shell GitHub access failed DNS resolution, so the owner cloned the repository through their Mac Terminal. The agent reconciled this refresh against fresh `main` at `e30ec35`; check publication/PR state for `docs/render-pilot-20261012` before continuing. Preserve any later remote changes. Never access the CRM or run the obsolete extraction verifier.
+Fresh local tests/typecheck/lint/build passed on 12 October, including after the privacy change, but no hosted paid test is claimed. The earlier documentation branch `docs/render-pilot-20261012` was merged as `e05aacd` (PR #1); check GitHub branch/PR state before continuing. Preserve any later remote changes. Never access the CRM or run the obsolete extraction verifier.
