@@ -1,6 +1,8 @@
 # Meeting Coach
 
-Documentation reviewed 7 October 2026. The local MVP is implemented and the implementation baseline was pushed to [GitHub main](https://github.com/ptaljaard1985/meeting-coach) as `fa3db03` on 2 October. Start a new session with [START_HERE.txt](START_HERE.txt) and [HANDOFF_NOTES.txt](HANDOFF_NOTES.txt). Live provider, hosted service and consultant calibration checks remain outstanding; the last full local verification was on 2 October.
+Documentation updated 12 October 2026. The owner reports deploying the pilot at **https://meeting-coach-0f6x.onrender.com** and adding Upstash credentials and an OpenAI key; they also confirm the site opens in their browser. The last instructed mode is **Synthetic preview (`demo`)**; no hosted AI review has been verified. The owner selected **GPT-6.1 Sol / medium / standard** for pilot reviews. This requires an explicit Render environment override because the unchanged source and `.env.example` still default to Astra.
+
+Fresh local verification on 12 October passed all 100 tests, TypeScript, ESLint and the production build. Hosted integrations, browser interaction, dependency audit and calibration remain outstanding. After the agent shell failed DNS resolution, the owner cloned GitHub main through their Mac Terminal. This documentation update was reconciled against that fresh checkout at `e30ec35`. Start with [START_HERE.txt](START_HERE.txt), [HANDOFF_NOTES.txt](HANDOFF_NOTES.txt) and the current [deployment runbook](DEPLOYMENT.md).
 
 Standalone, public-access adviser communication coaching. No CRM integration, account registration or saved meeting history. Transcript text and written reviews are not stored; live requests can contribute private numerical usage and scoring records. The same rubric applies to English, Afrikaans and mixed-language meetings, with original-language quotes and British English coaching. The owner removed the Afrikaans-specific criterion; this does not restrict transcript languages.
 
@@ -16,7 +18,7 @@ npm run dev
 
 Open http://127.0.0.1:3000. Default mode is **Synthetic preview**: load the supplied example, explicitly choose Adviser, mark Client A and Client B as clients, choose a couple meeting, tick the responsibility declaration, and review. Example scores are hand-authored and visibly labelled. Arbitrary transcripts cannot be graded by the demo.
 
-For an opt-in real synthetic smoke test, securely put a dedicated OpenAI Platform key in `.env.local` and set `REVIEW_MODE=live`. Never use a CRM key or a Codex session credential. Local development permits an in-memory counter and no challenge; public production requires the configuration in [DEPLOYMENT.md](DEPLOYMENT.md). A review can make two paid model calls. There is no provider fallback.
+For an opt-in real synthetic smoke test, securely put a dedicated OpenAI Platform key in `.env.local` and set `REVIEW_MODE=live`. Never use a CRM key or a Codex session credential. Local development permits an in-memory counter and no challenge; public production requires the configuration in [DEPLOYMENT.md](DEPLOYMENT.md). A review can make two paid model calls. There is no provider fallback. For the owner-selected pilot model, set `REVIEW_MODEL=gpt-6.1-sol` and `REVIEW_REASONING_EFFORT=medium` explicitly; example generation already uses Sol 6.1/low.
 
 ## Verify
 
@@ -70,17 +72,22 @@ The export includes a CSV and a console summary of request counts, outcomes, mea
 
 Analytics are best effort: a storage failure does not discard a completed review. A `running` record can indicate an interrupted server request rather than active work. A request may involve two model-call attempts; these are separate from request counts. Missing provider usage is marked `usageComplete=false`, and known token totals are not a zero-cost claim or a billing ledger. No real records have been collected during this local verification.
 
-The app is implemented for local use; live provider access, account retention settings and deployed challenge/counter/host behaviour require explicit verification before launch. See [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md) and [VERIFICATION.md](VERIFICATION.md).
+The owner reports a Render deployment, but live provider access, account retention settings and deployed challenge/counter/host behaviour remain unverified. Public operator name/email and the actual Render region are still awaiting confirmation. See [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md) and [VERIFICATION.md](VERIFICATION.md).
 
-## Next steps
+## Finish deployment
 
-1. Configure a dedicated OpenAI Platform key securely for a local live synthetic test. Verify both model IDs are available to that project.
-2. Generate several fictional meetings and review them; measure actual duration, returned usage, evidence quality and variation. Compare Astra and Sol using human labels before changing the default review model.
-3. Complete the interactive browser checks and a fresh dependency audit in an environment permitting browser/server access.
-4. Have the consultant review the scoring guide, particularly the listening-share anchor overlap; keep proposed changes out of the operative rubric until decided.
-5. Configure the pilot host, Turnstile and Redis, then verify long foreground requests, limits, private analytics export/deletion and host content-capture settings before opening live access. The discussed route is one Render web service; no service has been provisioned.
+The owner has completed account/key setup steps and reports deploying after the Upstash and OpenAI additions. Turnstile keys were obtained and Render configuration instructions supplied. The Upstash setup screenshot shows Frankfurt and pay-as-you-go pricing; Render's region was recommended as Frankfurt but is unconfirmed. The OpenAI permissions screenshot shows Responses Write only. Secret values are not documented or available to the agent.
 
-The documentation and GitHub push do not imply a live site or completed API test. For the exact unresolved settings and known environment limitations, use [HANDOFF_NOTES.txt](HANDOFF_NOTES.txt).
+1. Check the remaining Render settings without revealing secrets: Sol review override, `LIMIT_KEY_SECRET`, exact HTTPS origin, documented Render proxy header and limits. The proposed pilot allowance is 10 model calls/day; the source/template default remains 30. Confirm the actual `REVIEW_MODE` rather than inferring it from a deploy.
+2. Supply the operator name/public email for the privacy page and confirm Render's region. Verify account-specific retention, host body/response logging and trusted proxy behaviour; the page has not yet been updated with those facts.
+3. When configuration is ready, enable live mode for the authorised pilot and test a supplied fictional transcript and a separately generated example. Measure actual usage, timing, completeness and evidence. No successful paid call is recorded yet.
+4. Complete browser/PDF interactions, hosted long-request/cancellation behaviour, shared quotas and numerical persistence/export/deletion using an isolated synthetic database. Run the outstanding dependency audit when registry access permits.
+5. Have the consultant calibrate the selected Sol model against human labels before treating scores as a benchmark. The rubric and existing nine-page guide are unchanged.
+6. Check publication/PR state for `docs/render-pilot-20261012`, prepared against freshly cloned `main` at `e30ec35`. Preserve any later remote changes.
+
+The intended service configuration and dated cost examples are in [DEPLOYMENT.md](DEPLOYMENT.md). At the illustrative 20,000 ordinary input + 10,000 billed output tokens per Sol review, 100 reviews cost $14 in AI usage, or $21 including $7 Render compute, before Redis, tax, corrections, generation and overages. These are estimates, not measured app costs. See [official Sol pricing](https://developers.openai.com/api/docs/models/gpt-6.1-sol).
+
+The owner confirms the site opens in their browser. The agent could not independently verify it: web access failed, local DNS could not resolve the host and no browser was available. Use [VERIFICATION.md](VERIFICATION.md) to distinguish owner-reported setup, current local checks and remaining live work.
 
 ## Calibration (paid; never normal CI)
 
@@ -94,4 +101,4 @@ This compares Astra and Sol on the **same supplied synthetic example**, with at 
 
 The selected design combines Calm's separated panels with Editorial's burgundy and warm cream palette, Fraunces headings and IBM Plex Sans body text. Open the [combined HTML preview](output/design/meeting-coach-combined-style.html) or the [three original options](output/design/meeting-coach-style-options.html) locally; both are self-contained and make no AI calls. The app self-hosts its fonts under their included OFL licences. PDF generation uses built-in Helvetica/Times fonts and no font download. Licence copies are in `public/licences/`.
 
-The scoring guide and HTML previews remain valid for rubric 1.1; they were prepared on 2 October and have not been redesigned for this documentation refresh. Guide verification requires Python `python-docx` and Poppler. Its builder writes the Word document; the matching PDF needs rendering/export and visual QA before replacing it. The design-options builder also needs `tmp/layout/demo-review.json` and a separate font cache currently configured under `/private/tmp/meeting-coach-design-fonts/`; this cache can disappear between sessions. The committed previews embed their fonts and remain usable without it. These artifact-building prerequisites do not affect the normal app build.
+The scoring guide and HTML previews remain valid for rubric 1.1; they were prepared on 2 October and have not been redesigned or regenerated for the 12 October documentation refresh. Guide verification requires Python `python-docx` and Poppler. Its builder writes the Word document; the matching PDF needs rendering/export and visual QA before replacing it. The design-options builder also needs `tmp/layout/demo-review.json` and a separate font cache currently configured under `/private/tmp/meeting-coach-design-fonts/`; this cache can disappear between sessions. The committed previews embed their fonts and remain usable without it. These artifact-building prerequisites do not affect the normal app build.
