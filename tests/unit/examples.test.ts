@@ -44,6 +44,12 @@ it('changes scenario after every click and supplies a new variation',async()=>{
   expect(first.scenarioId).not.toBe('retirement');expect(second.scenarioId).not.toBe(first.scenarioId);
   expect(second.exampleId).not.toBe(first.exampleId);expect(send.mock.calls[1][0]).not.toEqual(send.mock.calls[0][0]);expect(reserve).toHaveBeenCalledTimes(2);
 });
+it('names the failed check with measurements and passes them to the retry',async()=>{
+  const short=raw();short.segments.forEach(s=>s.text='Plan work time.');const send=vi.fn<Parameters<typeof generateExample>[2]>(provider(short));
+  await expect(generateExample(input(),1000,send,async()=>{},new AbortController().signal)).rejects.toMatchObject({code:'example_validation',message:'The generated example could not be used. First attempt: 300 words, but an example needs 6,300 to 7,700. Second attempt: 300 words, but an example needs 6,300 to 7,700. Your current transcript is unchanged; please try again.'});
+  expect(send.mock.calls[0][0].instructions).not.toContain('previous attempt');expect(send.mock.calls[1][0].instructions).toContain('The previous attempt failed a check: 300 words, but an example needs 6,300 to 7,700.');
+  const few=raw();few.segments=few.segments.slice(0,40);expect(()=>validateExample(few,'career','x')).toThrow(expect.objectContaining({detail:'40 speech turns, but an example needs 70 to 160'}));
+});
 it('reserves a correction call and stops after at most two attempts',async()=>{
   const reserve=vi.fn(async()=>{}),send=vi.fn<Parameters<typeof generateExample>[2]>().mockImplementationOnce(provider({})).mockImplementationOnce(provider(raw()));
   await generateExample(input(),1000,send,reserve,new AbortController().signal);
