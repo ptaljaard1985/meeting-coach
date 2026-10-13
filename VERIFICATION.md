@@ -2,6 +2,13 @@
 
 Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
+## Custom domain, 13 October 2026
+
+- The operator's GoDaddy CNAME `meetingcoach` → `meeting-coach-0f6x.onrender.com` resolves. `https://meetingcoach.coachingwayofbeing.com` returned HTTP 200 with a valid certificate and reported live mode. The owner's earlier screenshot showed the Turnstile widget listing both hostnames.
+- The owner's next attempt, example generation on the custom domain, showed "Open Meeting Coach in its own browser tab". An empty POST to `/api/example` showed `APP_ORIGIN` still named the onrender address; such a request is refused at input validation, before limits, analytics or any model call. The owner changed it, and at 13:12 SAST the same probe passed the origin check from the custom domain and was refused (`origin`) from the onrender address.
+- PR #8 (`83210ea`) merged at 13:05 SAST. By 13:07 the hosted CSP included `'wasm-unsafe-eval'`, and the four PDF font files returned HTTP 200.
+- Not yet verified on the custom domain: a review, example generation and a PDF download.
+
 ## PDF fixed and redesigned as a slide deck, 13 October 2026
 
 - First paid hosted review: the owner's screenshot showed a completed review page ("Your meeting review", title "Second Opinion") for a real Fathom transcript set up as a couple on one device. Duration, the model line and the Both voices output were not reported. This is the first evidence that a paid hosted review completes.
