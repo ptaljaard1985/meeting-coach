@@ -1,5 +1,6 @@
 import { describe,it,expect } from 'vitest';
 import { parseTranscript,parseTimestamp } from '../../lib/transcripts';
+import { MAX_TRANSCRIPT_BYTES } from '../../lib/constants';
 import { computeMeetingMetrics } from '../../lib/metrics';
 import { checkRoles } from '../../lib/roles';
 import golden from '../fixtures/golden.json';
@@ -12,9 +13,10 @@ describe('local parser extraction',()=>{
     ['VTT','WEBVTT\n\n00:00:01.000 --> 00:00:04.000\n<v Adviser>How are you?</v>\n\n00:00:05.000 --> 00:00:08.000\n<v Client>Yes, thank you.</v>','vtt'],
     ['SRT','1\n00:00:01,000 --> 00:00:04,000\nAdviser: How are you?\n\n2\n00:00:05,000 --> 00:00:08,000\nClient: Yes, thank you.','srt'],
   ])('supports %s with real timestamps',(_,raw,format)=>{const p=parseTranscript(raw);expect(p.format).toBe(format);expect(p.hasTimestamps).toBe(true);expect(p.segments.at(-1)?.text).toBe('Yes, thank you.');expect(p.segments[0].id).toBe('segment-1');expect(p.segments.at(-1)?.timestamp).toBe('00:00:05.000'.replace('.000',format==='vtt'||format==='srt'?'.000':''));});
+  it('reads "H:MM:SS - Name (Organisation)" header blocks as one speaker each',()=>{const p=parseTranscript('0:00:05 - Coach Person (example-coaching.com)\n  How have things been?\n\n1:12:44 - Client One (Example Holdings Trading Group Ltd)\n  Better, thank you.\n  Much better.\n\n1:13:05 \u2013 Coach Person (example-coaching.com)\n  Good to hear.');expect(p.format).toBe('speaker_blocks');expect(p.speakers.map(s=>s.name)).toEqual(['Coach Person (example-coaching.com)','Client One (Example Holdings Trading Group Ltd)']);expect(p.segments.map(s=>s.timestamp)).toEqual(['00:00:05','01:12:44','01:13:05']);expect(p.segments[1].text).toBe('Better, thank you. Much better.');});
   it('does not fabricate timestamps',()=>{const p=parseTranscript('Speaker 1: Hello there.\nSpeaker 2: Hello there.');expect(p.hasTimestamps).toBe(false);expect(p.segments.every(s=>s.timestamp==='')).toBe(true);});
   it.each(['','Plain text without speakers.','Adviser: Only one voice.','WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nUnattributed speech.','Adviser: Hello.\nClient: Hello.\n'+'Unsupported prose. '.repeat(100)])('rejects incomplete/unsupported attribution',raw=>expect(()=>parseTranscript(raw)).toThrow());
-  it('rejects oversize and excessive speakers',()=>{expect(()=>parseTranscript('Adviser: '+'x'.repeat(64001))).toThrow(/large/);expect(()=>parseTranscript(Array.from({length:13},(_,i)=>`Speaker ${i}: hello.`).join('\n'))).toThrow(/Too many/);});
+  it('rejects oversize and excessive speakers',()=>{expect(()=>parseTranscript('Adviser: '+'x'.repeat(MAX_TRANSCRIPT_BYTES))).toThrow(/is 161 KB\. The limit is 160 KB/);expect(parseTranscript('Adviser: '+'x '.repeat(70000)+'\nClient: Yes.').speakers).toHaveLength(2);expect(()=>parseTranscript(Array.from({length:13},(_,i)=>`Speaker ${i}: hello.`).join('\n'))).toThrow(/Too many/);});
   it('rejects invalid clocks for metrics',()=>{expect(parseTimestamp('00:70:00')).toBeNull();expect(parseTimestamp('01:02:03.500')).toBe(3723.5);});
 });
 describe('ported golden arithmetic and role semantics',()=>{

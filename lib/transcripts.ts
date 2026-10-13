@@ -5,6 +5,8 @@ export class TranscriptParseError extends Error {}
 export const countWords = (text: string) => text.trim() ? text.trim().split(/\s+/).length : 0;
 const bare = /^\d{1,2}:\d{2}(?::\d{2})?(?:[.,]\d{1,3})?$/;
 const inline = /^(?:\[?(\d{1,2}:\d{2}(?::\d{2})?(?:[.,]\d{1,3})?)\]?\s+)?([^:\n]{1,60}):\s+(.*)$/;
+// Header line "1:12:44 - Name (Organisation)", with the speech on the following lines.
+const stamped = /^\[?(\d{1,2}:\d{2}(?::\d{2})?(?:[.,]\d{1,3})?)\]?\s+[-–—]\s+(.+)$/;
 const cue = /^(\d{1,2}:\d{2}(?::\d{2})?[.,]\d{1,3})\s*-->\s*(\d{1,2}:\d{2}(?::\d{2})?[.,]\d{1,3})(?:\s+.*)?$/;
 const cueAny = /^(\d{1,2}:\d{2}(?::\d{2})?(?:[.,]\d{1,3})?)\s*-->\s*(\d{1,2}:\d{2}(?::\d{2})?(?:[.,]\d{1,3})?)(?:\s+.*)?$/;
 function stamp(t: string) { const p=t.replace(',', '.').split(':'); if(p.length===2)p.unshift('00'); return p.map((v,i)=>i<2?v.padStart(2,'0'):v.padStart(2,'0')).join(':'); }
@@ -16,7 +18,8 @@ export function parseTimestamp(t: string): number | null {
 interface Candidate { segments: Segment[]; covered: Set<number> }
 export function parseTranscript(raw: string) {
   if(!raw.trim()) throw new TranscriptParseError('Paste a speaker-labelled transcript to begin.');
-  if(new TextEncoder().encode(raw).length>MAX_TRANSCRIPT_BYTES) throw new TranscriptParseError('This transcript is too large. Use an excerpt of up to 64 KB.');
+  const size=new TextEncoder().encode(raw).length;
+  if(size>MAX_TRANSCRIPT_BYTES) throw new TranscriptParseError(`This transcript is ${Math.ceil(size/1000)} KB. The limit is ${MAX_TRANSCRIPT_BYTES/1000} KB (roughly three hours of conversation). Use a shorter excerpt.`);
   const lines=raw.replace(/\r\n?/g,'\n').split('\n');
   const make=():Candidate=>({segments:[],covered:new Set()});
   const push=(c:Candidate,speaker:string,text:string,timestamp:string,indices:number[])=>{
@@ -27,7 +30,9 @@ export function parseTranscript(raw: string) {
   const b=make(); let previous=''; let group:number[]=[];
   const block=()=>{
     if(!group.length)return;const first=lines[group[0]].trim();let speaker=previous,timestamp='',start=1;
+    const header=stamped.exec(first);
     if(bare.test(first)){if(!previous){group=[];return;}timestamp=stamp(first);}
+    else if(header&&group.length>=2&&header[2].length<=80&&header[2].split(/\s+/).length<=10&&!/[.?!,;:]$/.test(header[2])){timestamp=stamp(header[1]);speaker=header[2];}
     else {if(group.length<2 || first.length>60 || first.split(/\s+/).length>6 || /[.?!,;:]$/.test(first) || /^[#>\-]/.test(first)){group=[];return;} speaker=first;
       if(bare.test(lines[group[1]].trim())){timestamp=stamp(lines[group[1]].trim());start=2;}}
     push(b,speaker,group.slice(start).map(i=>lines[i].trim()).join(' '),timestamp,group);previous=speaker;group=[];

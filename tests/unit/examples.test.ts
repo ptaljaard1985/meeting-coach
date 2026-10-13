@@ -4,6 +4,7 @@ import { EXAMPLE_INSTRUCTIONS } from '../../lib/examples/prompt';
 import { handleExample } from '../../lib/server/example-handler';
 import { MemoryLimiter } from '../../lib/server/limits';
 import { parseTranscript } from '../../lib/transcripts';
+import { MAX_TRANSCRIPT_BYTES } from '../../lib/constants';
 import { prepareInput } from '../../lib/review/input';
 import { config,provider,submission } from './helpers';
 import type { AnalysisRecord } from '../../lib/analytics';
@@ -26,7 +27,7 @@ it.each(['too_short','too_long','absent_client','oversized','shape'])('rejects a
   if(kind==='too_short')r.segments.forEach(s=>s.text='Too brief.');
   if(kind==='too_long')r.segments.forEach(s=>s.text+=' plan'.repeat(20));
   if(kind==='absent_client')r.segments.forEach(s=>{if(s.speaker==='Client B')s.speaker='Client A';});
-  if(kind==='oversized')r.segments.forEach(s=>s.text=Array(70).fill('abcdefghijklmn').join(' '));
+  if(kind==='oversized')r.segments.forEach(s=>s.text=Array(70).fill('x'.repeat(Math.ceil(MAX_TRANSCRIPT_BYTES/7000))).join(' '));
   if(kind==='shape')r.segments[0].speaker='Unidentified';
   expect(()=>validateExample(r,'career','example')).toThrow();
 });
