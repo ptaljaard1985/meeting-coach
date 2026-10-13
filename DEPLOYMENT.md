@@ -1,6 +1,6 @@
 # Render pilot deployment
 
-Updated 13 October 2026. The owner supplied **https://meeting-coach-0f6x.onrender.com** and reports deployments after entering Upstash credentials and the OpenAI key. Cloudflare Turnstile keys were obtained and configuration instructions supplied. The owner confirms the site opens in their browser. **The owner switched to `live` on 12 October and the homepage reports live mode (rechecked 13 October); live AI reviews have not been verified.** The agent first loaded the homepage from its shell in demo mode (HTTP 200, Turnstile site key present) and saw `live` after the switch. A reported deployment is not an end-to-end test.
+Updated 13 October 2026. The pilot runs at **https://meetingcoach.coachingwayofbeing.com** (custom domain since 13 October; the original **https://meeting-coach-0f6x.onrender.com** no longer accepts reviews). The owner reports deployments after entering Upstash credentials and the OpenAI key. Cloudflare Turnstile keys were obtained and configuration instructions supplied. The owner confirms the site opens in their browser. **The owner switched to `live` on 12 October and the homepage reports live mode (rechecked 13 October); the owner's screenshot on 13 October showed the first completed paid review.** The agent first loaded the homepage from its shell in demo mode (HTTP 200, Turnstile site key present) and saw `live` after the switch. A reported deployment is not an end-to-end test.
 
 The owner explicitly selected **GPT-6.1 Sol for reviews** on 12 October, retaining medium reasoning and standard service. Examples remain fixed Sol 6.1/low. Set the model override explicitly: unchanged runtime code and `.env.example` still default to Astra. Claude was discussed but no provider change or fallback was selected.
 
@@ -35,7 +35,7 @@ These are the supplied setup instructions, not a claim that the environment has 
 | Start | `./node_modules/.bin/next start --hostname 0.0.0.0 --port "$PORT"` |
 | Initial mode | `REVIEW_MODE=demo` |
 
-The ordinary local `npm start` binds to `127.0.0.1`; the Render command above supplies the public binding and host port. Render provides the `onrender.com` address and managed HTTPS, so no custom domain or DNS change is required. [Web service setup](https://render.com/docs/web-services), [Node version](https://render.com/docs/node-version), [compute plan names](https://render.com/docs/compute-plans).
+The ordinary local `npm start` binds to `127.0.0.1`; the Render command above supplies the public binding and host port. Render provides managed HTTPS for both the `onrender.com` address and the custom domain. On 13 October the operator added a GoDaddy CNAME, `meetingcoach` → `meeting-coach-0f6x.onrender.com`; after Render verified the domain, the custom domain served a valid certificate. [Web service setup](https://render.com/docs/web-services), [Node version](https://render.com/docs/node-version), [compute plan names](https://render.com/docs/compute-plans).
 
 Render documents a 100-minute HTTP response limit, sufficient in principle for the app's 15-minute foreground deadline and 16-minute route declaration. Actual long requests and cancellation still need testing. The user must keep the page open; refresh/navigation cannot recover a review. No background worker or content storage was introduced. [Render request duration](https://render.com/docs/render-vs-vercel-comparison).
 
@@ -55,7 +55,7 @@ Enter secrets directly in Render; do not put their values in chat, screenshots, 
 | `REVIEW_CONCURRENCY` | `3` (existing default) |
 | `REVIEW_TIMEOUT_MS` | `900000` (15 minutes including any correction) |
 | `ANALYTICS_ENABLED` | `true` |
-| `APP_ORIGIN` | `https://meeting-coach-0f6x.onrender.com` — no trailing slash |
+| `APP_ORIGIN` | `https://meetingcoach.coachingwayofbeing.com`, with no trailing slash (switched from the onrender address on 13 October) |
 | `TURNSTILE_SITE_KEY` | Widget's public site key |
 | `TURNSTILE_SECRET_KEY` | Widget's private secret key |
 | `UPSTASH_REDIS_REST_URL` | Database HTTPS REST URL ending in `.upstash.io`, not the Redis TCP connection URL |
@@ -71,7 +71,7 @@ openssl rand -hex 32
 
 The OpenAI key permissions screenshot showed **Restricted**, **Responses (`/v1/responses`) = Write**, every other displayed individual permission **None**, and the parent Model capabilities group **Mixed**. A 90-day expiry was suggested but not confirmed; record the actual expiry and replace the key in Render before that date. Never use another application's key or a Codex session credential. [OpenAI permissions](https://developers.openai.com/api/docs/guides/rbac), [API key handling](https://developers.openai.com/api/docs/guides/production-best-practices).
 
-Turnstile setup instructions: widget name `Meeting Coach`, hostname `meeting-coach-0f6x.onrender.com` (no scheme/path), **Managed**, pre-clearance disabled. The app already embeds the widget and verifies tokens server-side, including hostname and action `review`; no DNS proxy change is needed. [Widget setup](https://developers.cloudflare.com/turnstile/get-started/widget-management/dashboard/).
+Turnstile setup instructions: widget name `Meeting Coach`, hostnames `meetingcoach.coachingwayofbeing.com` and `meeting-coach-0f6x.onrender.com` (no scheme or path; both listed per the owner's screenshot on 13 October), **Managed**, pre-clearance disabled. The app already embeds the widget and verifies tokens server-side, including hostname and action `review`; no DNS proxy change is needed. [Widget setup](https://developers.cloudflare.com/turnstile/get-started/widget-management/dashboard/).
 
 ## Proxy verification and retention
 
