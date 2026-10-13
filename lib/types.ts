@@ -1,6 +1,7 @@
 export interface Segment { id: string; speaker: { display_name: string }; text: string; timestamp: string }
 export type Role = 'adviser' | 'client' | 'observer';
-export type MeetingContext = 'single' | 'couple' | 'other';
+// couple_shared: both partners speak under one client label (joined from one device).
+export type MeetingContext = 'single' | 'couple' | 'couple_shared' | 'other';
 export interface SpeakerRole { speaker: string; role: Role }
 export interface MeetingMetrics {
   talk_share_adviser: number | null; question_count_adviser: number;

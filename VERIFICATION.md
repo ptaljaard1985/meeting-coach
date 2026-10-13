@@ -2,6 +2,14 @@
 
 Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
+## Couple on one device, 13 October 2026
+
+- PR #6 (`2f44978`) merged at 10:11 SAST. The owner's next screenshot of the hosted site showed "skipped 2 lines before the first speaker", so the heading fix is live. The agent's own script-chunk check reported otherwise; that check was faulty.
+- The same screenshot showed two clients who joined from one computer, so the export has both partners under one label and "A couple" was refused. Interim advice was "Other client meeting". The owner then chose a dedicated meeting type with Both voices partly scored.
+- Changes: new context `couple_shared`, shown as "A couple on one device (one shared label)", requiring exactly one client label. Both voices may be assessed on criteria 2 and 3 only. Validation rejects any verdict on criteria 1 or 4 (`shared_label_scope`), and the client balance ratio stays null. Prompt rule 8 was rewritten and `PROMPT_VERSION` moved to `meeting-coach-openai-2.3`; rubric 1.1 is unchanged. A one-label "A couple" error now points to the new type.
+- `npm run test` (107 tests, two new), typecheck, lint and build passed.
+- Not verified: live model behaviour with `couple_shared`, and calibration of the partial Both voices score. Both voices scores from shared-label and two-label couples are not like-for-like.
+
 ## Export headings and flexible headers, 13 October 2026
 
 - PR #5 (`3c2f220`) merged at 09:59 SAST. By 10:01 the hosted page and its parser script showed the 160 KB limit (checked from the agent shell).

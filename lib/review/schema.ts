@@ -26,7 +26,9 @@ export function validateReview(raw: unknown, segments: Segment[], context: Meeti
       for(const e of c.evidence){const segment=source.get(e.segment_id);if(!e.quote.trim()||!segment||!segment.text.includes(e.quote))throw new InvalidReview('quote_segment_mismatch');}
     }
     if(s.assessable!==(s.value!==null)||s.assessable!==s.criteria.some(c=>c.verdict!=='not_assessable'))throw new InvalidReview('assessability');
-    if(expected.position===7&&context!=='couple'&&s.assessable)throw new InvalidReview('couple_scope');
+    if(expected.position===7&&context!=='couple'&&context!=='couple_shared'&&s.assessable)throw new InvalidReview('couple_scope');
+    // One shared client label: balance (c1) and individual confirmation (c4) cannot be attributed.
+    if(expected.position===7&&context==='couple_shared'&&s.criteria.some(c=>[1,4].includes(expected.criteria.find(x=>x.id===c.criterion_id)!.position)&&c.verdict!=='not_assessable'))throw new InvalidReview('shared_label_scope');
   }
   const scores=rubric.scores.map(def=>{
     const s=data.scores.find(x=>x.score_id===def.id)!;

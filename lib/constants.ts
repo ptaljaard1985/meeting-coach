@@ -10,4 +10,4 @@ export const REVIEW_TIMEOUT_MS = 15 * 60 * 1000;
 export const MAX_PROMPT_BYTES = 267_904;
 // Example requests carry no transcript, so they keep the original 128,000-token budget.
 export const MAX_EXAMPLE_PROMPT_BYTES = 123_904;
-export const PROMPT_VERSION = 'meeting-coach-openai-2.2';
+export const PROMPT_VERSION = 'meeting-coach-openai-2.3';

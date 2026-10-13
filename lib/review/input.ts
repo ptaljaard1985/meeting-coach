@@ -6,7 +6,7 @@ import { computeMeetingMetrics } from '../metrics';
 export const submissionSchema=z.strictObject({
   transcript:z.string().min(1).max(MAX_TRANSCRIPT_BYTES),
   roles:z.array(z.strictObject({speaker:z.string().min(1).max(60),role:z.enum(['adviser','client','observer'])})).min(2).max(12),
-  context:z.enum(['single','couple','other']), knownDurationSeconds:z.number().positive().max(28_800).optional(),
+  context:z.enum(['single','couple','couple_shared','other']), knownDurationSeconds:z.number().positive().max(28_800).optional(),
   acknowledgement:z.literal(true),noticeVersion:z.literal(NOTICE_VERSION),
   requestId:z.uuid(),challengeToken:z.string().max(2048).optional()
 });
