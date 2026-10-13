@@ -2,6 +2,12 @@
 
 Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
+## Example length overshoot, 13 October 2026
+
+- With PR #10 live, the next example attempt reported its measurements: 7,754 words, then 8,383 on the retry, against a range of 6,300 to 7,700. The drafts were too long, not too short as the entry below guessed. Told only the range, the retry went longer. That makes four paid example calls today, none successful.
+- Changes: the prompt aims for about 6,600 words and says that going over fails too. A word-count failure now states its direction and size ("54 over the 7,700 maximum"), and the retry is told to write about 6,600 words and roughly how many fewer or more. `EXAMPLE_PROMPT_VERSION` moved to `meeting-coach-example-1.2`. The accepted range (45 to 55 minutes) is unchanged.
+- `npm run test` (108 tests), typecheck, lint and build passed. Not verified live.
+
 ## Example generation failure, 13 October 2026
 
 - On the custom domain, "Generate example meeting" passed the origin check and made two paid model calls (the first attempt and the automatic correction). Both outputs failed the app's example checks, showing "The generated example did not meet the length or speaker requirements". This was the first live example-generation attempt; none has succeeded yet.

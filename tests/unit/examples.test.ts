@@ -46,8 +46,9 @@ it('changes scenario after every click and supplies a new variation',async()=>{
 });
 it('names the failed check with measurements and passes them to the retry',async()=>{
   const short=raw();short.segments.forEach(s=>s.text='Plan work time.');const send=vi.fn<Parameters<typeof generateExample>[2]>(provider(short));
-  await expect(generateExample(input(),1000,send,async()=>{},new AbortController().signal)).rejects.toMatchObject({code:'example_validation',message:'The generated example could not be used. First attempt: 300 words, but an example needs 6,300 to 7,700. Second attempt: 300 words, but an example needs 6,300 to 7,700. Your current transcript is unchanged; please try again.'});
-  expect(send.mock.calls[0][0].instructions).not.toContain('previous attempt');expect(send.mock.calls[1][0].instructions).toContain('The previous attempt failed a check: 300 words, but an example needs 6,300 to 7,700.');
+  await expect(generateExample(input(),1000,send,async()=>{},new AbortController().signal)).rejects.toMatchObject({code:'example_validation',message:'The generated example could not be used. First attempt: 300 words, 6,000 under the 6,300 minimum. Second attempt: 300 words, 6,000 under the 6,300 minimum. Your current transcript is unchanged; please try again.'});
+  expect(send.mock.calls[0][0].instructions).not.toContain('previous attempt');expect(send.mock.calls[1][0].instructions).toContain('The previous attempt failed a check: 300 words, 6,000 under the 6,300 minimum. Write a longer meeting this time: about 6,600 words, roughly 6,300 more than before.');
+  const long=raw();long.segments.forEach(s=>s.text=Array(78).fill('plan').join(' '));expect(()=>validateExample(long,'career','x')).toThrow(expect.objectContaining({detail:'7,800 words, 100 over the 7,700 maximum',retry:'Write a shorter meeting this time: about 6,600 words, roughly 1,200 fewer than before.'}));
   const few=raw();few.segments=few.segments.slice(0,40);expect(()=>validateExample(few,'career','x')).toThrow(expect.objectContaining({detail:'40 speech turns, but an example needs 70 to 160'}));
 });
 it('reserves a correction call and stops after at most two attempts',async()=>{

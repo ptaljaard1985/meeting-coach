@@ -15,7 +15,9 @@ const jsonSchema = z.toJSONSchema(exampleOutputSchema,{target:'draft-7'});
 const emphases = ['Thoughtful opening and reflections, but an overly adviser-led close.', 'Clear decisions, but some jargon and weak checks for understanding.', 'Good explanations, but uneven attention to the quieter partner.', 'Good individual goals, but worry is answered too quickly.', 'Useful emotional acknowledgement, but actions and obstacles stay vague.', 'Good practical next steps, but some recommendations lose the link to personal goals.'];
 
 // A failed example check with a plain-English measurement: shown to the adviser and given to the retry.
-class InvalidExample extends InvalidReview { constructor(code:string,public detail:string){super(code);} }
+// `retry` is an extra instruction for the second attempt, such as which way to change the length.
+class InvalidExample extends InvalidReview { constructor(code:string,public detail:string,public retry=''){super(code);} }
+const WORD_TARGET=6600;
 const n=(x:number)=>x.toLocaleString('en-GB');
 
 export function exampleParameters(scenario:ScenarioId,variation:string,emphasis:string,correction?:string):ResponseCreateParamsNonStreaming {
@@ -30,7 +32,8 @@ export function validateExample(raw:unknown,scenario:ScenarioId,exampleId:string
   if(!result.success){const turns=(raw as {segments?:unknown}|null)?.segments;throw new InvalidExample('example_shape',Array.isArray(turns)&&(turns.length<70||turns.length>160)?`${n(turns.length)} speech turns, but an example needs 70 to 160`:'the reply did not match the required format');}
   const segments=result.data.segments.map(s=>({...s,text:s.text.replace(/\s+/g,' ')}));
   const wordCount=segments.reduce((n,s)=>n+countWords(s.text),0);
-  if(wordCount<6300||wordCount>7700)throw new InvalidExample('example_word_count_6300_to_7700',`${n(wordCount)} words, but an example needs 6,300 to 7,700`);
+  if(wordCount>7700)throw new InvalidExample('example_word_count_6300_to_7700',`${n(wordCount)} words, ${n(wordCount-7700)} over the 7,700 maximum`,`Write a shorter meeting this time: about ${n(WORD_TARGET)} words, roughly ${n(wordCount-WORD_TARGET)} fewer than before.`);
+  if(wordCount<6300)throw new InvalidExample('example_word_count_6300_to_7700',`${n(wordCount)} words, ${n(6300-wordCount)} under the 6,300 minimum`,`Write a longer meeting this time: about ${n(WORD_TARGET)} words, roughly ${n(WORD_TARGET-wordCount)} more than before.`);
   for(const speaker of ['Adviser','Client A','Client B']){
     const turns=segments.filter(s=>s.speaker===speaker);
     const words=turns.reduce((sum,s)=>sum+countWords(s.text),0);
@@ -60,7 +63,7 @@ export async function generateExample(input:z.infer<typeof exampleRequestSchema>
       return validateExample(raw,scenario,variation);
     }catch(e){
       if(signal.aborted)throw new SafeError(504,'timeout','Example generation timed out or was cancelled. Your current transcript is unchanged.');
-      if(e instanceof InvalidReview){const detail=e instanceof InvalidExample?e.detail:e.code;failures.push(detail);correction=detail;if(attempt===0)continue;
+      if(e instanceof InvalidReview){const detail=e instanceof InvalidExample?e.detail:e.code;failures.push(detail);correction=e instanceof InvalidExample&&e.retry?`${detail}. ${e.retry}`:detail;if(attempt===0)continue;
         throw new SafeError(502,'example_validation',`The generated example could not be used. First attempt: ${failures[0]}. Second attempt: ${failures[1]}. Your current transcript is unchanged; please try again.`);}
       if(e instanceof SafeError)throw e;
       throw new SafeError(502,'provider','The service could not create an example. Your current transcript is unchanged; please try again later.');
