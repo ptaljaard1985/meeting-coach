@@ -1,6 +1,7 @@
 export const EXAMPLE_MODEL = 'gpt-6.1-sol';
 // 1.1 (13 October 2026): the retry instruction states the measured failure, e.g. the word count.
-export const EXAMPLE_PROMPT_VERSION = 'meeting-coach-example-1.1';
+// 1.2 (13 October 2026): aim for about 6,600 words (live drafts ran 7,754 and 8,383); the retry is told which way to change the length.
+export const EXAMPLE_PROMPT_VERSION = 'meeting-coach-example-1.2';
 export const EXAMPLE_OUTPUT_TOKENS = 20_000;
 export const SCENARIOS = {
   retirement: 'A couple considering a gradual retirement while balancing time together, work identity and uneven confidence about money.',
@@ -17,7 +18,7 @@ This is synthetic test data, never an actual client record or a recommendation t
 
 LENGTH AND FORMAT
 - Write the complete conversation, not a summary, outline, scene description or excerpt.
-- The speech must total 6,300–7,700 whitespace-separated words: approximately 45–55 minutes at 140 spoken words per minute. Aim for 6,900–7,200 words.
+- The speech must total 6,300–7,700 whitespace-separated words: approximately 45–55 minutes at 140 spoken words per minute. Aim for about 6,600 words: drafts tend to run long, and more than 7,700 words fails the check just as fewer than 6,300 does.
 - Use 80–150 naturally varied speech turns. Short answers can be a few words; occasional explanations may be longer. Do not make every turn the same length.
 - Return only JSON conforming to the supplied schema: a short title and segments with speaker and text.
 - Use exactly the labels Adviser, Client A, Client B. The clients are a couple. Both must speak substantially and have distinct priorities and conversational voices.
