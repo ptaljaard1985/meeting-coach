@@ -7,5 +7,6 @@ export function checkRoles(parsed: ParsedTranscript, roles: SpeakerRole[], conte
   if(advisers.length!==1)throw new Error('Explicitly select one adviser.');
   if(!clients.length)throw new Error('Confirm at least one client.');
   if(context==='single'&&clients.length!==1)throw new Error('A single-client meeting must have one client. Choose another context or correct the roles.');
-  if(context==='couple'&&clients.length!==2)throw new Error('A couple meeting must have exactly two clients. Observers are separate.');
+  if(context==='couple'&&clients.length!==2)throw new Error(clients.length===1?'A couple meeting needs two client voices, but only one client label was found. If both partners joined from one device, choose “A couple on one device”.':'A couple meeting must have exactly two clients. Observers are separate.');
+  if(context==='couple_shared'&&clients.length!==1)throw new Error('A couple on one device has exactly one client label, shared by both partners. With two client labels, choose “A couple (two clients)”.');
 }

@@ -3,11 +3,12 @@ import { DEMO_TRANSCRIPT } from '../demo-transcript';
 import { makeReview } from './schema';
 import type { PreparedInput } from './input';
 import { SafeError } from '../server/errors';
-export function demoRaw(context:'single'|'couple'|'other'='couple'){
+import type { MeetingContext } from '../types';
+export function demoRaw(context:MeetingContext='couple'){
   const evidenceSegments:[[number,number],...[number,number][]]=[[1,3],[3,7],[3,7],[7,7],[10,13],[3,4],[5,6]];
   const summaries=['The opening engaged with the person and let both clients shape the agenda.','Questions and reflections followed the clients’ own priorities.','Concern about time was named; this excerpt offers no market-turbulence rehearsal.','The discussion stayed in everyday language and checked the order of the meeting.','The adviser named owners and a deadline, then read back the next steps.','The discussion connected to time at home and a change in working hours.','Both clients contributed and confirmed the next steps.'];
-  return {scores:rubric.scores.map((s,i)=>{const assessable=i!==6||context==='couple';return {score_id:s.id,assessable,value:assessable?[4,4,3,4,4,4,3][i]:null,summary:assessable?summaries[i]:'This category applies only to an explicitly confirmed couple meeting.',criteria:s.criteria.map((c,j)=>{
-    const relevant=assessable && !(i===2&&j>=1) && !(i===3&&j===2) && !(i===6&&j===1);
+  return {scores:rubric.scores.map((s,i)=>{const assessable=i!==6||context==='couple'||context==='couple_shared';return {score_id:s.id,assessable,value:assessable?[4,4,3,4,4,4,3][i]:null,summary:assessable?summaries[i]:'This category applies only to an explicitly confirmed couple meeting.',criteria:s.criteria.map((c,j)=>{
+    const relevant=assessable && !(i===2&&j>=1) && !(i===3&&j===2) && !(i===6&&(context==='couple_shared'?j===0||j===3:j===1));
     const segment=evidenceSegments[i][j%2];return {criterion_id:c.id,verdict:relevant?'met' as const:'not_assessable' as const,rationale:relevant?'Illustrative coaching only: this excerpt contains a relevant interaction. A live review would evaluate it against the full criterion.':'The excerpt does not establish an opportunity to assess this criterion. Absence is not a failure.',evidence:relevant?[{segment_id:`segment-${segment}`,quote:DEMO_QUOTES[segment]}]:[]};})};}),
     coaching:[
       {title:'Lead with the person',learning:'Make space for life before looking at figures. Reflect what the client says so the opening shapes the conversation.',example:'The adviser opened with a check-in and reflected Client A’s wish for more control over time (segments 1–3).'},

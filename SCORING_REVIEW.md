@@ -16,7 +16,7 @@ The current implementation retains the extracted categories while we review them
 | Plain language | Understandable explanations and checks for understanding | Keep; do not assume a client understood simply because they said yes. |
 | Agreements & adherence | Actions, owners, deadlines and obstacles | Consider the clearer name “Decisions & next steps”. This is communication, not a compliance or suitability assessment. |
 | Anchored to their why | Connecting discussion to goals and values | Useful; avoid counting the same reflective moment as strong evidence for every category. |
-| Both voices | Participation and confirmation by each partner | Couple-only. Keep separate from the overall if comparing solo and couple meetings over time. An observer is never a spouse. |
+| Both voices | Participation and confirmation by each partner | Couple-only. Keep separate from the overall if comparing solo and couple meetings over time. An observer is never a spouse. For a couple on one device (one shared client label), only criteria 2 and 3 are scored, so compare those scores with care. |
 
 Recommended method for discussion:
 
