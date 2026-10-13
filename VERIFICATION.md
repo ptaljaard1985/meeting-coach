@@ -2,6 +2,14 @@
 
 Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
+## Example generation failure, 13 October 2026
+
+- On the custom domain, "Generate example meeting" passed the origin check and made two paid model calls (the first attempt and the automatic correction). Both outputs failed the app's example checks, showing "The generated example did not meet the length or speaker requirements". This was the first live example-generation attempt; none has succeeded yet.
+- The failing check cannot be identified: that message covered six checks, and analytics store only `validation_error`. Offline checks found no deterministic fault: the generator and parser count words identically, and valid synthetic examples pass with the current parser. The most likely cause is the model writing outside 6,300 to 7,700 words.
+- Changes: each check now reports a plain-English measurement (for example "5,212 words, but an example needs 6,300 to 7,700"). The error shows both attempts' measurements, and the retry instruction states the measurement instead of a bare code. `EXAMPLE_PROMPT_VERSION` moved to `meeting-coach-example-1.1`. The word range, model and reasoning effort are unchanged (owner decision).
+- `npm run test` (108 tests, one new), typecheck, lint and build passed.
+- Not verified: whether the measured retry succeeds live.
+
 ## Custom domain, 13 October 2026
 
 - The operator's GoDaddy CNAME `meetingcoach` → `meeting-coach-0f6x.onrender.com` resolves. `https://meetingcoach.coachingwayofbeing.com` returned HTTP 200 with a valid certificate and reported live mode. The owner's earlier screenshot showed the Turnstile widget listing both hostnames.

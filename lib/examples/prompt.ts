@@ -1,5 +1,6 @@
 export const EXAMPLE_MODEL = 'gpt-6.1-sol';
-export const EXAMPLE_PROMPT_VERSION = 'meeting-coach-example-1.0';
+// 1.1 (13 October 2026): the retry instruction states the measured failure, e.g. the word count.
+export const EXAMPLE_PROMPT_VERSION = 'meeting-coach-example-1.1';
 export const EXAMPLE_OUTPUT_TOKENS = 20_000;
 export const SCENARIOS = {
   retirement: 'A couple considering a gradual retirement while balancing time together, work identity and uneven confidence about money.',
