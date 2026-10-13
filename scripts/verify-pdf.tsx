@@ -16,7 +16,7 @@ for(const long of [false,true]){
   if(long){const quote=('The café visit was a chance to reflect, without being naïve. '.repeat(55)+'END OF LONG QUOTE').trim();segments[0].text=quote;for(const score of raw.scores)for(const criterion of score.criteria){criterion.rationale='This is a synthetic layout stress test. '.repeat(30)+'END OF RATIONALE';for(const evidence of criterion.evidence)if(evidence.segment_id==='segment-1')evidence.quote=quote;}raw.coaching[4].example+=' END OF FINAL TAKEAWAY';}
   const review=makeReview(raw,segments,'couple',prepared.metrics,'Synthetic demonstration',true);
   const file=`tmp/pdfs/${long?'long':'standard'}-review.pdf`;const buffer=await renderToBuffer(<ReportDocument review={review} title="Synthetic review · Café review"/>);await writeFile(file,buffer);
-  const text=execFileSync('pdftotext',['-layout',file,'-'],{encoding:'utf8'}).replace(/\s+/g,' ');
+  const text=execFileSync('pdftotext',[file,'-'],{encoding:'utf8'}).replace(/\s+/g,' ');
   const expected=[...rubric.scores.flatMap(s=>[s.name,...s.criteria.map(c=>c.text)]),...review.coaching.flatMap(t=>[t.title,t.learning,t.example]),'Meeting Coach','Café review'];
   for(const item of expected)if(!text.includes(item.replace(/\s+/g,' ')))throw new Error(`PDF omitted content: ${item.slice(0,60)}`);
   if(long&&!text.includes('END OF LONG QUOTE'))throw new Error('Long quote clipped');

@@ -69,6 +69,6 @@ Official implementation references: [Structured outputs](https://developers.open
 | Request gates, deadlines and quotas | `lib/server/handler.ts`, `lib/server/example-handler.ts`, `lib/server/config.ts`, `lib/server/limits.ts` |
 | Private numerical records | `lib/analytics.ts`, `lib/server/analytics.ts`, `scripts/analytics.ts` |
 | Privacy and disclosure versions | `app/privacy/page.tsx`, `lib/constants.ts` |
-| Browser PDF | `lib/pdf.tsx`, `lib/report.ts`, `scripts/verify-pdf.tsx` |
+| Browser PDF (16:9 slide deck) | `lib/pdf.tsx`, `lib/pdf-fonts/`, `lib/report.ts`, `scripts/verify-pdf.tsx`; the `proxy.ts` CSP allows `'wasm-unsafe-eval'` for the layout engine |
 
 The original handoff rubric files and source manifest are historical extraction records. They must not override the current rubric, privacy notice or accepted owner decisions. Never run the historical extraction verifier against the CRM.
