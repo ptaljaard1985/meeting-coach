@@ -1,6 +1,6 @@
 # Architecture and data lifecycle
 
-Updated 12 October 2026 against the local implementation. Implementation baseline `fa3db03` is unchanged by fresh GitHub `main` at `e30ec35`, inspected on 12 October after the owner cloned through their Mac Terminal. The owner reports a Render deployment at https://meeting-coach-0f6x.onrender.com and confirms it opens in their browser; the agent confirmed the homepage responds in demo mode, but AI and hosted-service behaviour have not been independently verified. See `HANDOFF_NOTES.txt` for continuation and `VERIFICATION.md` for dated evidence.
+Updated 13 October 2026 against the local implementation. Implementation baseline `fa3db03` is unchanged by fresh GitHub `main` at `e30ec35`, inspected on 12 October after the owner cloned through their Mac Terminal. The owner reports a Render deployment at https://meeting-coach-0f6x.onrender.com and confirms it opens in their browser; the agent confirmed the homepage responds and now reports live mode, but AI and hosted-service behaviour have not been independently verified. See `HANDOFF_NOTES.txt` for continuation and `VERIFICATION.md` for dated evidence.
 
 TypeScript, Next.js App Router, React, Zod, official OpenAI SDK, Vitest and browser `@react-pdf/renderer`. The server relay is needed because the operator funds a shared key. No CRM, Supabase, ORM, transcript store, object storage, content queue or hosted eval dataset is used.
 
@@ -46,7 +46,7 @@ Upstash Redis EVAL makes each concurrency, duplicate and call-quota decision ato
 
 Allowance is reserved before **every** outbound model call, including a correction. Failed/ambiguous calls are never refunded. Production live calls fail closed without the key, exact HTTPS origin, challenge, shared limiter, trusted proxy IP header and pseudonym secret. The in-memory limiter is for local development only.
 
-The Render pilot instructions use `APP_ORIGIN=https://meeting-coach-0f6x.onrender.com`, public binding to `0.0.0.0:$PORT`, and a suggested 10-call daily allowance; the unchanged code/template defaults remain 30 calls/day, 12/network/hour and concurrency 3. The configured values have not been inspected. Upstash's Frankfurt selection is visible in the setup screenshot, and the owner confirmed Render Frankfurt. Render documents `x-forwarded-for` for the client IP, but the deployed proxy and forged-header behaviour remain a separate check. The owner asked to switch to `live` on 12 October; the homepage still reported `demo` at the agent's last check. See `DEPLOYMENT.md` before enabling paid requests.
+The Render pilot instructions use `APP_ORIGIN=https://meeting-coach-0f6x.onrender.com`, public binding to `0.0.0.0:$PORT`, and a suggested 10-call daily allowance; the unchanged code/template defaults remain 30 calls/day, 12/network/hour and concurrency 3. The configured values have not been inspected. Upstash's Frankfurt selection is visible in the setup screenshot, and the owner confirmed Render Frankfurt. Render documents `x-forwarded-for` for the client IP, but the deployed proxy and forged-header behaviour remain a separate check. The owner switched to `live` on 12 October; the homepage reports live mode, but no paid request result is recorded yet. See `DEPLOYMENT.md` before enabling paid requests.
 
 ## Numerical analytics retained until deletion
 

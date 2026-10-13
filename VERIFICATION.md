@@ -1,6 +1,6 @@
 # MVP verification
 
-Documentation updated 12 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
+Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
 ## Completed locally on 12 October 2026
 
@@ -13,10 +13,10 @@ Documentation updated 12 October 2026. Evidence below separates fresh local chec
 
 ## Later checks on 12 October 2026
 
-- After the owner supplied the operator details and confirmed Render Frankfurt, `app/privacy/page.tsx` gained a "Who runs Meeting Coach" section and `NOTICE_VERSION` moved to `2026-10-12.1`. `npm run test` (100 tests, seven files), typecheck, lint and build passed again, and a local production server rendered the new section at `/privacy`. The hosted page shows it only after the change is merged and deployed.
+- After the owner supplied the operator details and confirmed Render Frankfurt, `app/privacy/page.tsx` gained a "Who runs Meeting Coach" section and `NOTICE_VERSION` moved to `2026-10-12.1`. `npm run test` (100 tests, seven files), typecheck, lint and build passed again, and a local production server rendered the new section at `/privacy`. PR #2 merged it as `9941ab3`; the hosted `/privacy` page showed the section about 90 seconds after the merge (rechecked 13 October).
 - The agent shell reached GitHub: PR #1 (`docs/render-pilot-20261012`) was merged at 17:12 SAST as `e05aacd`, a merge commit with no further changes.
 - The agent fetched the hosted homepage: HTTP 200 through Cloudflare to Render, `no-store` and CSP headers present, a Turnstile site key in the page, and mode `demo`. This shows the site is up in demo mode. It does not verify AI requests, Redis, the Turnstile secret or the environment values.
-- The owner asked to switch to live mode and was given the Render steps. A check after that request still showed `demo`; the switch is not yet confirmed.
+- The owner asked to switch to live mode and was given the Render steps. A later check on 12 October showed mode `live`, and it was still `live` on 13 October. This confirms the mode only; it does not show that each credential is correct or that a paid review succeeds.
 
 ## Owner-reported setup on 12 October 2026
 
@@ -24,7 +24,7 @@ Documentation updated 12 October 2026. Evidence below separates fresh local chec
 - Owner obtained Turnstile keys and was guided to add them, the exact hostname and `APP_ORIGIN` in Render. Successful verification is not established.
 - Upstash setup screenshot showed Frankfurt (`eu-central-1`), pay-as-you-go $0.20/100K commands and no maximum budget set at that point. Eviction was off on the initial screenshot and instructed to remain off. Final settings and data lifecycle are not audited.
 - OpenAI permissions screenshot showed Restricted, Responses Write and all other displayed permissions None. The owner reported adding the resulting key and deploying; the key value was not inspected. Dedicated project selection, billing, expiry and model access remain unverified.
-- Owner explicitly selected `gpt-6.1-sol` for pilot reviews. The model override, 10-call suggested allowance, random limiter secret and remaining non-secret environment values have not been inspected. The owner later asked to switch `REVIEW_MODE` to `live`; no completed switch or successful paid review is recorded.
+- Owner explicitly selected `gpt-6.1-sol` for pilot reviews. The model override, 10-call suggested allowance, random limiter secret and remaining non-secret environment values have not been inspected. The owner later switched `REVIEW_MODE` to `live` (confirmed on the hosted homepage); no successful paid review is recorded.
 - The owner supplied the public operator (Rob Macdonald, rob@coachingwayofbeing.com) and confirmed Render's region as Frankfurt.
 
 ## Access limitations observed on 12 October 2026
@@ -51,7 +51,7 @@ Documentation updated 12 October 2026. Evidence below separates fresh local chec
 
 1. **Live OpenAI behaviour.** The owner reports installing a dedicated key in Render, but access to the selected Sol model and a successful paid request remain unverified. Confirm the explicit Sol environment override, then run a fictional end-to-end review and example generation. Measure actual cost, latency, evidence accuracy, usefulness and variation. Compare against human labels; passing schema tests does not establish model quality.
 2. **Full interactive browser flow.** Playwright tests are implemented, but the sandbox rejected the local server bind with `EPERM`; a headless browser launch was also blocked. Run `npm run build` followed by `npm run test:browser` in an environment that permits the server and browser. Check PDF download, keyboard navigation, cancellation, Clear, refresh and back/forward navigation.
-3. **Hosted pilot.** Verify the owner-provided Render URL, HTTPS, the fixed public origin, Turnstile, shared Redis counters, trusted proxy configuration (including forged-header behaviour) and the 15-minute provider deadline. Verify analytics persistence/export and explicit deletion using a separate synthetic test database; ensure service eviction and backup settings match retention until deletion. Inspect network traffic and host logging to confirm that content is not captured. Verify the OpenAI account's retention settings and publish the operator/host privacy section (notice `2026-10-12.1`) and confirm it on the hosted page.
+3. **Hosted pilot.** Verify the owner-provided Render URL, HTTPS, the fixed public origin, Turnstile, shared Redis counters, trusted proxy configuration (including forged-header behaviour) and the 15-minute provider deadline. Verify analytics persistence/export and explicit deletion using a separate synthetic test database; ensure service eviction and backup settings match retention until deletion. Inspect network traffic and host logging to confirm that content is not captured. Verify the OpenAI account's retention settings. The operator/host privacy section (notice `2026-10-12.1`) is now live on the hosted page.
 4. **Scoring calibration.** A consultant should review the category anchors and applicability rules using the scoring guide, then independently label several varied synthetic meetings. The listening-share anchors have an overlap identified in `SCORING_REVIEW.md`; resolve this through the rubric review before treating scores as a reliable benchmark.
 
 ## Reproduce
@@ -73,4 +73,4 @@ Use the documented Node 24 LTS target. Report-PDF checks require Poppler; consul
 
 The initial implementation was pushed to GitHub `main` on 2 October as `fa3db03fb283a622074135854bf651d62b3c3ccf`, including app source, tests, synthetic fixtures, design previews and scoring guide. The CRM extracts, credentials, analytics exports and temporary test/build files were excluded. A fresh checkout fetched on 7 October confirmed that baseline. `START_HERE.txt`, `HANDOFF_NOTES.txt` and `AGENTS.md` provide the restart path; historical 25-criterion handoff JSON must not replace the operative 24-criterion rubric.
 
-This 12 October documentation refresh records the owner's Sol choice and deployment progress without changing source defaults or backdating live verification. The edits have been reconciled against freshly cloned GitHub `main` at `e30ec35`; that branch was later merged as PR #1 (`e05aacd`). Check GitHub branch/PR state before repeating publication work.
+This 12 October documentation refresh records the owner's Sol choice and deployment progress without changing source defaults or backdating live verification. The edits have been reconciled against freshly cloned GitHub `main` at `e30ec35`; that branch was later merged as PR #1 (`e05aacd`), and the privacy change as PR #2 (`9941ab3`). Check GitHub branch/PR state before repeating publication work.
