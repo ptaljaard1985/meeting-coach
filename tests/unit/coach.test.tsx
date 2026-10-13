@@ -55,7 +55,7 @@ it('cancels a request without replacing text or accepting a late response',async
 it('shows a waiting notice during a review and keeps cancellation available',async()=>{
   await seedAndEnable();
   const select=async(label:string,value:string)=>{await act(async()=>{const l=Array.from(host.querySelectorAll('label')).find(l=>l.textContent?.trim()===label)!;const field=document.getElementById(l.htmlFor) as HTMLSelectElement;field.value=value;field.dispatchEvent(new Event('change',{bubbles:true}));});};
-  await select('Which speaker is the adviser?','Adviser');await select('Client A','client');await select('Client B','client');await select('Meeting context','couple');
+  await select('Which speaker is the adviser?','Adviser');await select('Client A','client');await select('Client B','client');await select('Meeting type','couple');
   await act(async()=>host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click());
   fetchMock.mockImplementation((_url,options)=>new Promise((_resolve,reject)=>options?.signal?.addEventListener('abort',()=>reject(new DOMException('Cancelled','AbortError')),{once:true})));
   expect(button('Review meeting').disabled).toBe(false);await act(async()=>button('Review meeting').click());

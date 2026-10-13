@@ -25,7 +25,7 @@ Read in this order:
 
 Preserve these decisions:
 - Seven sections, 24 criteria, rubric 1.1; English, Afrikaans and mixed-language support.
-- Calm panels with Editorial colours and typography.
+- Calm panels with Editorial colours and typography; the input page is three stacked numbered steps with sage as a second colour (owner request, 13 October).
 - Sol 6.1/medium/standard pilot reviews; Sol 6.1/low fictional examples; dedicated Platform key only.
 - Foreground requests, shared 15-minute deadline, keep-page-open notice and Cancel; no worker.
 - Transcript text, quotes and written reviews remain transient. Private numerical analytics remain until owner deletion; no public analytics endpoint.

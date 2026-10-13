@@ -2,6 +2,13 @@
 
 Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
+## Input-page layout change, 13 October 2026
+
+- At the owner's request the input page became three numbered steps stacked down the page: Your transcript (rose tint), Meeting context (new sage tint) and Confirm and review (cream). The meeting-context select is now labelled "Meeting type", and the transcript box takes its name from the "Your transcript" heading. `--color-boundary` moved from `#93877c` to `#857a70` so field borders keep at least 3:1 contrast on both tints. No rubric, prompt, privacy wording, server or API change.
+- `npm run test` (100 tests, seven files), typecheck, lint and build passed on Node 25.5.0.
+- `npm run test:browser` ran locally (Brave, headless) against a demo server started with `APP_ORIGIN=http://127.0.0.1:3100`. Without that value every review in the suite is rejected by the origin check, because the local Next server reports its own URL as `localhost` while the tests open `127.0.0.1`. The five responsive tests (320 to 1440 px) passed. Two tests failed in the same way on an untouched clone of `main` at `e0f6cdc`: the full-flow test times out waiting for the PDF download event, and the error/cancel test finds two `alert` roles (the app's error message and the Next.js route announcer). These are existing test issues, not caused by the layout change.
+- The hosted site keeps the earlier layout until this change is merged to `main` and Render redeploys.
+
 ## Completed locally on 12 October 2026
 
 - `npm run test`: **100 tests passed in seven files** using synthetic fixtures and mocked providers.
