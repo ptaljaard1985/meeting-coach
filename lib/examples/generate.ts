@@ -3,7 +3,7 @@ import { randomInt } from 'node:crypto';
 import type { ResponseCreateParamsNonStreaming } from 'openai/resources/responses/responses';
 import { parseTranscript } from '../transcripts';
 import { countWords } from '../metrics';
-import { MAX_TRANSCRIPT_BYTES, MAX_PROMPT_BYTES } from '../constants';
+import { MAX_TRANSCRIPT_BYTES, MAX_EXAMPLE_PROMPT_BYTES } from '../constants';
 import { InvalidReview } from '../review/schema';
 import { abortable, type Provider } from '../review/judge';
 import { SafeError } from '../server/errors';
@@ -45,7 +45,7 @@ export async function generateExample(input:z.infer<typeof exampleRequestSchema>
   for(let attempt=0;attempt<2;attempt++){
     try{
       const parameters=exampleParameters(scenario,variation,emphasis,correction);
-      if(Buffer.byteLength(JSON.stringify(parameters),'utf8')>MAX_PROMPT_BYTES)throw new SafeError(413,'tokens','The example request exceeds the generation budget.');
+      if(Buffer.byteLength(JSON.stringify(parameters),'utf8')>MAX_EXAMPLE_PROMPT_BYTES)throw new SafeError(413,'tokens','The example request exceeds the generation budget.');
       signal.throwIfAborted();await reserve();signal.throwIfAborted();
       const response=await abortable(provider(parameters,signal),signal);
       if(response.status!=='completed')throw new SafeError(502,'incomplete','The example did not finish. Your current transcript is unchanged; please try again.');

@@ -47,7 +47,7 @@ Generation shares the review challenge, concurrency, network and daily call allo
 
 ## What it does
 
-Local parsing supports speaker blocks, inline speaker labels and attributed VTT/SRT. It rejects unsupported/unparsed text and incomplete diarisation. All speakers require role confirmation. Observers remain in judge context but contribute no adviser/client speaking time. Couple scoring requires explicit couple context.
+Local parsing supports speaker blocks (including headers such as `1:12:44 - Name (Organisation)` with the speech on the following lines), inline speaker labels and attributed VTT/SRT, up to 160 KB (roughly three hours). It rejects unsupported/unparsed text and incomplete diarisation. All speakers require role confirmation. Observers remain in judge context but contribute no adviser/client speaking time. Couple scoring requires explicit couple context.
 
 Reviews show seven categories, 24 criteria, exact source-linked quotes, deterministic conversation metrics and five takeaways. Unassessable categories are `n/a` and excluded from the equal-weight overall. AI score judgments can vary. See [SCORING_REVIEW.md](SCORING_REVIEW.md) for the current method and review points. The nine-page consultant pack is available as [PDF](output/documents/meeting-coach-scoring-guide.pdf) and [editable Word](output/documents/meeting-coach-scoring-guide.docx), with one page per category. `python3 scripts/document/verify_guide.py` checks its contents against the operative rubric.
 

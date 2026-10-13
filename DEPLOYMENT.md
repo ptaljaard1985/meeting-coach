@@ -99,18 +99,20 @@ The owner's cost illustration used **20,000 ordinary input + 10,000 billed outpu
 
 ### Conservative technical exposure
 
-The app caps serialized model parameters at 123,904 UTF-8 bytes plus a conservative 4,096-token framing allowance, budgeting 128,000 input tokens. Reviews allow 12,000 output tokens and examples 20,000; both include reasoning. Confirm framing/actual usage before relying on these technical bounds. Transcript input is at most 64 KB and API body at most 80 KB.
+The app caps serialized review parameters at 267,904 UTF-8 bytes plus a conservative 4,096-token framing allowance, so a review request cannot exceed 272,000 input tokens. That keeps every review below GPT-6.1 Sol's long-context tier, which charges double input/cache and 1.5× output for prompts above 272K tokens. Example requests carry no transcript and keep the earlier 123,904-byte cap (128,000 tokens). Reviews allow 12,000 output tokens and examples 20,000; both include reasoning. Confirm framing/actual usage before relying on these technical bounds. Transcript input is at most 160 KB (raised from 64 KB on 13 October at the owner's request; roughly three hours of conversation) and the API body at most 200 KB.
 
 Using the higher cache-write input price as a conservative input assumption:
 
 ```text
-Sol review attempt:    128,000 × $2.50 / 1m + 12,000 × $10 / 1m = $0.44
+Sol review attempt:    272,000 × $2.50 / 1m + 12,000 × $10 / 1m = $0.80
 Sol example attempt:   128,000 × $2.50 / 1m + 20,000 × $10 / 1m = $0.52
-Suggested 10 calls/day: 10 × $0.52 = $5.20/day technical exposure
-Source-default 30/day:  30 × $0.52 = $15.60/day technical exposure
+Suggested 10 calls/day: 10 × $0.80 = $8.00/day technical exposure
+Source-default 30/day:  30 × $0.80 = $24.00/day technical exposure
 ```
 
-The daily counter includes reviews, examples and corrections; ten calls are not ten completed reviews. Hidden SDK retries are disabled and failed/ambiguous attempts are not refunded. This is a deliberately generous technical bound, not a measured bill or monthly dollar cap; it excludes tax/other account charges and depends on model/pricing/token assumptions. If the Sol override is missing, the Astra source default has a higher bound ($2.20/review attempt at the checked prices), so verifying `REVIEW_MODEL` matters. [Astra pricing](https://developers.openai.com/api/docs/models/gpt-6-astra).
+Byte caps overstate tokens several-fold. In synthetic checks on 13 October, a 74-minute meeting with per-turn headers produced a 101 KB review request and a three-hour meeting 220 KB. Assuming roughly 4 bytes per token, that is about 25,000 to 55,000 input tokens, or about $0.05 to $0.11 of ordinary-price input per attempt. These are estimates, not observed usage.
+
+The daily counter includes reviews, examples and corrections; ten calls are not ten completed reviews. Hidden SDK retries are disabled and failed/ambiguous attempts are not refunded. This is a deliberately generous technical bound, not a measured bill or monthly dollar cap; it excludes tax/other account charges and depends on model/pricing/token assumptions. If the Sol override is missing, the Astra source default has a higher bound ($4.00/review attempt at the checked prices: 272,000 × $12.50 / 1m + 12,000 × $50 / 1m), so verifying `REVIEW_MODEL` matters. [Astra pricing](https://developers.openai.com/api/docs/models/gpt-6-astra).
 
 ## Finish the pilot
 

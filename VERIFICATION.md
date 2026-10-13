@@ -2,12 +2,21 @@
 
 Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
+## Transcript size and header format, 13 October 2026
+
+- The owner reported, with a screenshot, that a long transcript pasted into the hosted site showed "This transcript is too large". The text box silently cut pastes at 64,000 characters, and the parser then refused the remainder as over 64 KB. Separately, the parser read each `H:MM:SS - Name (Organisation)` header line as the speaker's name, so every turn became a new speaker (or, past six words, was left unattributed). Only synthetic text was used for the checks below.
+- Changes: speaker blocks accept a `H:MM:SS - Name` header (optional brackets; hyphen, en or em dash; name up to 80 characters and ten words) with the speech on the following lines. Transcript limit 160 KB, body 200 KB, review request cap 267,904 bytes (below Sol's 272K-token long-context tier). Examples keep the 123,904-byte cap through `MAX_EXAMPLE_PROMPT_BYTES`. The text box no longer truncates, and the size error states the actual and maximum size.
+- Synthetic 74, 120, 150 and 180-minute meetings in that header style parsed as two speakers and produced review requests of 101, 152, 186 and 220 KB. A 200-minute one (168 KB) was refused with the new message.
+- `npm run test` (101 tests, seven files), typecheck, lint and build passed. Browser suite with the same `APP_ORIGIN` setup: the five responsive tests passed; the same two existing failures remain.
+- Stop local servers by port (`lsof -tiTCP:3100 -sTCP:LISTEN | xargs kill`). Next renames its process to `next-server`, so `pkill -f "next start"` can leave a stale server holding the port, and later test runs then hit old code.
+- Not verified: a paid review of a long transcript (duration against the 15-minute deadline, output quality, actual token usage). No rubric, prompt or privacy change.
+
 ## Input-page layout change, 13 October 2026
 
 - At the owner's request the input page became three numbered steps stacked down the page: Your transcript (rose tint), Meeting context (new sage tint) and Confirm and review (cream). The meeting-context select is now labelled "Meeting type", and the transcript box takes its name from the "Your transcript" heading. `--color-boundary` moved from `#93877c` to `#857a70` so field borders keep at least 3:1 contrast on both tints. No rubric, prompt, privacy wording, server or API change.
 - `npm run test` (100 tests, seven files), typecheck, lint and build passed on Node 25.5.0.
 - `npm run test:browser` ran locally (Brave, headless) against a demo server started with `APP_ORIGIN=http://127.0.0.1:3100`. Without that value every review in the suite is rejected by the origin check, because the local Next server reports its own URL as `localhost` while the tests open `127.0.0.1`. The five responsive tests (320 to 1440 px) passed. Two tests failed in the same way on an untouched clone of `main` at `e0f6cdc`: the full-flow test times out waiting for the PDF download event, and the error/cancel test finds two `alert` roles (the app's error message and the Next.js route announcer). These are existing test issues, not caused by the layout change.
-- The hosted site keeps the earlier layout until this change is merged to `main` and Render redeploys.
+- Merged as PR #4 (`587f288`) at 09:45 SAST. The hosted homepage served the three-step markup and the sage stylesheet about 40 seconds later (checked from the agent shell, not in a browser).
 
 ## Completed locally on 12 October 2026
 
