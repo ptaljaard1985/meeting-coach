@@ -2,6 +2,14 @@
 
 Documentation updated 13 October 2026. Evidence below separates fresh local checks, the owner's deployment reports and historical checks. The actual CRM directory was not accessed or changed. The unchanged implementation baseline is `fa3db03`; fresh GitHub `main` at `e30ec35` was inspected on 12 October after the owner cloned it through their Mac Terminal.
 
+## Export headings and flexible headers, 13 October 2026
+
+- PR #5 (`3c2f220`) merged at 09:59 SAST. By 10:01 the hosted page and its parser script showed the 160 KB limit (checked from the agent shell).
+- The owner then reported, with a screenshot, that a Fathom export's opening lines (meeting title, "VIEW RECORDING … : link", `---`) produced "Some transcript text could not be attributed". The title line was also being read as a speaker block.
+- Changes: divider lines (`---`, `***`, `===` and similar) are read as blank lines. Around a timestamped conversation, untimestamped leading or trailing "turns" by labels that never speak inside it are treated as headings. Up to ten short (at most 300 characters) unattributed lines before the first turn or after the last are skipped and reported in the status line, for example "skipped 2 lines before the first speaker". Speaker blocks also accept `Name  0:03`, `Name - 0:03` and `Name (0:03)` headers. Unattributed text inside the conversation is still refused; the local error now gives the line number and quotes the line, while the server keeps its generic message. Segment IDs are renumbered after skipping.
+- `npm run test` (105 tests, including five new parser cases), typecheck, lint and build passed. Synthetic 74 to 180-minute meetings with a Fathom-style heading parsed with two lines skipped. Browser suite: the five responsive tests passed; the same two existing failures remain.
+- Not verified: real exports from other tools (Otter, Zoom, Teams) beyond the synthetic header shapes, and a paid review of a long transcript.
+
 ## Transcript size and header format, 13 October 2026
 
 - The owner reported, with a screenshot, that a long transcript pasted into the hosted site showed "This transcript is too large". The text box silently cut pastes at 64,000 characters, and the parser then refused the remainder as over 64 KB. Separately, the parser read each `H:MM:SS - Name (Organisation)` header line as the speaker's name, so every turn became a new speaker (or, past six words, was left unattributed). Only synthetic text was used for the checks below.
