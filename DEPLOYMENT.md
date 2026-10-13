@@ -1,6 +1,6 @@
 # Render pilot deployment
 
-Updated 12 October 2026. The owner supplied **https://meeting-coach-0f6x.onrender.com** and reports deployments after entering Upstash credentials and the OpenAI key. Cloudflare Turnstile keys were obtained and configuration instructions supplied. The owner confirms the site opens in their browser. **The owner asked to switch to `live` on 12 October, but the homepage still reported `demo` at the agent's last check; live AI reviews have not been verified.** Later that day the agent loaded the homepage from its shell (HTTP 200, Turnstile site key present, mode `demo`). A reported deployment is not an end-to-end test.
+Updated 13 October 2026. The owner supplied **https://meeting-coach-0f6x.onrender.com** and reports deployments after entering Upstash credentials and the OpenAI key. Cloudflare Turnstile keys were obtained and configuration instructions supplied. The owner confirms the site opens in their browser. **The owner switched to `live` on 12 October and the homepage reports live mode (rechecked 13 October); live AI reviews have not been verified.** The agent first loaded the homepage from its shell in demo mode (HTTP 200, Turnstile site key present) and saw `live` after the switch. A reported deployment is not an end-to-end test.
 
 The owner explicitly selected **GPT-6.1 Sol for reviews** on 12 October, retaining medium reasoning and standard service. Examples remain fixed Sol 6.1/low. Set the model override explicitly: unchanged runtime code and `.env.example` still default to Astra. Claude was discussed but no provider change or fallback was selected.
 
@@ -15,8 +15,8 @@ The owner explicitly selected **GPT-6.1 Sol for reviews** on 12 October, retaini
 | Upstash retention/cost settings | Eviction shown off initially and instructed to stay off; no read regions or Prod Pack requested; maximum budget was not set in the screenshot; final settings/backups not inspected |
 | OpenAI key | Owner reports adding key and deploying; screenshot confirms only Responses Write enabled under Restricted permissions |
 | OpenAI project/access | Dedicated project, billing and 90-day expiry were instructed/recommended; actual project selection, billing, expiry and Sol access are unverified |
-| Remaining environment values | Instructions supplied below; the owner was asked on 12 October to confirm them while setting `REVIEW_MODE=live`. Actual model override, limiter secret, limits, mode and IP-header value have not been inspected |
-| Public operator details | Rob Macdonald, rob@coachingwayofbeing.com (owner-supplied 12 October); on the privacy page under notice `2026-10-12.1`, pending publication |
+| Remaining environment values | Instructions supplied below; the owner was asked on 12 October to confirm them while setting `REVIEW_MODE=live`. Actual model override, limiter secret, limits and IP-header value have not been inspected; the homepage confirms `REVIEW_MODE=live` |
+| Public operator details | Rob Macdonald, rob@coachingwayofbeing.com (owner-supplied 12 October); on the hosted privacy page under notice `2026-10-12.1` (PR #2, `9941ab3`) |
 | Live testing | No successful review, generation, challenge/counter integration or live numerical record verified |
 
 ## Render service settings
@@ -46,7 +46,7 @@ Enter secrets directly in Render; do not put their values in chat, screenshots, 
 | Key | Intended value / source |
 | --- | --- |
 | `NODE_VERSION` | `24.21.0` |
-| `REVIEW_MODE` | `demo` until configuration and launch checks are ready; switch deliberately to `live` for the authorised pilot |
+| `REVIEW_MODE` | `live` (switched by the owner on 12 October for the authorised pilot) |
 | `OPENAI_API_KEY` | Dedicated Meeting Coach Platform project key, with funded API billing and Sol access |
 | `REVIEW_MODEL` | **`gpt-6.1-sol`** (owner selected; source/template default is Astra) |
 | `REVIEW_REASONING_EFFORT` | `medium` |
@@ -114,12 +114,12 @@ The daily counter includes reviews, examples and corrections; ten calls are not 
 
 ## Finish the pilot
 
-1. Inspect configuration without revealing secrets. Confirm the dedicated project/billing/model access, Sol override, random limiter secret, exact origin, limits and actual mode. Do not switch to live merely for this docs update.
-2. Publish the privacy-page operator/region change and confirm it on the hosted `/privacy` page; finish account-specific privacy/host logging disclosures and verify proxy handling.
-3. When ready, deliberately set `REVIEW_MODE=live` and deploy. Use the supplied synthetic transcript for the first paid review, then test fictional example generation separately. Record success/failure, actual usage, timing, evidence quality and model shown in the report. If access fails, diagnose it; no silent model/provider substitution.
+1. Inspect configuration without revealing secrets. Confirm the dedicated project/billing/model access, Sol override, random limiter secret, exact origin, and limits. The homepage reports live mode.
+2. The privacy-page operator/region change is live on the hosted `/privacy` page. Finish account-specific privacy/host logging disclosures and verify proxy handling.
+3. `REVIEW_MODE=live` is set and deployed. Use the supplied synthetic transcript for the first paid review, then test fictional example generation separately. Record success/failure, actual usage, timing, evidence quality and model shown in the report. If access fails, diagnose it; no silent model/provider substitution.
 4. Verify challenge failures, hostname/action mismatch, origin rejection, quotas, concurrent requests, leases and shared-office behaviour. Check a hosted long request and cancellation/disconnect against the shared 15-minute allowance. A single fast success does not prove the long-request behaviour.
 5. Exercise PDF download, keyboard, Clear, refresh/back navigation and mobile flow. Verify no content capture or browser persistence.
 6. Test private numerical persistence/export/deletion using a separate synthetic database. Do not run deletion against production records as a launch check. No public analytics route is authorised.
 7. Complete dependency audit and consultant calibration; do not advertise uncalibrated scores as a benchmark. Record evidence in `VERIFICATION.md` and current status in `HANDOFF_NOTES.txt`.
 
-Fresh local tests/typecheck/lint/build passed on 12 October, including after the privacy change, but no hosted paid test is claimed. The earlier documentation branch `docs/render-pilot-20261012` was merged as `e05aacd` (PR #1); check GitHub branch/PR state before continuing. Preserve any later remote changes. Never access the CRM or run the obsolete extraction verifier.
+Fresh local tests/typecheck/lint/build passed on 12 October, including after the privacy change, but no hosted paid test is claimed. The earlier documentation branch `docs/render-pilot-20261012` was merged as `e05aacd` (PR #1) and the privacy change as `9941ab3` (PR #2); check GitHub branch/PR state before continuing. Preserve any later remote changes. Never access the CRM or run the obsolete extraction verifier.
