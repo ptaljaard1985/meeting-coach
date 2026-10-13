@@ -1,7 +1,8 @@
 :root {
   --color-paper: #f7f3eb; --color-surface: #fcfaf5; --color-tint: #eee2df;
   --color-ink: #332a2b; --color-muted: #6f5d59;
-  --color-rule: #d8ccc3; --color-boundary: #93877c;
+  --color-rule: #d8ccc3; --color-boundary: #857a70;
+  --color-sage: #4a6a52; --color-sage-tint: #e3e9de; --color-sage-rule: #c8d3c2;
   --color-accent: #6c253e; --color-focus: #6c253e; --color-accent-ink: var(--color-surface);
   --color-error: #922d21; --color-disabled: #ded4cf;
   --font-display: 'Fraunces', serif; --font-body: 'IBM Plex Sans', sans-serif;

@@ -9,7 +9,7 @@ The owner explicitly instructed: **never touch the CRM**. Do not access, read, s
 ## Accepted product decisions
 
 - Preserve seven scoring sections and 24 criteria in `lib/rubric.json`, version 1.1. The Afrikaans-specific criterion is removed; English, Afrikaans and mixed-language support remains.
-- Preserve the Calm panel layout with Editorial palette and type. The owner accepted the design for now.
+- Preserve the Calm panel layout with Editorial palette and type. On 13 October the owner asked for the input page to become three numbered steps stacked down the page (Your transcript, Meeting context, Confirm and review), with sage as a second colour beside the rose tint. Keep that structure.
 - On 12 October 2026 the owner selected `gpt-6.1-sol` for pilot reviews, with medium reasoning and standard service. Set `REVIEW_MODEL=gpt-6.1-sol` explicitly: the existing code and `.env.example` still default to Astra, and this documentation update does not change runtime code. Fictional 45–55-minute examples remain fixed to `gpt-6.1-sol`, low reasoning. Use a dedicated OpenAI Platform key; no Codex credential or provider fallback.
 - Keep foreground requests, the 15-minute overall deadline including corrections, and the waiting notice. No background worker is currently implemented.
 - Keep transcript text, quotes and written reviews transient. Numerical analytics are private and retained **until the owner deletes them**, without automatic expiry. No public analytics endpoint is authorised by the existing scope.
